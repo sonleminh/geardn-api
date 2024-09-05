@@ -9,9 +9,6 @@ export class User {
   @Transform(({ value }) => value.toString())
   _id?: Types.ObjectId;
 
-  @Prop({ require: true, unique: true })
-  username: string;
-
   @Prop({ require: true, trim: true })
   password: string;
 
@@ -19,7 +16,7 @@ export class User {
   email: string;
 
   @Prop({ require: true })
-  name: string;
+  fullName: string;
 
   @Prop({ default: 'user' })
   role: string;

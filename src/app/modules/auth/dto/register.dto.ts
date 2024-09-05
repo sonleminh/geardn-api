@@ -15,15 +15,8 @@ export class RegisterDTO {
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(5, 26)
   @IsLowercase()
-  username: string;
+  fullName: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Transform(({ value }: TransformFnParams) => value?.trim())
-  @MinLength(5)
-  password: string;
-
-  @IsString()
   @IsNotEmpty()
   @IsEmail()
   @Transform(({ value }: TransformFnParams) => value?.trim())
@@ -33,8 +26,8 @@ export class RegisterDTO {
   @IsString()
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
-  @MinLength(4)
-  name: string;
+  @MinLength(5)
+  password: string;
 
   @IsOptional()
   @IsString()

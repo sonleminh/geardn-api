@@ -37,8 +37,8 @@ export class UserService {
     }
   }
 
-  async findOneByUsername(username: string) {
-    return this.userModel.find((user) => user.username === username);
+  async findOneByEmail(email: string) {
+    return this.userModel.find((user) => user.email === email);
   }
 
   async getUserById(id: Types.ObjectId) {
@@ -53,10 +53,10 @@ export class UserService {
     }
   }
 
-  async findAndVerify(authCredentialsDto: AuthCredentialsDto) {
+  async findAndVerify(authCredentialsDto: any) {
     try {
-      const { username, password } = authCredentialsDto;
-      const user = await this.userModel.findOne({ username });
+      const { email, password } = authCredentialsDto;
+      const user = await this.userModel.findOne({ email });
       if (!user) {
         throw new NotFoundException('User does not exist');
       }

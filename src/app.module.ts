@@ -32,7 +32,7 @@ import { AppService } from './app.service';
           DbConfigKey.MONGO_PASSWORD,
         );
         return {
-          uri: `mongodb+srv://${username}:${password}@${host}/`,
+          uri: `mongodb+srv://${username}:${password}@${host}`,
         };
       },
     }),
