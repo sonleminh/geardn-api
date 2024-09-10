@@ -12,7 +12,7 @@ export class User {
   @Prop({ require: true, trim: true })
   password: string;
 
-  @Prop({ require: true })
+  @Prop({ require: true, unique: true })
   email: string;
 
   @Prop({ require: true })

@@ -9,10 +9,7 @@ import { AuthConfigKey, IAuthConfig } from 'src/app/config/auth.config';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly configService: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        JwtStrategy.extractJWT,
-        ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ]),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: configService.get<IAuthConfig['JWT_SECRET_KEY']>(
         AuthConfigKey.JWT_SECRET_KEY,
@@ -22,16 +19,5 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     return payload;
-  }
-
-  private static extractJWT(req: Request): string | null {
-    if (
-      req.cookies &&
-      'sessionToken' in req.cookies &&
-      req.cookies.sessionToken.length > 0
-    ) {
-      return req.cookies.sessionToken;
-    }
-    return null;
   }
 }

@@ -3,6 +3,8 @@ import * as bcrypt from 'bcrypt';
 import {
   BadRequestException,
   ConflictException,
+  HttpException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -16,29 +18,31 @@ import { User, UserDocument } from './entities/user.entity';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-
   async createUser(registerDTO: RegisterDTO) {
+    const checkExistUser = await this.userModel.findOne({
+      email: registerDTO.email,
+    });
+    if (checkExistUser) {
+      throw new HttpException(
+        'User already exist',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
     const { password, ...rest } = registerDTO;
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     const data = { password: hashedPassword, ...rest };
     const user = await this.userModel.create(data);
-
-    try {
-      const userData = await user.save();
-      const { password: userPassword, ...userWithoutPassword } =
-        userData['_doc'];
-      return userWithoutPassword;
-    } catch (error) {
-      if (error.code === '23505') {
-        throw new ConflictException('Username already exists');
-      }
-      throw new InternalServerErrorException();
-    }
+    const userData = await user.save();
+    const { password: userPassword, ...userWithoutPassword } = userData['_doc'];
+    return userWithoutPassword;
   }
 
   async findOneByEmail(email: string) {
-    return this.userModel.find((user) => user.email === email);
+    return this.userModel
+      .findOne((user) => user.email === email)
+      .lean()
+      .exec();
   }
 
   async getUserById(id: Types.ObjectId) {
