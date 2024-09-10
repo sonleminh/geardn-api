@@ -23,13 +23,13 @@ export class AuthController {
   @Get('ck')
   checkCookie(@Request() request: MGRQ) {
     // Truy cập signed cookies
-    // console.log('Headers:', request.headers);
+    console.log('Headers:', request.headers);
 
     // Log cookie trực tiếp từ headers nếu chưa được parse
     // console.log('Raw Cookies from headers:', request.headers.cookie);
 
     // Nếu cookie-parser được sử dụng, log cookies đã parse
-    console.log('Parsed Cookies:', request.cookies);
+    // console.log('Parsed Cookies:', request.cookies);
 
     // // Nếu có signed cookies, log signed cookies
     // console.log('Signed Cookies:', request.signedCookies);
@@ -52,7 +52,7 @@ export class AuthController {
   @Post('login')
   async login(@Request() req, @Res({ passthrough: true }) res) {
     // : Promise<{
-    //   message: string;
+    //   message: st ring;
     //   user: {
     //     id: string;
     //     fullName: string;
@@ -70,11 +70,5 @@ export class AuthController {
   @Get('whoami')
   async getProfile(@Request() req) {
     return req.user;
-  }
-
-  @Post('cookie')
-  async cookie(@Request() req, @Res({ passthrough: true }) res) {
-    // console.log(req.headers);
-    // return req.user;
   }
 }

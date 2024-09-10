@@ -48,6 +48,8 @@ export class AuthService {
         email: user.email,
       });
 
+      console.log(refreshToken)
+
       this.storeRefreshToken(res, refreshToken);
 
       const { password, ...tempUser } = user['_doc'];
@@ -71,20 +73,8 @@ export class AuthService {
   async generaTokens(data: ITokenPayload) {
     try {
       const [AT, RT] = await Promise.all([
-        generateToken(
-          data,
-          this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
-            AuthConfigKey.JWT_SECRET_KEY,
-          ),
-          { expiresIn: '7d' },
-        ),
-        generateToken(
-          { _id: 123 },
-          this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
-            AuthConfigKey.JWT_SECRET_KEY,
-          ),
-          { expiresIn: '7d' },
-        ),
+        this.jwtService.sign(data, { expiresIn: '10s' }),
+        this.jwtService.sign(data, { expiresIn: '7d' }),
       ]);
       return {
         accessToken: AT,
@@ -142,10 +132,10 @@ export class AuthService {
 
   storeRefreshToken(res: Response, refreshToken: string) {
     res.cookie('rt', refreshToken, {
-      sameSite: 'none',
+      // sameSite: 'none',
       signed: true,
       // httpOnly: true,
-      secure: false,
+      // secure: true,
       path: '/',
     });
   }
