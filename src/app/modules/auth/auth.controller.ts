@@ -6,6 +6,7 @@ import {
   Post,
   Request,
   Res,
+  Response,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -23,7 +24,7 @@ export class AuthController {
   @Get('ck')
   checkCookie(@Request() request: MGRQ) {
     // Truy cập signed cookies
-    console.log('Headers:', request.headers);
+    // console.log('Headers:', request.headers);
 
     // Log cookie trực tiếp từ headers nếu chưa được parse
     // console.log('Raw Cookies from headers:', request.headers.cookie);
@@ -70,5 +71,10 @@ export class AuthController {
   @Get('whoami')
   async getProfile(@Request() req) {
     return req.user;
+  }
+
+  @Get('refresh')
+  async refresh(@Request() req) {
+    return this.authService.refreshToken(req)
   }
 }

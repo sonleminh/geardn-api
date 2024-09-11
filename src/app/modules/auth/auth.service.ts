@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Request,
+  Res,
+} from '@nestjs/common';
 import { RegisterDTO } from './dto/register.dto';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/user/user.service';
@@ -7,13 +12,14 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthConfigKey, IAuthConfig } from 'src/app/config/auth.config';
 import generateToken from './utils';
 import { ITokenPayload } from 'src/app/interfaces/ITokenPayload';
-import { Request, Response } from 'express';
+import { Request as expressRequest, Response } from 'express';
 import { ILoginResponse } from 'src/app/interfaces/IUser';
 @Injectable()
 export class AuthService {
   private ATSecret: string;
   private RTSecret: string;
   private CKPath: string;
+  private JwtSecretKey: string;
 
   constructor(
     private userService: UserService,
@@ -23,6 +29,7 @@ export class AuthService {
     this.ATSecret = this.configService.get('AT_SECRET');
     this.RTSecret = this.configService.get('RT_SECRET');
     this.CKPath = this.configService.get('CK_PATH');
+    this.JwtSecretKey = this.configService.get('JWT_SECRET_KEY');
   }
 
   async validateUser(email: string, password: string) {
@@ -48,7 +55,7 @@ export class AuthService {
         email: user.email,
       });
 
-      console.log(refreshToken)
+      console.log(refreshToken);
 
       this.storeRefreshToken(res, refreshToken);
 
@@ -73,7 +80,7 @@ export class AuthService {
   async generaTokens(data: ITokenPayload) {
     try {
       const [AT, RT] = await Promise.all([
-        this.jwtService.sign(data, { expiresIn: '10s' }),
+        this.jwtService.sign(data, { expiresIn: '15m' }),
         this.jwtService.sign(data, { expiresIn: '7d' }),
       ]);
       return {
@@ -133,10 +140,32 @@ export class AuthService {
   storeRefreshToken(res: Response, refreshToken: string) {
     res.cookie('rt', refreshToken, {
       // sameSite: 'none',
-      signed: true,
       // httpOnly: true,
       // secure: true,
       path: '/',
     });
+  }
+
+  async refreshToken(@Request() req: expressRequest) {
+    const refreshToken = req.headers.cookie;
+    const cleanedToken = decodeURIComponent(refreshToken.replace(/^rt=/, ''));
+
+    if (!refreshToken) {
+      return { message: 'Refresh token not found' };
+    }
+
+    try {
+      const payload = this.jwtService.verify(cleanedToken, {
+        secret:
+          this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
+            AuthConfigKey.JWT_SECRET_KEY,
+          ) || 'JWT_SECRET_KEY',
+      });
+      const { _id, email, ...rest } = payload;
+      const newAccessToken = await this.jwtService.signAsync({ _id, email });
+      return { accessToken: newAccessToken };
+    } catch {
+      throw new InternalServerErrorException();
+    }
   }
 }
