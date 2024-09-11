@@ -21,29 +21,6 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
   ) {}
-  @Get('ck')
-  checkCookie(@Request() request: MGRQ) {
-    // Truy cập signed cookies
-    // console.log('Headers:', request.headers);
-
-    // Log cookie trực tiếp từ headers nếu chưa được parse
-    // console.log('Raw Cookies from headers:', request.headers.cookie);
-
-    // Nếu cookie-parser được sử dụng, log cookies đã parse
-    // console.log('Parsed Cookies:', request.cookies);
-
-    // // Nếu có signed cookies, log signed cookies
-    // console.log('Signed Cookies:', request.signedCookies);
-
-    return { cc: 22 };
-    // if (Object.keys(cookies).length) {
-    //   console.log('Signed Cookies:', cookies);
-    //   return { message: 'Signed cookie found', cookies };
-    // } else {
-    //   return { message: 'No signed cookies found' };
-    // }
-  }
-
   @Post('signup')
   async signUp(@Body() registerDTO: RegisterDTO) {
     return this.authService.signUp(registerDTO);
