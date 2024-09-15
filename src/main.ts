@@ -24,7 +24,7 @@ async function bootstrap() {
   });
   app.setGlobalPrefix(apiPrefix);
   app.useGlobalPipes(new ValidationPipe(ValidationConfig));
-  app.use(cookieParser(process.env.CK_SECRET));
+  // app.use(cookieParser(process.env.CK_SECRET));
 
   await app.listen(
     configService.get<IAppConfig['PORT']>(AppConfigKey.PORT),

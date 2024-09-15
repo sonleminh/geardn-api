@@ -1,7 +1,9 @@
 import {
+  HttpException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
-  Request
+  Request,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -9,7 +11,6 @@ import { Request as expressRequest, Response } from 'express';
 import { AuthConfigKey, IAuthConfig } from 'src/app/config/auth.config';
 import { ITokenPayload } from 'src/app/interfaces/ITokenPayload';
 import { ILoginResponse } from 'src/app/interfaces/IUser';
-import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { RegisterDTO } from './dto/register.dto';
 @Injectable()
@@ -51,9 +52,11 @@ export class AuthService {
       const { accessToken, refreshToken } = await this.generaTokens({
         _id: user._id,
         email: user.email,
+        fullName: user.fullName,
       });
 
-      this.storeRefreshToken(res, refreshToken);
+      this.storeToken(res, 'at', accessToken);
+      this.storeToken(res, 'rt', refreshToken);
 
       const { password, ...tempUser } = user['_doc'];
       // const payload = {
@@ -67,7 +70,7 @@ export class AuthService {
       //   expiresIn: '15m',
       // })
       // console.log(accessToken, refreshToken)
-      return { accessToken, user: tempUser };
+      return tempUser;
     } catch (error) {
       throw error;
     }
@@ -76,8 +79,18 @@ export class AuthService {
   async generaTokens(data: ITokenPayload) {
     try {
       const [AT, RT] = await Promise.all([
-        this.jwtService.sign(data, { expiresIn: '15m' }),
-        this.jwtService.sign(data, { expiresIn: '7d' }),
+        this.jwtService.signAsync(data, {
+          secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
+            AuthConfigKey.JWT_SECRET_KEY,
+          ),
+          expiresIn: '20s',
+        }),
+        this.jwtService.signAsync(data, {
+          secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
+            AuthConfigKey.JWT_SECRET_KEY,
+          ),
+          expiresIn: '7d',
+        }),
       ]);
       return {
         accessToken: AT,
@@ -88,53 +101,15 @@ export class AuthService {
     }
   }
 
-  async generateJwtToken(
-    user: User,
-    res: Response,
-  ): Promise<{
-    message: string;
-    user: {
-      id: string;
-      fullName: string;
-      email: string;
-      accessToken: string;
-      refreshToken: string;
-    };
-  }> {
-    const payload = {
-      email: user.email,
-      id_user: String(user._id),
-    };
-
-    // const [AT, RT] = await Promise.all([
-    //   generateToken(data, this.ATSecret, { expiresIn: '7d' }),
-    //   generateToken({ _id: data._id }, this.RTSecret, { expiresIn: '7d' }),
-    // ]);
-
-    return {
-      message: 'Login successful',
-      user: {
-        id: String(user._id),
-        fullName: user.fullName,
-        email: user.email,
-        accessToken: await this.jwtService.signAsync(payload, {
-          secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
-            AuthConfigKey.JWT_SECRET_KEY,
-          ),
-          expiresIn: '15m',
-        }),
-        refreshToken: await this.jwtService.signAsync(payload, {
-          secret: this.configService.get<IAuthConfig['RT_SECRET']>(
-            AuthConfigKey.RT_SECRET,
-          ),
-          expiresIn: '7d',
-        }),
-      },
-    };
+  async at(res: Response) {
+    const newAccessToken = await this.jwtService.signAsync({ cc: 'cc' });
+    this.storeToken(res, 'at', newAccessToken)
+    console.log('at')
+    return 'at'
   }
 
-  storeRefreshToken(res: Response, refreshToken: string) {
-    res.cookie('rt', refreshToken, {
+  storeToken(res: Response, tokenName: string, token: string) {
+    res.cookie(tokenName, token, {
       // sameSite: 'none',
       // httpOnly: true,
       // secure: true,
@@ -142,16 +117,20 @@ export class AuthService {
     });
   }
 
-  async refreshToken(@Request() req: expressRequest) {
-    const refreshToken = req.headers.cookie;
-    const cleanedToken = decodeURIComponent(refreshToken.replace(/^rt=/, ''));
-
-    if (!refreshToken) {
-      return { message: 'Refresh token not found' };
+  async refreshToken(@Request() req: expressRequest, res: Response) {
+    const tokens = req.headers.cookie;
+    if (!tokens) {
+      throw new HttpException(
+        'Refresh token is required',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-
+    const refreshToken = tokens
+      .split('; ')
+      .find((tokens) => tokens.startsWith('rt='))
+      .split('=')[1];
     try {
-      const payload = this.jwtService.verify(cleanedToken, {
+      const payload = await this.jwtService.verify(refreshToken, {
         secret:
           this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
@@ -159,9 +138,15 @@ export class AuthService {
       });
       const { _id, email, ...rest } = payload;
       const newAccessToken = await this.jwtService.signAsync({ _id, email });
-      return { accessToken: newAccessToken };
+      console.log('new:', newAccessToken)
+      this.storeToken(res, 'at', newAccessToken);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'New access token created successfully!',
+      };
+      // return 2;
     } catch {
-      throw new InternalServerErrorException();
+      throw new HttpException('Invalid refresh token', HttpStatus.UNAUTHORIZED);
     }
   }
 }
