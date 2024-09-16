@@ -33,7 +33,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     .split('; ')
     .find((cookie) => cookie.startsWith('at='));
     
-    console.log('cookies:', jwtCookie)
     // If no JWT cookie is found, return null
     if (!jwtCookie) {
       return null;

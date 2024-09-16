@@ -89,7 +89,7 @@ export class AuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '2d',
+          expiresIn: '1d',
         }),
       ]);
       return {
@@ -143,7 +143,7 @@ export class AuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '10s',
+          expiresIn: '15m',
         },
       );
       return {

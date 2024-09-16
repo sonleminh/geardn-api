@@ -40,7 +40,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('whoami')
   async getProfile(@Request() req) {
-    // console.log('who', req)
     return req.user;
   }
 
