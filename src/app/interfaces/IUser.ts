@@ -4,6 +4,6 @@ export interface ILoginResponse {
   _id: Types.ObjectId;
   email: string;
   password: string;
-  fullName: string;
+  name: string;
   role: string;
 }

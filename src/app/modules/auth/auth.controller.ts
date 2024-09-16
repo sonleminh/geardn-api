@@ -21,7 +21,7 @@ export class AuthController {
     private readonly userService: UserService,
   ) {}
 
-  @Get('/at')
+  @Get('/access-token')
   async at(@Res({ passthrough: true }) res) {
     return this.authService.at(res)
   }
@@ -40,6 +40,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('whoami')
   async getProfile(@Request() req) {
+    // console.log('who', req)
     return req.user;
   }
 

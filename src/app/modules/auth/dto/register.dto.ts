@@ -15,7 +15,7 @@ export class RegisterDTO {
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(5, 26)
   @IsLowercase()
-  fullName: string;
+  name: string;
 
   @IsNotEmpty()
   @IsEmail()

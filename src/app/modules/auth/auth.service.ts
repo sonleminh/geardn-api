@@ -52,7 +52,7 @@ export class AuthService {
       const { accessToken, refreshToken } = await this.generaTokens({
         _id: user._id,
         email: user.email,
-        fullName: user.fullName,
+        name: user.name,
       });
 
       this.storeToken(res, 'at', accessToken);
@@ -83,13 +83,13 @@ export class AuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '20s',
+          expiresIn: '15m',
         }),
         this.jwtService.signAsync(data, {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '7d',
+          expiresIn: '2d',
         }),
       ]);
       return {
@@ -103,9 +103,9 @@ export class AuthService {
 
   async at(res: Response) {
     const newAccessToken = await this.jwtService.signAsync({ cc: 'cc' });
-    this.storeToken(res, 'at', newAccessToken)
-    console.log('at')
-    return 'at'
+    this.storeToken(res, 'at', newAccessToken);
+    console.log('at');
+    return { at: newAccessToken };
   }
 
   storeToken(res: Response, tokenName: string, token: string) {
@@ -136,13 +136,19 @@ export class AuthService {
             AuthConfigKey.JWT_SECRET_KEY,
           ) || 'JWT_SECRET_KEY',
       });
-      const { _id, email, ...rest } = payload;
-      const newAccessToken = await this.jwtService.signAsync({ _id, email });
-      console.log('new:', newAccessToken)
-      this.storeToken(res, 'at', newAccessToken);
+      const { _id, email, name, ...rest } = payload;
+      const newAccessToken = await this.jwtService.signAsync(
+        { _id, email, name },
+        {
+          secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
+            AuthConfigKey.JWT_SECRET_KEY,
+          ),
+          expiresIn: '10s',
+        },
+      );
       return {
+        accessToken: newAccessToken,
         statusCode: HttpStatus.OK,
-        message: 'New access token created successfully!',
       };
       // return 2;
     } catch {
