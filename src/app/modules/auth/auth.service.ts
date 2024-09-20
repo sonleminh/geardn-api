@@ -59,21 +59,17 @@ export class AuthService {
       this.storeToken(res, 'rt', refreshToken);
 
       const { password, ...tempUser } = user['_doc'];
-      // const payload = {
-      //   email: user.email,
-      //   id_user: String(user._id),
-      // };
-      // return await this.jwtService.signAsync(payload, {
-      //   secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
-      //     AuthConfigKey.JWT_SECRET_KEY,
-      //   ),
-      //   expiresIn: '15m',
-      // })
-      // console.log(accessToken, refreshToken)
       return tempUser;
     } catch (error) {
       throw error;
     }
+  }
+
+  async logout(req: expressRequest, res: Response) {
+    res.clearCookie('at');
+    res.clearCookie('rt');
+    res.clearCookie('GC');
+    return { message: 'Logout successful!', statusCode: HttpStatus.OK };
   }
 
   async generaTokens(data: ITokenPayload) {
@@ -99,13 +95,6 @@ export class AuthService {
     } catch {
       throw new InternalServerErrorException();
     }
-  }
-
-  async at(res: Response) {
-    const newAccessToken = await this.jwtService.signAsync({ cc: 'cc' });
-    this.storeToken(res, 'at', newAccessToken);
-    console.log('at');
-    return { at: newAccessToken };
   }
 
   storeToken(res: Response, tokenName: string, token: string) {

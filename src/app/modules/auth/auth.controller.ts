@@ -20,12 +20,6 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
   ) {}
-
-  @Get('/access-token')
-  async at(@Res({ passthrough: true }) res) {
-    return this.authService.at(res)
-  }
-
   @Post('signup')
   async signUp(@Body() registerDTO: RegisterDTO) {
     return this.authService.signUp(registerDTO);
@@ -35,6 +29,11 @@ export class AuthController {
   @Post('login')
   async login(@Request() req, @Res({ passthrough: true }) res) {
     return this.authService.login(req.user, res);
+  }
+
+  @Post('logout')
+  async logout(@Request() req, @Res({ passthrough: true }) res) {
+    return this.authService.logout(req, res);
   }
 
   @UseGuards(JwtAuthGuard)
