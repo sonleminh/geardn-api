@@ -11,8 +11,8 @@ import { Request as expressRequest, Response } from 'express';
 import { AuthConfigKey, IAuthConfig } from 'src/app/config/auth.config';
 import { ITokenPayload } from 'src/app/interfaces/ITokenPayload';
 import { ILoginResponse } from 'src/app/interfaces/IUser';
-import { UserService } from 'src/user/user.service';
 import { RegisterDTO } from './dto/register.dto';
+import { UserService } from '../user/user.service';
 @Injectable()
 export class AuthService {
   private ATSecret: string;
@@ -79,7 +79,7 @@ export class AuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '15m',
+          expiresIn: '2h',
         }),
         this.jwtService.signAsync(data, {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
@@ -132,7 +132,7 @@ export class AuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '15m',
+          expiresIn: '2h',
         },
       );
       return {

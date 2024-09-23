@@ -8,12 +8,11 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { Request as MGRQ } from 'express';
-import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { RegisterDTO } from './dto/register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { CookieAuthGuard } from './guards/guard-auth.guard';
+import { UserService } from '../user/user.service';
 @Controller('auth')
 export class AuthController {
   constructor(

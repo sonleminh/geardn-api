@@ -4,9 +4,12 @@ import { configurations } from './app/config/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DbConfigKey, IDbConfig } from './app/config/database.config';
-import { UserModule } from './user/user.module';
+import { UserModule } from './app/modules/user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './app/modules/auth/auth.module';
+import { CategoryModule } from './app/modules/category/category.module';
+import { ProductModule } from './app/modules/product/product.module';
 // import { AuthModule } from './app/modules/auth/auth.module';
 
 @Module({
@@ -36,8 +39,10 @@ import { AppService } from './app.service';
         };
       },
     }),
-    // AuthModule,
+    AuthModule,
     UserModule,
+    CategoryModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
