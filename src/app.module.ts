@@ -10,6 +10,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './app/modules/auth/auth.module';
 import { CategoryModule } from './app/modules/category/category.module';
 import { ProductModule } from './app/modules/product/product.module';
+import { AdminAuthModule } from './app/modules/admin-auth/admin-auth.module';
+import { UploadModule } from './app/modules/upload/upload.module';
 // import { AuthModule } from './app/modules/auth/auth.module';
 
 @Module({
@@ -40,9 +42,11 @@ import { ProductModule } from './app/modules/product/product.module';
       },
     }),
     AuthModule,
+    AdminAuthModule,
     UserModule,
     CategoryModule,
     ProductModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

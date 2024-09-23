@@ -1,27 +1,23 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   Patch,
   Post,
   Query,
   UploadedFile,
   UseGuards,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ProductService } from './product.service';
-import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
 import { Types } from 'mongoose';
-import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
-import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from 'src/app/decorators/role.decorator';
 import { RBAC } from 'src/app/enums/rbac.enum';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RoleGuard } from '../auth/guards/role.guard';
+import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
+import { ProductService } from './product.service';
 
 @Controller('product')
 export class ProductController {

@@ -119,8 +119,11 @@ export class ProductService {
         };
       }
 
+      const categories = await this.categoryService.getCategoryInitial();
+
       return {
         productList: res,
+        categories: categories,
         total,
       };
     } catch (error) {

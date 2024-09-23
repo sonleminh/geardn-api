@@ -3,6 +3,7 @@ import { Transform } from 'class-transformer';
 import { Types } from 'mongoose';
 import { Category } from '../../category/entities/category.entity';
 import { TagsDto } from '../dto/tag.dto';
+import { Discount, DiscountSchema } from './discount.schema';
 
 
 @Schema({ collection: 'products', timestamps: true })
@@ -12,6 +13,12 @@ export class Product {
 
   @Prop({ required: true })
   name: string;
+
+  @Prop({ required: true })
+  price: string;
+
+  @Prop({ type: DiscountSchema })  // Embedding the Discount schema
+  discount: Discount;
 
   @Prop({ type: Types.ObjectId, ref: Category.name })
   category_id: string;
