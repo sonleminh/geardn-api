@@ -53,6 +53,7 @@ export class AuthService {
         _id: user._id,
         email: user.email,
         name: user.name,
+        role: user.role,
       });
 
       this.storeToken(res, 'at', accessToken);
@@ -125,9 +126,9 @@ export class AuthService {
             AuthConfigKey.JWT_SECRET_KEY,
           ) || 'JWT_SECRET_KEY',
       });
-      const { _id, email, name, ...rest } = payload;
+      const { _id, email, name, role, ...rest } = payload;
       const newAccessToken = await this.jwtService.signAsync(
-        { _id, email, name },
+        { _id, email, name, role },
         {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,

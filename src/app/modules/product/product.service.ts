@@ -27,9 +27,11 @@ export class ProductService {
   ) {
     try {
       const imageUrl = await this.firebaseService.uploadFile(thumbnail_image);
+      const tags = JSON.parse(body.tags);
       const payload = {
         ...body,
         thumbnail_image: imageUrl,
+        tags: tags,
       };
       return await this.productModel.create(payload);
     } catch (error) {
@@ -152,6 +154,7 @@ export class ProductService {
     let newData: Product = {
       ...entity,
       ...body,
+      tags: JSON.parse(body.tags),
     };
 
     if (thumbnail_image) {

@@ -11,6 +11,7 @@ export class CreateProductDto {
   @Length(0)
   category_id: string;
 
+  @IsNotEmpty()
   @Length(0)
   tags: string;
 
@@ -25,10 +26,17 @@ export class CreateProductDto {
 }
 
 export class UpdateProductDto {
-  @IsOptional()
   @IsString()
   @Length(0, 490, { message: 'Độ dài tiêu đề từ 0-490 ký tự!' })
   name: string;
+
+  @IsString()
+  @Length(0)
+  category_id: string;
+
+  @IsNotEmpty()
+  @Length(0)
+  tags: string;
 
   @IsOptional()
   @IsString()
@@ -37,9 +45,4 @@ export class UpdateProductDto {
 
   @IsOptional()
   thumbnail_image?: string | null;
-
-  // @IsOptional()
-  // @IsString()
-  // @Length(0)
-  // category_id: string;
 }

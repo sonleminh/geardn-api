@@ -14,6 +14,9 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/category.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
+import { RoleGuard } from '../auth/guards/role.guard';
+import { Roles } from 'src/app/decorators/role.decorator';
+import { RBAC } from 'src/app/enums/rbac.enum';
 
 @Controller('category')
 @UseGuards(JwtAuthGuard)
@@ -31,19 +34,24 @@ export class CategoryController {
     return await this.categoryService.findById(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('/')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RBAC.ADMIN)
   async createCategory(@Body() createCategoryDTO: CreateCategoryDto) {
     return await this.categoryService.create(createCategoryDTO);
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RBAC.ADMIN)
   @HttpCode(HttpStatus.CREATED)
   async update(@Param() { id }: { id: string }, @Body() body: any) {
     return await this.categoryService.update(id, body);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RBAC.ADMIN)
   @HttpCode(HttpStatus.CREATED)
   async remove(
     @Param() { id }: ObjectIdParamDto,

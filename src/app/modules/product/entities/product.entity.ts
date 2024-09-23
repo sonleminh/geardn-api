@@ -13,17 +13,17 @@ export class Product {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true })
-  content: string;
-
-  @Prop({})
-  thumbnail_image: string;
-
   @Prop({ type: Types.ObjectId, ref: Category.name })
   category_id: string;
 
   @Prop({ required: true })
-  tags: object[];
+  tags: TagsDto[];
+  
+  @Prop({})
+  thumbnail_image: string;
+  
+  @Prop({ required: true })
+  content: string;
 
   @Prop({ default: false })
   is_deleted: boolean;
