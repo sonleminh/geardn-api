@@ -77,7 +77,7 @@ export class ProductService {
           { $match: filterObject },
           {
             $facet: {
-              recent_articles: [{ $sort: { date: -1 } }, { $limit: 10 }],
+              // recent_articles: [{ $sort: { date: -1 } }, { $limit: 10 }],
               FE_articles: [
                 { $match: { 'tags.value': 'front-end' } },
                 { $limit: 6 },
