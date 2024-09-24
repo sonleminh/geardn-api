@@ -48,6 +48,7 @@ export class ProductController {
   }
 
   @Get(':id')
+
   async getProductById(@Param('id') id: Types.ObjectId) {
     return this.productService.getProductById(id);
   }
@@ -58,9 +59,10 @@ export class ProductController {
   @UseInterceptors(FileInterceptor('thumbnail_image'))
   async updateProduct(
     @Param() { id }: { id: Types.ObjectId },
-    @Body() updateProductDTO: UpdateProductDto,
+    @Body() updateProductDTO: any,
     @UploadedFile() thumbnail_image: Express.Multer.File,
   ) {
+    console.log(updateProductDTO)
     return await this.productService.update(
       id,
       updateProductDTO,

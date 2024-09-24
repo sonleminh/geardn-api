@@ -3,8 +3,18 @@ import { Transform } from 'class-transformer';
 import { Types } from 'mongoose';
 import { Category } from '../../category/entities/category.entity';
 import { TagsDto } from '../dto/tag.dto';
-import { Discount, DiscountSchema } from './discount.schema';
+import { Document } from 'mongoose';
+@Schema({ _id: false })
+export class Discount extends Document {
+  @Prop({ required: true })
+  discountPrice: number;
 
+  @Prop({ required: true })
+  startDate: Date;
+
+  @Prop({ required: true })
+  endDate: Date;
+}
 
 @Schema({ collection: 'products', timestamps: true })
 export class Product {
@@ -15,9 +25,9 @@ export class Product {
   name: string;
 
   @Prop({ required: true })
-  price: string;
+  price: number;
 
-  @Prop({ type: DiscountSchema })  // Embedding the Discount schema
+  @Prop({ type: Discount })
   discount: Discount;
 
   @Prop({ type: Types.ObjectId, ref: Category.name })

@@ -33,7 +33,8 @@ export class UpdateProductDto {
   @IsString()
   @Length(0)
   category_id: string;
-
+  
+  @IsOptional()
   @IsNotEmpty()
   @Length(0)
   tags: string;

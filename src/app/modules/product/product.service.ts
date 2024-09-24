@@ -39,7 +39,6 @@ export class ProductService {
     }
   }
 
-
   async getInitialProductForCreate() {
     const categories = await this.categoryService.getCategoryInitial();
     const tags = Object.keys(TAGS).map((key) => ({
@@ -142,7 +141,7 @@ export class ProductService {
 
   async update(
     id: Types.ObjectId,
-    body: UpdateProductDto,
+    body: any,
     thumbnail_image: Express.Multer.File,
   ) {
     const entity = await this.productModel
@@ -154,11 +153,14 @@ export class ProductService {
       throw new NotFoundException('Đối tượng không tồn tại!!');
     }
 
-    let newData: Product = {
+    let newData = {
       ...entity,
       ...body,
-      tags: JSON.parse(body.tags),
     };
+
+    if (body?.tags) {
+      newData.tags = JSON.parse(body.tags);
+    }
 
     if (thumbnail_image) {
       const [imageUrl] = await Promise.all([
