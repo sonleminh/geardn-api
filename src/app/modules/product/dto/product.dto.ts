@@ -1,11 +1,15 @@
-import { IsArray, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
-import { TagsDto } from './tag.dto';
+import { Transform } from 'class-transformer';
+import { IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
   @Length(0, 490, { message: 'Độ dài tiêu đề từ 0-490 ký tự!' })
   name: string;
+
+  @IsNotEmpty()
+  @Transform(({ value }) => parseFloat(value))
+  price: number;
 
   @IsString()
   @Length(0)
@@ -29,6 +33,10 @@ export class UpdateProductDto {
   @IsString()
   @Length(0, 490, { message: 'Độ dài tiêu đề từ 0-490 ký tự!' })
   name: string;
+
+  @IsNotEmpty()
+  @Transform(({ value }) => parseFloat(value))
+  price: number;
 
   @IsString()
   @Length(0)

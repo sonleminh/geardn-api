@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -18,6 +21,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
 import { ProductService } from './product.service';
+import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
 
 @Controller('product')
 export class ProductController {
@@ -59,7 +63,7 @@ export class ProductController {
   @UseInterceptors(FileInterceptor('thumbnail_image'))
   async updateProduct(
     @Param() { id }: { id: Types.ObjectId },
-    @Body() updateProductDTO: any,
+    @Body() updateProductDTO: UpdateProductDto,
     @UploadedFile() thumbnail_image: Express.Multer.File,
   ) {
     return await this.productService.update(
@@ -67,5 +71,14 @@ export class ProductController {
       updateProductDTO,
       thumbnail_image,
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  @HttpCode(HttpStatus.CREATED)
+  async softDelete(
+    @Param() { id }: ObjectIdParamDto,
+  ): Promise<{ deleteCount: number }> {
+    return await this.productService.deleteSoft(id);
   }
 }
