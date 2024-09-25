@@ -144,6 +144,7 @@ export class ProductService {
     body: any,
     thumbnail_image: Express.Multer.File,
   ) {
+    console.log(body)
     const entity = await this.productModel
       .findById(id)
       .where({ is_deleted: { $ne: true } })
@@ -159,8 +160,9 @@ export class ProductService {
     };
 
     if (body?.tags) {
-      newData.tags = JSON.parse(body.tags);
+      newData.tags = JSON.parse(body?.tags);
     }
+
 
     if (thumbnail_image) {
       const [imageUrl] = await Promise.all([

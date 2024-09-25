@@ -62,7 +62,6 @@ export class ProductController {
     @Body() updateProductDTO: any,
     @UploadedFile() thumbnail_image: Express.Multer.File,
   ) {
-    console.log(updateProductDTO)
     return await this.productService.update(
       id,
       updateProductDTO,
