@@ -32,13 +32,15 @@ export class ProductController {
   @Roles(RBAC.ADMIN)
   @UseInterceptors(FileInterceptor('thumbnail_image'))
   async createProduct(
-    @Body() createProductDTO: CreateProductDto,
+    @Body() createProductDTO: any,
+    // @Body() createProductDTO: CreateProductDto,
     @UploadedFile() thumbnail_image: Express.Multer.File,
   ) {
-    return await this.productService.createProduct(
-      createProductDTO,
-      thumbnail_image,
-    );
+    console.log(thumbnail_image)
+    // return await this.productService.createProduct(
+    //   createProductDTO,
+    //   thumbnail_image,
+    // );
   }
 
   @Get()

@@ -16,6 +16,11 @@ export class Discount extends Document {
   endDate: Date;
 }
 
+@Schema({ _id: false })
+export class Image extends Document {
+  @Prop({ required: true })
+  url: string;
+}
 @Schema({ collection: 'products', timestamps: true })
 export class Product {
   @Transform(({ value }) => value.toString(), { toPlainOnly: true })
@@ -37,7 +42,7 @@ export class Product {
   tags: TagsDto[];
   
   @Prop({})
-  thumbnail_image: string;
+  images: Image[];
   
   @Prop({ required: true })
   content: string;

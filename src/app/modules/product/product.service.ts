@@ -164,16 +164,16 @@ export class ProductService {
     }
 
 
-    if (thumbnail_image) {
-      const [imageUrl] = await Promise.all([
-        this.firebaseService.uploadFile(thumbnail_image),
-        this.firebaseService.deleteFile(entity.thumbnail_image),
-      ]);
-      newData = {
-        ...newData,
-        thumbnail_image: imageUrl,
-      };
-    }
+    // if (thumbnail_image) {
+    //   const [imageUrl] = await Promise.all([
+    //     this.firebaseService.uploadFile(thumbnail_image),
+    //     this.firebaseService.deleteFile(entity.thumbnail_image),
+    //   ]);
+    //   newData = {
+    //     ...newData,
+    //     thumbnail_image: imageUrl,
+    //   };
+    // }
     return await this.productModel
       .findByIdAndUpdate(id, newData, {
         new: true,
