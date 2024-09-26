@@ -26,7 +26,7 @@ export class Product {
   @Transform(({ value }) => value.toString(), { toPlainOnly: true })
   _id: Types.ObjectId;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   name: string;
 
   @Prop({ required: true })

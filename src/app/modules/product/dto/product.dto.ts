@@ -26,7 +26,7 @@ export class CreateProductDto {
 
 
   @IsOptional()
-  thumbnail_image?: string | null;
+  images?: string | null;
 }
 
 export class UpdateProductDto {
@@ -53,5 +53,5 @@ export class UpdateProductDto {
   content: string;
 
   @IsOptional()
-  thumbnail_image?: string | null;
+  images?: string | null;
 }

@@ -23,14 +23,19 @@ export class ProductService {
 
   async createProduct(
     body: CreateProductDto,
-    thumbnail_image: Express.Multer.File,
+    images: Array<Express.Multer.File>,
   ) {
     try {
-      const imageUrl = await this.firebaseService.uploadFile(thumbnail_image);
+      if (images.length === 0 || images.length > 3) {
+        throw new Error('Please upload between 1 to 3 images');
+      }
+      const imageUrlList = await Promise.all(
+        images.map((image) => this.firebaseService.uploadFile(image)),
+      );
       const tags = JSON.parse(body.tags);
       const payload = {
         ...body,
-        thumbnail_image: imageUrl,
+        images: imageUrlList,
         tags: tags,
       };
       return await this.productModel.create(payload);
@@ -142,7 +147,7 @@ export class ProductService {
   async update(
     id: Types.ObjectId,
     body: any,
-    thumbnail_image: Express.Multer.File,
+    images: Express.Multer.File,
   ) {
     console.log(body)
     const entity = await this.productModel
@@ -164,14 +169,14 @@ export class ProductService {
     }
 
 
-    // if (thumbnail_image) {
+    // if (images) {
     //   const [imageUrl] = await Promise.all([
-    //     this.firebaseService.uploadFile(thumbnail_image),
-    //     this.firebaseService.deleteFile(entity.thumbnail_image),
+    //     this.firebaseService.uploadFile(images),
+    //     this.firebaseService.deleteFile(entity.images),
     //   ]);
     //   newData = {
     //     ...newData,
-    //     thumbnail_image: imageUrl,
+    //     images: imageUrl,
     //   };
     // }
     return await this.productModel
