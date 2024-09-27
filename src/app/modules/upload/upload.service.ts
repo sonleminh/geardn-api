@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable()
@@ -7,7 +7,7 @@ export class UploadService {
   async uploadImage(images: Array<Express.Multer.File>) {
     try {
       if (images.length === 0 || images.length > 3) {
-        throw new Error('Please upload between 1 to 3 images');
+        throw new BadRequestException('Please upload between 1 to 3 images');
       }
       const imageUrlList = await Promise.all(
         images.map((image) => this.firebaseService.uploadFile(image)),
