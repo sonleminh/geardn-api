@@ -33,12 +33,8 @@ export class ProductController {
   @Post('/')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
-  @UseInterceptors(FilesInterceptor('images'))
-  async createProduct(
-    @Body() createProductDTO: CreateProductDto,
-    @UploadedFiles() images: Array<Express.Multer.File>,
-  ) {
-    return await this.productService.createProduct(createProductDTO, images);
+  async createProduct(@Body() body: CreateProductDto) {
+    return await this.productService.createProduct(body);
   }
 
   @Get()
@@ -59,13 +55,11 @@ export class ProductController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
-  @UseInterceptors(FileInterceptor('images'))
   async updateProduct(
     @Param() { id }: { id: Types.ObjectId },
     @Body() updateProductDTO: UpdateProductDto,
-    @UploadedFile() images: Express.Multer.File,
   ) {
-    return await this.productService.update(id, updateProductDTO, images);
+    return await this.productService.update(id, updateProductDTO);
   }
 
   @UseGuards(JwtAuthGuard)

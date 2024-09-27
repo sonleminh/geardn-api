@@ -21,24 +21,9 @@ export class ProductService {
     private readonly categoryService: CategoryService,
   ) {}
 
-  async createProduct(
-    body: CreateProductDto,
-    images: Array<Express.Multer.File>,
-  ) {
+  async createProduct(body: CreateProductDto) {
     try {
-      if (images.length === 0 || images.length > 3) {
-        throw new Error('Please upload between 1 to 3 images');
-      }
-      const imageUrlList = await Promise.all(
-        images.map((image) => this.firebaseService.uploadFile(image)),
-      );
-      const tags = JSON.parse(body.tags);
-      const payload = {
-        ...body,
-        images: imageUrlList,
-        tags: tags,
-      };
-      return await this.productModel.create(payload);
+      return await this.productModel.create(body);
     } catch (error) {
       throw error;
     }
@@ -144,12 +129,7 @@ export class ProductService {
     }
   }
 
-  async update(
-    id: Types.ObjectId,
-    body: any,
-    images: Express.Multer.File,
-  ) {
-    console.log(body)
+  async update(id: Types.ObjectId, body: UpdateProductDto) {
     const entity = await this.productModel
       .findById(id)
       .where({ is_deleted: { $ne: true } })
@@ -159,15 +139,10 @@ export class ProductService {
       throw new NotFoundException('Đối tượng không tồn tại!!');
     }
 
-    let newData = {
+    const newData = {
       ...entity,
       ...body,
     };
-
-    if (body?.tags) {
-      newData.tags = JSON.parse(body?.tags);
-    }
-
 
     // if (images) {
     //   const [imageUrl] = await Promise.all([
