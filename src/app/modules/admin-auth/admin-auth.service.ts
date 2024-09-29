@@ -76,13 +76,13 @@ export class AdminAuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '2h',
+          expiresIn: '1d',
         }),
         this.jwtService.signAsync(data, {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '1d',
+          expiresIn: '7d',
         }),
       ]);
       return {
@@ -129,7 +129,7 @@ export class AdminAuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '2h',
+          expiresIn: '1d',
         },
       );
       return {
