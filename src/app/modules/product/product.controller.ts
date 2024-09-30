@@ -9,22 +9,16 @@ import {
   Patch,
   Post,
   Query,
-  UploadedFile,
-  UploadedFiles,
-  UseGuards,
-  UseInterceptors,
+  UseGuards
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { Roles } from 'src/app/decorators/role.decorator';
+import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
 import { RBAC } from 'src/app/enums/rbac.enum';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
+import { UpdateProductDto } from './dto/product.dto';
 import { ProductService } from './product.service';
-import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
 
 @Controller('product')
 export class ProductController {
@@ -33,7 +27,7 @@ export class ProductController {
   @Post('/')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
-  async createProduct(@Body() body: CreateProductDto) {
+  async createProduct(@Body() body: any) {
     return await this.productService.createProduct(body);
   }
 

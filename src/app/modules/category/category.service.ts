@@ -69,7 +69,10 @@ export class CategoryService {
 
   async getCategoryInitial() {
     try {
-      const res = await this.categoryModel.find({}, 'label').lean().exec();
+      const res = await this.categoryModel
+        .find({}, { label: 1, value: 1 })
+        .lean()
+        .exec();
       return res;
     } catch (error) {
       throw new BadRequestException(error);

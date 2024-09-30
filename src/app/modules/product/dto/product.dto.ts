@@ -2,6 +2,9 @@ import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
 import { TagsDto } from './tag.dto';
 import { DiscountDto } from './discount.dto';
+import { CategoryDto } from './category.dto';
+import { OptionDto } from './options.dto';
+import { Variant } from '../entities/product.entity';
 
 export class CreateProductDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
@@ -16,15 +19,17 @@ export class CreateProductDto {
   @IsOptional()
   discount: DiscountDto;
 
-  @IsString()
-  @Length(0)
-  category_id: string;
+  @IsNotEmpty()
+  category: CategoryDto;
 
   @IsOptional()
   tags: TagsDto[];
 
   @IsNotEmpty()
   images?: string[];
+
+  @IsOptional()
+  variant: Variant[];
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
@@ -44,15 +49,17 @@ export class UpdateProductDto {
   @IsOptional()
   discount: DiscountDto;
 
-  @IsString()
-  @Length(0)
-  category_id: string;
+  @IsNotEmpty()
+  category: CategoryDto;
   
   @IsOptional()
   tags: TagsDto[];
 
   @IsOptional()
-  images?: string[];
+  images: string[];
+
+  @IsOptional()
+  variant: Variant[];
 
   @IsOptional()
   @IsString()
