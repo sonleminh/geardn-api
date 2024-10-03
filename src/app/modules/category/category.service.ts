@@ -6,7 +6,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
-import { CreateCategoryDto } from './dto/category.dto';
+import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
 import { Category } from './entities/category.entity';
 
 @Injectable()
@@ -40,7 +40,7 @@ export class CategoryService {
     }
   }
 
-  async update(id: string, body: any): Promise<Category> {
+  async update(id: string, body: UpdateCategoryDto): Promise<Category> {
     const entity = await this.categoryModel
       .findById({ _id: id })
       .where({ is_deleted: { $ne: true } })
@@ -70,7 +70,7 @@ export class CategoryService {
   async getCategoryInitial() {
     try {
       const res = await this.categoryModel
-        .find({}, { label: 1, value: 1 })
+        .find({}, { name: 1, value: 1 })
         .lean()
         .exec();
       return res;

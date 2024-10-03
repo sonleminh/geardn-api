@@ -122,7 +122,12 @@ export class ProductService {
 
   async getProductById(id: Types.ObjectId) {
     try {
-      const product = await this.productModel.findById(id);
+      const product = await this.productModel
+        .findById(id)
+        .populate('category', 'name');
+      if (!product) {
+        throw new NotFoundException('Không tìm thấy sản phẩm!');
+      }
       return product;
     } catch {
       throw new NotFoundException('Không tìm thấy sản phẩm!');

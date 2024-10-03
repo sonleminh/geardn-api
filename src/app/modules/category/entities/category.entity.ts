@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
 import { HydratedDocument, Types } from 'mongoose';
 
-export type UserDocument = HydratedDocument<Category>;
+export type CategoryDocument = HydratedDocument<Category>;
 
 @Schema({ collection: 'categories', timestamps: true })
 export class Category {
@@ -10,10 +10,7 @@ export class Category {
   _id: Types.ObjectId;
 
   @Prop({ require: true, unique: true, type: String })
-  value: string;
-
-  @Prop({ require: true, unique: true, type: String })
-  label: string;
+  name: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
