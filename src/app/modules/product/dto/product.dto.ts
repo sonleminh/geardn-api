@@ -12,12 +12,8 @@ export class CreateProductDto {
   @Length(0, 490, { message: 'Độ dài tên từ 0-490 ký tự!' })
   name: string;
 
-  @IsNotEmpty()
-  @Transform(({ value }) => parseFloat(value))
-  price: number;
-
-  @IsOptional()
-  discount: DiscountDto;
+  // @IsOptional()
+  // discount: DiscountDto;
 
   @IsNotEmpty()
   category: CategoryDto;
@@ -42,12 +38,8 @@ export class UpdateProductDto {
   @Length(0, 490, { message: 'Độ dài tiêu đề từ 0-490 ký tự!' })
   name: string;
 
-  @IsNotEmpty()
-  @Transform(({ value }) => parseFloat(value))
-  price: number;
-
-  @IsOptional()
-  discount: DiscountDto;
+  // @IsOptional()
+  // discount: DiscountDto;
 
   @IsNotEmpty()
   category: CategoryDto;

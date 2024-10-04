@@ -1,30 +1,46 @@
+import { Transform } from 'class-transformer';
 import { IsEnum, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
 
 export class CreateProductSkuDto {
-  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
-  // @IsString()
-  // @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
-  // @IsEnum(TYPE_ATTRIBUTE, {
-  //   message: `Vui lòng chọn 1 trong ${Object.values(TYPE_ATTRIBUTE).length} loại sau: ${Object.values(
-  //     TYPE_ATTRIBUTE,
-  //   ).join(' | ')}`,
-  // })
-  // type: string;
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  product_id: string;
 
-  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
-  // @IsString()
-  // @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
-  // value: string;
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  attribute_id: string;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
+  sku: string;
+
+  @IsNotEmpty()
+  @Transform(({ value }) => parseFloat(value))
+  price: number;
+
+  @IsNotEmpty()
+  quantity: number;
 }
 
 export class UpdateProductSkuDto {
-  // @IsOptional()
-  // @IsString()
-  // @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
-  // type: string;
+  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  product_id: string;
 
-  // @IsOptional()
-  // @IsString()
-  // @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
-  // value: string;
+  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  attribute_id: string;
+
+  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
+  sku: string;
+
+  @IsOptional()
+  @Transform(({ value }) => parseFloat(value))
+  price: number;
+
+  @IsOptional()
+  quantity: number;
 }

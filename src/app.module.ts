@@ -13,6 +13,7 @@ import { ProductModule } from './app/modules/product/product.module';
 import { AdminAuthModule } from './app/modules/admin-auth/admin-auth.module';
 import { UploadModule } from './app/modules/upload/upload.module';
 import { AttributeModule } from './app/modules/attribute/attribute.module';
+import { ProductSkuModule } from './app/modules/product-sku/product-sku.module';
 // import { AuthModule } from './app/modules/auth/auth.module';
 
 @Module({
@@ -48,6 +49,7 @@ import { AttributeModule } from './app/modules/attribute/attribute.module';
     CategoryModule,
     ProductModule,
     AttributeModule,
+    ProductSkuModule,
     UploadModule,
   ],
   controllers: [AppController],

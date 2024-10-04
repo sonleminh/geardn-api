@@ -6,6 +6,8 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
+import { ProductSku } from './entities/product-sku.entity';
+import { UpdateProductSkuDto } from './dto/product-sku.dto';
 
 @Injectable()
 export class ProductSkuService {
@@ -13,7 +15,7 @@ export class ProductSkuService {
     @InjectModel(ProductSku.name) private ProductSkuModel: Model<ProductSku>,
   ) {}
 
-  async create(body: CreateProductSkuDto) {
+  async create(body: any) {
     try {
       return await this.ProductSkuModel.create(body);
     } catch (error) {
@@ -27,7 +29,7 @@ export class ProductSkuService {
         this.ProductSkuModel.find().lean().exec(),
         this.ProductSkuModel.countDocuments(),
       ]);
-      return { categoryList: res, total };
+      return { skuList: res, total };
     } catch (error) {
       throw new BadRequestException(error);
     }
@@ -38,17 +40,18 @@ export class ProductSkuService {
   }
 
   async update(id: string, body: UpdateProductSkuDto): Promise<ProductSku> {
-    const entity = await this.ProductSkuModel
-      .findById({ _id: id })
+    const entity = await this.ProductSkuModel.findById({ _id: id })
       .where({ is_deleted: { $ne: true } })
       .lean();
     if (!entity) {
       throw new NotFoundException(`Đối tượng này không tồn tại!!`);
     }
 
-    return await this.ProductSkuModel
-      .findByIdAndUpdate(id, { ...entity, ...body }, { new: true })
-      .exec();
+    return await this.ProductSkuModel.findByIdAndUpdate(
+      id,
+      { ...entity, ...body },
+      { new: true },
+    ).exec();
   }
 
   async remove(id: string): Promise<{ deletedCount: number }> {

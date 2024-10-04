@@ -23,6 +23,13 @@ import { RBAC } from 'src/app/enums/rbac.enum';
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
+  @Post('/')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RBAC.ADMIN)
+  async createCategory(@Body() createCategoryDTO: CreateCategoryDto) {
+    return await this.categoryService.create(createCategoryDTO);
+  }
+
   @Get()
   async getCategoryList() {
     return this.categoryService.findAll();
@@ -32,13 +39,6 @@ export class CategoryController {
   @HttpCode(HttpStatus.OK)
   async findById(@Param() { id }: ObjectIdParamDto) {
     return await this.categoryService.findById(id);
-  }
-
-  @Post('/')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(RBAC.ADMIN)
-  async createCategory(@Body() createCategoryDTO: CreateCategoryDto) {
-    return await this.categoryService.create(createCategoryDTO);
   }
 
   @Patch(':id')

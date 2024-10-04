@@ -15,6 +15,15 @@ export class CategoryService {
     @InjectModel(Category.name) private categoryModel: Model<Category>,
   ) {}
 
+  async create(createCategoryDTO: CreateCategoryDto) {
+    try {
+      const payload = createCategoryDTO;
+      return await this.categoryModel.create(payload);
+    } catch (error) {
+      throw error;
+    }
+  }
+  
   async findAll() {
     try {
       const [res, total] = await Promise.all([
@@ -29,15 +38,6 @@ export class CategoryService {
 
   async findById(id: string) {
     return await this.categoryModel.findById(id);
-  }
-
-  async create(createCategoryDTO: CreateCategoryDto) {
-    try {
-      const payload = createCategoryDTO;
-      return await this.categoryModel.create(payload);
-    } catch (error) {
-      throw error;
-    }
   }
 
   async update(id: string, body: UpdateCategoryDto): Promise<Category> {
