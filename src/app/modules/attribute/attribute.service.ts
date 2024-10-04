@@ -29,7 +29,7 @@ export class AttributeService {
         this.attributeModel.find().lean().exec(),
         this.attributeModel.countDocuments(),
       ]);
-      return { categoryList: res, total };
+      return { attributeList: res, total };
     } catch (error) {
       throw new BadRequestException(error);
     }
