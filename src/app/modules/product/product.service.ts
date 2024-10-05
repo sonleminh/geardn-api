@@ -38,6 +38,18 @@ export class ProductService {
     return { categories, tags: tags };
   }
 
+  async getInitialProductList() {
+    try {
+      const res = await this.productModel
+        .find({}, { _id: 1, name: 1 })
+        .lean()
+        .exec();
+      return res;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
   async findAll({ s, page, limit, find_option }) {
     try {
       const filterObject = {

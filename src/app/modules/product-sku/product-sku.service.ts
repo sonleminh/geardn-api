@@ -8,11 +8,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ProductSku } from './entities/product-sku.entity';
 import { UpdateProductSkuDto } from './dto/product-sku.dto';
+import { ProductService } from '../product/product.service';
+import { AttributeService } from '../attribute/attribute.service';
 
 @Injectable()
 export class ProductSkuService {
   constructor(
     @InjectModel(ProductSku.name) private ProductSkuModel: Model<ProductSku>,
+    private readonly productService: ProductService,
+    private readonly attributeService: AttributeService,
   ) {}
 
   async create(body: any) {
@@ -36,7 +40,16 @@ export class ProductSkuService {
   }
 
   async findById(id: string) {
-    return await this.ProductSkuModel.findById(id);
+    return await this.ProductSkuModel.findById(id).populate('product');
+  }
+
+  async initialForCreate() {
+    const [initialProductList, initialAttributeList] = await Promise.all([
+      await this.productService.getInitialProductList(),
+      await this.attributeService.getInitialAttributeList(),
+    ]);
+
+    return { initialProductList, initialAttributeList };
   }
 
   async update(id: string, body: UpdateProductSkuDto): Promise<ProductSku> {

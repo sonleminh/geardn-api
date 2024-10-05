@@ -17,6 +17,6 @@ export class ObjectIdParamDto {
     const arr = String(value).split('-');
     return arr[arr.length - 1];
   })
-  @IsMongoId({ message: 'id sai kiểu dữ liệu!' })
+  @IsMongoId({ message: 'Id sai kiểu dữ liệu!' })
   id: string;
 }

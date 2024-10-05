@@ -26,13 +26,18 @@ export class ProductSkuController {
   @Post('/')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
-  async createProductSku(@Body() body: CreateProductSkuDto) {
+  async createProductSku(@Body() body: any) {
     return await this.productSkuService.create(body);
   }
 
   @Get()
   async getAllProductSku() {
     return this.productSkuService.findAll();
+  }
+
+  @Get('initial-for-create')
+  async findInitial() {
+    return await this.productSkuService.initialForCreate();
   }
 
   @Get('/:id')

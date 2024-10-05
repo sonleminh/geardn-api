@@ -38,8 +38,8 @@ export class UpdateProductDto {
   @Length(0, 490, { message: 'Độ dài tiêu đề từ 0-490 ký tự!' })
   name: string;
 
-  // @IsOptional()
-  // discount: DiscountDto;
+  @IsOptional()
+  discount: DiscountDto;
 
   @IsNotEmpty()
   category: CategoryDto;

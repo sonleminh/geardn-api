@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
 import { HydratedDocument, Types } from 'mongoose';
+import { Attribute } from '../../attribute/entities/attribute.entity';
 
 export type ProductSkuDocument = HydratedDocument<ProductSku>;
 
@@ -12,10 +13,10 @@ export class ProductSku {
   @Prop({ require: true, type: String })
   product_id: string;
 
-  @Prop({ require: true, type: String })
-  attribute_id: string;
+  @Prop({ type: Types.ObjectId, ref: Attribute.name })
+  attributes: Attribute[];
 
-  @Prop({ require: true, unique: true, type: String })
+  @Prop({ require: true, type: String })
   sku: string;
 
   @Prop({ require: true, type: Number })

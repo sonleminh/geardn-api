@@ -39,6 +39,18 @@ export class AttributeService {
     return await this.attributeModel.findById(id);
   }
 
+  async getInitialAttributeList() {
+    try {
+      const res = await this.attributeModel
+        .find({}, { type: 1, value: 1 })
+        .lean()
+        .exec();
+      return res;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
   async update(id: string, body: UpdateAttributeDto): Promise<Attribute> {
     const entity = await this.attributeModel
       .findById({ _id: id })

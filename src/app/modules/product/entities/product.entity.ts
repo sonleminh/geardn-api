@@ -5,6 +5,7 @@ import { Category } from '../../category/entities/category.entity';
 import { TagsDto } from '../dto/tag.dto';
 import { Document } from 'mongoose';
 import { OptionDto } from '../dto/options.dto';
+import { ProductSku } from '../../product-sku/entities/product-sku.entity';
 @Schema({ _id: false })
 export class Discount extends Document {
   @Prop({ required: true })
@@ -33,11 +34,8 @@ export class Product {
   @Prop({ required: true, unique: true })
   name: string;
 
-  @Prop({ required: true })
-  price: number;
-
-  @Prop({ type: Discount })
-  discount: Discount;
+  // @Prop({ type: Discount })
+  // discount: Discount;
 
   @Prop({ type: Types.ObjectId, ref: Category.name })
   category: Category;
@@ -47,9 +45,6 @@ export class Product {
   
   @Prop({ required: true })
   images: string[];
-
-  @Prop()
-  variants: Variant[];
   
   @Prop({ required: true })
   content: string;

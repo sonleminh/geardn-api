@@ -36,7 +36,7 @@ export class ProductController {
     return this.productService.findAll(queryParam);
   }
 
-  @Get('get-product-initial')
+  @Get('initial-to-create')
   async findInitial() {
     return await this.productService.getInitialProductForCreate();
   }
