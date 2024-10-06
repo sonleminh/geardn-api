@@ -23,7 +23,7 @@ export class CategoryService {
       throw error;
     }
   }
-  
+
   async findAll() {
     try {
       const [res, total] = await Promise.all([

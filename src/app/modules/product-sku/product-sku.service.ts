@@ -10,11 +10,13 @@ import { ProductSku } from './entities/product-sku.entity';
 import { UpdateProductSkuDto } from './dto/product-sku.dto';
 import { ProductService } from '../product/product.service';
 import { AttributeService } from '../attribute/attribute.service';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class ProductSkuService {
   constructor(
     @InjectModel(ProductSku.name) private ProductSkuModel: Model<ProductSku>,
+    private readonly categoryService: CategoryService,
     private readonly productService: ProductService,
     private readonly attributeService: AttributeService,
   ) {}
@@ -40,16 +42,17 @@ export class ProductSkuService {
   }
 
   async findById(id: string) {
-    return await this.ProductSkuModel.findById(id).populate('product');
+    return await this.ProductSkuModel.findById(id);
   }
 
   async initialForCreate() {
-    const [initialProductList, initialAttributeList] = await Promise.all([
+    const [categoryList, productList, attributeList] = await Promise.all([
+      await this.productService.getCategoriesWithProducts(),
       await this.productService.getInitialProductList(),
       await this.attributeService.getInitialAttributeList(),
     ]);
 
-    return { initialProductList, initialAttributeList };
+    return { categoryList, productList, attributeList };
   }
 
   async update(id: string, body: UpdateProductSkuDto): Promise<ProductSku> {

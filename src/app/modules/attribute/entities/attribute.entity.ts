@@ -11,7 +11,7 @@ export class Attribute {
   _id: Types.ObjectId;
 
   @Prop({ enum: TYPE_ATTRIBUTE, require: true, type: String })
-  type: TYPE_ATTRIBUTE;
+  name: TYPE_ATTRIBUTE;
 
   @Prop({ require: true, unique: true, type: String })
   value: string;

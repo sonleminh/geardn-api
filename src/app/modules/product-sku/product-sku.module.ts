@@ -5,6 +5,7 @@ import { ProductSku, ProductSkuSchema } from './entities/product-sku.entity';
 import { ProductSkuController } from './product-sku.controller';
 import { ProductModule } from '../product/product.module';
 import { AttributeModule } from '../attribute/attribute.module';
+import { CategoryModule } from '../category/category.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AttributeModule } from '../attribute/attribute.module';
     ]),
     ProductModule,
     AttributeModule,
+    CategoryModule,
   ],
   providers: [ProductSkuService],
   controllers: [ProductSkuController],

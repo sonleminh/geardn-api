@@ -41,7 +41,7 @@ export class ProductService {
   async getInitialProductList() {
     try {
       const res = await this.productModel
-        .find({}, { _id: 1, name: 1 })
+        .find({}, { _id: 1, name: 1, category: 1 })
         .lean()
         .exec();
       return res;
@@ -193,5 +193,27 @@ export class ProductService {
     return {
       deleteCount: 1,
     };
+  }
+
+  async getCategoriesWithProducts() {
+    try {
+      const res = await this.productModel.aggregate([
+        {
+          $group: {
+            _id: '$category._id',
+            name: { $first: '$category.name' },
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+          },
+        },
+      ]);
+      return res;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }

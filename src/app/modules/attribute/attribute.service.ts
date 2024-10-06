@@ -42,7 +42,7 @@ export class AttributeService {
   async getInitialAttributeList() {
     try {
       const res = await this.attributeModel
-        .find({}, { type: 1, value: 1 })
+        .find({}, { name: 1, value: 1 })
         .lean()
         .exec();
       return res;
