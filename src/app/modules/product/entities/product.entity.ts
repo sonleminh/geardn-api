@@ -6,6 +6,7 @@ import { TagsDto } from '../dto/tag.dto';
 import { Document } from 'mongoose';
 import { OptionDto } from '../dto/options.dto';
 import { ProductSku } from '../../product-sku/entities/product-sku.entity';
+import { TYPE_ATTRIBUTE } from '../../attribute/dto/attribute.dto';
 @Schema({ _id: false })
 export class Discount extends Document {
   @Prop({ required: true })
@@ -48,6 +49,9 @@ export class Product {
   
   @Prop({ required: true })
   content: string;
+   
+  @Prop({ required: true })
+  attributes: TYPE_ATTRIBUTE[];
 
   @Prop({ default: false })
   is_deleted: boolean;
