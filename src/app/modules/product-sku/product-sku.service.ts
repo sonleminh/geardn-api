@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
 import { ProductSku } from './entities/product-sku.entity';
-import { UpdateProductSkuDto } from './dto/product-sku.dto';
+import { CreateProductSkuDto, UpdateProductSkuDto } from './dto/product-sku.dto';
 import { ProductService } from '../product/product.service';
 import { AttributeService } from '../attribute/attribute.service';
 import { CategoryService } from '../category/category.service';
@@ -21,7 +21,7 @@ export class ProductSkuService {
     private readonly attributeService: AttributeService,
   ) {}
 
-  async create(body: any) {
+  async create(body: CreateProductSkuDto) {
     try {
       return await this.ProductSkuModel.create(body);
     } catch (error) {
@@ -35,14 +35,22 @@ export class ProductSkuService {
         this.ProductSkuModel.find().lean().exec(),
         this.ProductSkuModel.countDocuments(),
       ]);
-      return { skuList: res, total };
+      return { productSkuList: res, total };
     } catch (error) {
       throw new BadRequestException(error);
     }
   }
 
   async findById(id: string) {
-    return await this.ProductSkuModel.findById(id);
+    try {
+      const res = await this.ProductSkuModel.findById(id);
+      if (!res) {
+        throw new NotFoundException('Không tìm thấy SKU!');
+      }
+      return res;
+    } catch {
+      throw new NotFoundException('Không tìm thấy SKU!');
+    }
   }
 
   async initialForCreate() {

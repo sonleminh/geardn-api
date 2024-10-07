@@ -37,7 +37,15 @@ export class CategoryService {
   }
 
   async findById(id: string) {
-    return await this.categoryModel.findById(id);
+    try {
+      const res = await this.categoryModel.findById(id);
+      if (!res) {
+        throw new NotFoundException('Không tìm thấy danh mục!');
+      }
+      return res;
+    } catch {
+      throw new NotFoundException('Không tìm thấy danh mục!');
+    }
   }
 
   async update(id: string, body: UpdateCategoryDto): Promise<Category> {

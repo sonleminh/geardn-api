@@ -11,7 +11,10 @@ export class ProductSku {
   _id: Types.ObjectId;
 
   @Prop({ require: true, type: String })
-  product_id: string;
+  productId: string;
+
+  @Prop({ require: true, type: String })
+  productName: string;
 
   @Prop({ type: Types.ObjectId, ref: Attribute.name })
   attributes: Attribute[];
