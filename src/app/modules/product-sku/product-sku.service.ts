@@ -46,13 +46,12 @@ export class ProductSkuService {
   }
 
   async initialForCreate() {
-    const [categoryList, productList, attributeList] = await Promise.all([
+    const [categoryList, attributeList] = await Promise.all([
       await this.productService.getCategoriesWithProducts(),
-      await this.productService.getInitialProductList(),
       await this.attributeService.getInitialAttributeList(),
     ]);
 
-    return { categoryList, productList, attributeList };
+    return { categoryList, attributeList };
   }
 
   async update(id: string, body: UpdateProductSkuDto): Promise<ProductSku> {

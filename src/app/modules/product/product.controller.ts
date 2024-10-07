@@ -41,6 +41,11 @@ export class ProductController {
     return await this.productService.getInitialProductForCreate();
   }
 
+  @Get('/category/:id')
+  async getProductByCategory(@Param('id') id: string) {
+    return await this.productService.getProductByCategory(id);
+  }
+
   @Get(':id')
   async getProductById(@Param('id') id: Types.ObjectId) {
     return this.productService.getProductById(id);

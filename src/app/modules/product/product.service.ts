@@ -50,6 +50,18 @@ export class ProductService {
     }
   }
 
+  async getProductByCategory(id: string) {
+    try {
+      const res = await this.productModel
+        .find({ 'category._id': id })
+        .lean()
+        .exec();
+      return res;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
   async findAll({ s, page, limit, find_option }) {
     try {
       const filterObject = {
