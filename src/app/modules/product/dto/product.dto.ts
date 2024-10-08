@@ -27,6 +27,10 @@ export class CreateProductDto {
   @IsOptional()
   variant: Variant[];
 
+  @IsNotEmpty()
+  @IsString()
+  brand: string;
+
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
   @Length(1, 10000, { message: 'Độ dài đoạn tóm tắt từ 1-10000 ký tự!' })
@@ -39,10 +43,7 @@ export class CreateProductDto {
       TYPE_ATTRIBUTE,
     ).join(' | ')}`,
   })
-  attributes: TYPE_ATTRIBUTE[];
-
-  @IsOptional()
-  quantity: number;
+  attributes?: TYPE_ATTRIBUTE[];
 }
 
 export class UpdateProductDto {
@@ -67,12 +68,13 @@ export class UpdateProductDto {
 
   @IsOptional()
   @IsString()
+  brand: string;
+
+  @IsOptional()
+  @IsString()
   @Length(1, 10000, { message: 'Độ dài đoạn tóm tắt từ 1-10000 ký tự!' })
   content: string;
 
   @IsOptional()
   attributes: string[];
-
-  @IsOptional()
-  quantity: number;
 }

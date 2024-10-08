@@ -42,18 +42,21 @@ export class Product {
 
   @Prop({ required: true })
   tags: TagsDto[];
-  
-  @Prop({ required: true })
-  images: string[];
-  
-  @Prop({ required: true })
-  content: string;
-   
-  @Prop({ required: true })
-  attributes: TYPE_ATTRIBUTE[];
 
   @Prop({ required: true })
-  quantity: number;
+  images: string[];
+
+  @Prop({ default: undefined })
+  attributes: TYPE_ATTRIBUTE[];
+
+  @Prop({ default: 'Không' })
+  brand: string;
+
+  @Prop({ required: true })
+  specs: TagsDto[];
+
+  @Prop({ required: true })
+  content: string;
 
   @Prop({ default: false })
   is_deleted: boolean;

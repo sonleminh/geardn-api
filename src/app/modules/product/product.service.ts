@@ -23,6 +23,7 @@ export class ProductService {
 
   async createProduct(body: CreateProductDto) {
     try {
+      console.log('body:', body);
       return await this.productModel.create(body);
     } catch (error) {
       throw error;
