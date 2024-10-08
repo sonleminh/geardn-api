@@ -3,7 +3,6 @@ import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Length } from 'class
 import { TagsDto } from './tag.dto';
 import { DiscountDto } from './discount.dto';
 import { CategoryDto } from './category.dto';
-import { OptionDto } from './options.dto';
 import { Variant } from '../entities/product.entity';
 import { TYPE_ATTRIBUTE } from '../../attribute/dto/attribute.dto';
 
@@ -41,6 +40,9 @@ export class CreateProductDto {
     ).join(' | ')}`,
   })
   attributes: TYPE_ATTRIBUTE[];
+
+  @IsOptional()
+  quantity: number;
 }
 
 export class UpdateProductDto {
@@ -70,4 +72,7 @@ export class UpdateProductDto {
 
   @IsOptional()
   attributes: string[];
+
+  @IsOptional()
+  quantity: number;
 }

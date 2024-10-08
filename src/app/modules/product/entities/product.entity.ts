@@ -4,7 +4,6 @@ import { Types } from 'mongoose';
 import { Category } from '../../category/entities/category.entity';
 import { TagsDto } from '../dto/tag.dto';
 import { Document } from 'mongoose';
-import { OptionDto } from '../dto/options.dto';
 import { ProductSku } from '../../product-sku/entities/product-sku.entity';
 import { TYPE_ATTRIBUTE } from '../../attribute/dto/attribute.dto';
 @Schema({ _id: false })
@@ -52,6 +51,9 @@ export class Product {
    
   @Prop({ required: true })
   attributes: TYPE_ATTRIBUTE[];
+
+  @Prop({ required: true })
+  quantity: number;
 
   @Prop({ default: false })
   is_deleted: boolean;
