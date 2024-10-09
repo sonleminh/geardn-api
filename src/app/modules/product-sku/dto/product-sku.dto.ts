@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
+import { Attribute } from '../../attribute/entities/attribute.entity';
 
 export class CreateProductSkuDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
@@ -8,7 +9,11 @@ export class CreateProductSkuDto {
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
-  attribute_id: string;
+  product_name: string;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsArray()
+  attributes: Attribute[];
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
@@ -30,7 +35,12 @@ export class UpdateProductSkuDto {
 
   @IsOptional({ message: 'Nội dung này không được để trống!' })
   @IsString()
-  attribute_id: string;
+  product_name: string;
+
+  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsArray()
+
+  attributes: Attribute[];
 
   @IsOptional({ message: 'Nội dung này không được để trống!' })
   @IsString()

@@ -15,6 +15,9 @@ export class Attribute {
 
   @Prop({ require: true, unique: true, type: String })
   value: string;
+
+  @Prop({ require: true, unique: true, type: String })
+  atb_sku: string;
 }
 
 export const AttributeSchema = SchemaFactory.createForClass(Attribute);

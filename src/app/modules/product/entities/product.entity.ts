@@ -4,7 +4,6 @@ import { Types } from 'mongoose';
 import { Category } from '../../category/entities/category.entity';
 import { TagsDto } from '../dto/tag.dto';
 import { Document } from 'mongoose';
-import { ProductSku } from '../../product-sku/entities/product-sku.entity';
 import { TYPE_ATTRIBUTE } from '../../attribute/dto/attribute.dto';
 @Schema({ _id: false })
 export class Discount extends Document {
@@ -18,12 +17,15 @@ export class Discount extends Document {
   endDate: Date;
 }
 
-export class Variant extends Document {
-  @Prop({ type: Map, of: String, required: true })
-  option: Record<string, string>;
+class Details {
+  @Prop()
+  guarantee: string;
+  
+  @Prop()
+  weight: string;
 
-  @Prop({ required: true })
-  price: number;
+  @Prop()
+  material: string;
 }
 
 @Schema({ collection: 'products', timestamps: true })
@@ -31,8 +33,11 @@ export class Product {
   @Transform(({ value }) => value.toString(), { toPlainOnly: true })
   _id: Types.ObjectId;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ require: true, unique: true })
   name: string;
+
+  @Prop({ require: true, unique: true })
+  sku_name: string;
 
   // @Prop({ type: Discount })
   // discount: Discount;
@@ -52,11 +57,11 @@ export class Product {
   @Prop({ default: 'Không' })
   brand: string;
 
-  @Prop({ required: true })
-  specs: TagsDto[];
+  @Prop({ type: Details })
+  details: Details;
 
   @Prop({ required: true })
-  content: string;
+  description: string;
 
   @Prop({ default: false })
   is_deleted: boolean;

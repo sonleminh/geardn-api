@@ -3,13 +3,13 @@ import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Length } from 'class
 import { TagsDto } from './tag.dto';
 import { DiscountDto } from './discount.dto';
 import { CategoryDto } from './category.dto';
-import { Variant } from '../entities/product.entity';
 import { TYPE_ATTRIBUTE } from '../../attribute/dto/attribute.dto';
+import { DetailsDto } from './details.dto';
 
 export class CreateProductDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
-  @Length(0, 490, { message: 'Độ dài tên từ 0-490 ký tự!' })
+  @Length(0, 100, { message: 'Độ dài tên từ 0-100 ký tự!' })
   name: string;
 
   // @IsOptional()
@@ -24,17 +24,14 @@ export class CreateProductDto {
   @IsNotEmpty()
   images?: string[];
 
-  @IsOptional()
-  variant: Variant[];
-
   @IsNotEmpty()
   @IsString()
   brand: string;
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
-  @Length(1, 10000, { message: 'Độ dài đoạn tóm tắt từ 1-10000 ký tự!' })
-  content: string;
+  @Length(1, 10000, { message: 'Độ dài đoạn mô tả từ 1-10000 ký tự!' })
+  description: string;
 
   @IsOptional()
   @IsArray()
@@ -44,6 +41,14 @@ export class CreateProductDto {
     ).join(' | ')}`,
   })
   attributes?: TYPE_ATTRIBUTE[];
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  @Length(0, 30, { message: 'Độ dài tên từ 0-30 ký tự!' })
+  sku_name: string;
+
+  @IsOptional()
+  details: DetailsDto;
 }
 
 export class UpdateProductDto {
@@ -64,17 +69,20 @@ export class UpdateProductDto {
   images: string[];
 
   @IsOptional()
-  variant: Variant[];
-
-  @IsOptional()
   @IsString()
   brand: string;
 
   @IsOptional()
-  @IsString()
-  @Length(1, 10000, { message: 'Độ dài đoạn tóm tắt từ 1-10000 ký tự!' })
-  content: string;
+  attributes: string[];
 
   @IsOptional()
-  attributes: string[];
+  sku_name: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(1, 10000, { message: 'Độ dài đoạn mô tả từ 1-10000 ký tự!' })
+  description: string;
+
+  @IsOptional()
+  details: DetailsDto;
 }
