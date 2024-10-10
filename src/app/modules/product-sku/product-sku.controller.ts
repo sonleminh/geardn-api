@@ -46,6 +46,14 @@ export class ProductSkuController {
     return await this.productSkuService.findById(id);
   }
 
+  @Get('/product/:id')
+  @HttpCode(HttpStatus.OK)
+  async findByProductId(@Param() { id }: ObjectIdParamDto) {
+    console.log(id)
+
+    return await this.productSkuService.findByProductId(id);
+  }
+
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)

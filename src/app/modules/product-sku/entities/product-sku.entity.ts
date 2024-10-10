@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
 import { HydratedDocument, Types } from 'mongoose';
 import { Attribute } from '../../attribute/entities/attribute.entity';
+import { STATUS } from '../dto/product-sku.dto';
 
 export type ProductSkuDocument = HydratedDocument<ProductSku>;
 
@@ -25,8 +26,16 @@ export class ProductSku {
   @Prop({ require: true, type: Number })
   price: number;
 
-  @Prop({ require: true, type: Number })
+  @Prop({ require: true, type: Number, default: 0 })
   quantity: number;
+
+  @Prop({
+    enum: STATUS,
+    require: true,
+    type: String,
+    default: STATUS.OUT_OF_STOCK,
+  })
+  status: string;
 }
 
 export const ProductSkuSchema = SchemaFactory.createForClass(ProductSku);

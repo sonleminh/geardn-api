@@ -4,8 +4,8 @@ import { AuthModule } from '../auth/auth.module';
 import { FirebaseModule } from '../firebase/firebase.module';
 import { Product, ProductSchema } from './entities/product.entity';
 import { ProductController } from './product.controller';
-import { ProductService } from './product.service';
 import { CategoryModule } from '../category/category.module';
+import { ProductService } from './product.service';
 
 @Module({
   imports: [

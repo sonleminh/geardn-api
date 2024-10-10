@@ -2,6 +2,13 @@ import { Transform } from 'class-transformer';
 import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
 import { Attribute } from '../../attribute/entities/attribute.entity';
 
+export enum STATUS {
+  IN_STOCK = 'IN_STOCK',
+  OUT_OF_STOCK = 'OUT_OF_STOCK',
+  PRE_ORDER = 'PRE_ORDER',
+}
+
+
 export class CreateProductSkuDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()

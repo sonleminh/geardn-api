@@ -7,7 +7,10 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
 import { ProductSku } from './entities/product-sku.entity';
-import { CreateProductSkuDto, UpdateProductSkuDto } from './dto/product-sku.dto';
+import {
+  CreateProductSkuDto,
+  UpdateProductSkuDto,
+} from './dto/product-sku.dto';
 import { ProductService } from '../product/product.service';
 import { AttributeService } from '../attribute/attribute.service';
 import { CategoryService } from '../category/category.service';
@@ -44,6 +47,20 @@ export class ProductSkuService {
   async findById(id: string) {
     try {
       const res = await this.ProductSkuModel.findById(id);
+      if (!res) {
+        throw new NotFoundException('Không tìm thấy SKU!');
+      }
+      return res;
+    } catch {
+      throw new NotFoundException('Không tìm thấy SKU!');
+    }
+  }
+
+  async findByProductId(id: string) {
+    try {
+      const res = await this.ProductSkuModel.find({ product_id: id })
+        .lean()
+        .exec();
       if (!res) {
         throw new NotFoundException('Không tìm thấy SKU!');
       }
