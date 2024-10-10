@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 import { Attribute } from '../../attribute/entities/attribute.entity';
 
 export enum STATUS {
@@ -32,7 +32,13 @@ export class CreateProductSkuDto {
   price: number;
 
   @IsNotEmpty()
+  @IsNumber({}, { message: 'Số lượng phải là một số!' })
+  @Min(0, { message: 'Số lượng phải lớn hơn hoặc bằng 0!' })
   quantity: number;
+
+  @IsNotEmpty()
+  @IsString()
+  status: string;
 }
 
 export class UpdateProductSkuDto {
@@ -59,5 +65,11 @@ export class UpdateProductSkuDto {
   price: number;
 
   @IsOptional()
+  @IsNumber({}, { message: 'Số lượng phải là một số!' })
+  @Min(0, { message: 'Số lượng phải lớn hơn hoặc bằng 0!' })
   quantity: number;
+
+  @IsOptional()
+  @IsString()
+  status: string;
 }

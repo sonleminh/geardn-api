@@ -15,7 +15,7 @@ import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from 'src/app/decorators/role.decorator';
 import { RBAC } from 'src/app/enums/rbac.enum';
-import { CreateAttributeDto } from './dto/attribute.dto';
+import { CreateAttributeDto, UpdateAttributeDto } from './dto/attribute.dto';
 import { AttributeService } from './attribute.service';
 
 @Controller('attribute')
@@ -45,7 +45,10 @@ export class AttributeController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
   @HttpCode(HttpStatus.CREATED)
-  async update(@Param() { id }: { id: string }, @Body() body: any) {
+  async update(
+    @Param() { id }: { id: string },
+    @Body() body: UpdateAttributeDto,
+  ) {
     return await this.attributeService.update(id, body);
   }
 

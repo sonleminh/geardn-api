@@ -16,7 +16,10 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from 'src/app/decorators/role.decorator';
 import { RBAC } from 'src/app/enums/rbac.enum';
 import { ProductSkuService } from './product-sku.service';
-import { CreateProductSkuDto } from './dto/product-sku.dto';
+import {
+  CreateProductSkuDto,
+  UpdateProductSkuDto,
+} from './dto/product-sku.dto';
 
 @Controller('product-sku')
 @UseGuards(JwtAuthGuard)
@@ -49,7 +52,7 @@ export class ProductSkuController {
   @Get('/product/:id')
   @HttpCode(HttpStatus.OK)
   async findByProductId(@Param() { id }: ObjectIdParamDto) {
-    console.log(id)
+    console.log(id);
 
     return await this.productSkuService.findByProductId(id);
   }
@@ -58,7 +61,10 @@ export class ProductSkuController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
   @HttpCode(HttpStatus.CREATED)
-  async update(@Param() { id }: { id: string }, @Body() body: any) {
+  async update(
+    @Param() { id }: { id: string },
+    @Body() body: UpdateProductSkuDto,
+  ) {
     return await this.productSkuService.update(id, body);
   }
 

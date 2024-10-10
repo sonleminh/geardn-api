@@ -17,8 +17,8 @@ export class ProductSku {
   @Prop({ require: true, type: String })
   product_name: string;
 
-  @Prop({ type: Types.ObjectId, ref: Attribute.name })
-  attributes: Attribute[];
+  @Prop({ type: Array })
+  attributes: Types.ObjectId[];
 
   @Prop({ require: true, type: String })
   sku: string;

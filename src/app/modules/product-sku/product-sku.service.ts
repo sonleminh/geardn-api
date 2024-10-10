@@ -87,11 +87,17 @@ export class ProductSkuService {
       throw new NotFoundException(`Đối tượng này không tồn tại!!`);
     }
 
-    return await this.ProductSkuModel.findByIdAndUpdate(
-      id,
-      { ...entity, ...body },
-      { new: true },
-    ).exec();
+    const updatedEntity = { ...entity, ...body };
+
+    if (body.quantity !== undefined) {
+      // Update status based on quantity
+      updatedEntity.status = body.quantity > 0 ? 'IN_STOCK' : 'OUT_OF_STOCK';
+    }
+
+    // Perform the update and return the updated document
+    return await this.ProductSkuModel.findByIdAndUpdate(id, updatedEntity, {
+      new: true,
+    }).exec();
   }
 
   async remove(id: string): Promise<{ deletedCount: number }> {
