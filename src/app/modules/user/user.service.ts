@@ -13,6 +13,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { AuthCredentialsDto } from 'src/app/modules/auth/dto/auth-credentials.dto';
 import { RegisterDTO } from 'src/app/modules/auth/dto/register.dto';
 import { User, UserDocument } from './entities/user.entity';
+import { LoginDTO } from '../auth/dto/login.dto';
 
 @Injectable()
 export class UserService {
@@ -57,7 +58,7 @@ export class UserService {
     }
   }
 
-  async findAndVerify(authCredentialsDto: any) {
+  async findAndVerify(authCredentialsDto: { email: string; password: string }) {
     try {
       const { email, password } = authCredentialsDto;
       const user = await this.userModel.findOne({ email });

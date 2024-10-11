@@ -33,7 +33,7 @@ export class UpdateAttributeDto {
   @IsOptional()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
-  type: string;
+  name: string;
 
   @IsOptional()
   @IsString()

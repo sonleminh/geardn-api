@@ -29,7 +29,7 @@ export class ProductSkuController {
   @Post('/')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
-  async createProductSku(@Body() body: any) {
+  async createProductSku(@Body() body: CreateProductSkuDto) {
     return await this.productSkuService.create(body);
   }
 

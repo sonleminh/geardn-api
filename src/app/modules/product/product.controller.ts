@@ -17,7 +17,7 @@ import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
 import { RBAC } from 'src/app/enums/rbac.enum';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { UpdateProductDto } from './dto/product.dto';
+import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -27,7 +27,7 @@ export class ProductController {
   @Post('/')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
-  async createProduct(@Body() body: any) {
+  async createProduct(@Body() body: CreateProductDto) {
     return await this.productService.createProduct(body);
   }
 

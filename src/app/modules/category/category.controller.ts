@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/category.dto';
+import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
 import { RoleGuard } from '../auth/guards/role.guard';
@@ -45,7 +45,10 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
   @HttpCode(HttpStatus.CREATED)
-  async update(@Param() { id }: { id: string }, @Body() body: any) {
+  async update(
+    @Param() { id }: { id: string },
+    @Body() body: UpdateCategoryDto,
+  ) {
     return await this.categoryService.update(id, body);
   }
 
