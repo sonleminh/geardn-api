@@ -26,6 +26,7 @@ export class ProductSkuService {
 
   async create(body: CreateProductSkuDto) {
     try {
+      body.status = body.quantity > 0 ? 'IN_STOCK' : 'OUT_OF_STOCK';
       return await this.ProductSkuModel.create(body);
     } catch (error) {
       throw error;

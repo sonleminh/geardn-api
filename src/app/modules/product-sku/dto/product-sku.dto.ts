@@ -19,6 +19,10 @@ export class CreateProductSkuDto {
   product_name: string;
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  product_sku: string;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsArray()
   attributes: Attribute[];
 
@@ -49,6 +53,10 @@ export class UpdateProductSkuDto {
   @IsOptional({ message: 'Nội dung này không được để trống!' })
   @IsString()
   product_name: string;
+
+  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  product_sku: string;
 
   @IsOptional({ message: 'Nội dung này không được để trống!' })
   @IsArray()

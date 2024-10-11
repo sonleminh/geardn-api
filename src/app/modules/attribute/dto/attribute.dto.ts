@@ -16,7 +16,7 @@ export class CreateAttributeDto {
       TYPE_ATTRIBUTE,
     ).join(' | ')}`,
   })
-  type: string;
+  name: string;
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
