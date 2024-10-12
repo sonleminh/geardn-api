@@ -14,6 +14,7 @@ import {
 import { ProductService } from '../product/product.service';
 import { AttributeService } from '../attribute/attribute.service';
 import { CategoryService } from '../category/category.service';
+import { Attribute } from '../attribute/entities/attribute.entity';
 
 @Injectable()
 export class ProductSkuService {
@@ -47,7 +48,13 @@ export class ProductSkuService {
 
   async findById(id: string) {
     try {
-      const res = await this.ProductSkuModel.findById(id);
+      const res = await this.ProductSkuModel.findById(id)
+        .populate({
+          path: 'attributes',
+          model: Attribute.name,
+          select: ['name', 'value'],
+        })
+        .exec();
       if (!res) {
         throw new NotFoundException('Không tìm thấy SKU!');
       }

@@ -9,7 +9,9 @@ import { ProductService } from './product.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
+    MongooseModule.forFeature([
+      { name: Product.name, schema: ProductSchema },
+    ]),
     forwardRef(() => AuthModule),
     FirebaseModule,
     CategoryModule,

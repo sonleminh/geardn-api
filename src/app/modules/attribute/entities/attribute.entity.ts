@@ -13,10 +13,10 @@ export class Attribute {
   @Prop({ enum: TYPE_ATTRIBUTE, require: true, type: String })
   name: TYPE_ATTRIBUTE;
 
-  @Prop({ require: true, unique: true, type: String })
+  @Prop({ required: true, unique: true, type: String })
   value: string;
 
-  @Prop({ require: true, unique: true, type: String })
+  @Prop({ required: true, unique: true, type: String })
   atb_sku: string;
 }
 

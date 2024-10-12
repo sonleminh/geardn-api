@@ -40,7 +40,7 @@ export class CreateProductSkuDto {
   @Min(0, { message: 'Số lượng phải lớn hơn hoặc bằng 0!' })
   quantity: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   status: string;
 }

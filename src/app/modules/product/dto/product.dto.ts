@@ -1,10 +1,16 @@
-import { Transform } from 'class-transformer';
-import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
-import { TagsDto } from './tag.dto';
-import { DiscountDto } from './discount.dto';
-import { CategoryDto } from './category.dto';
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
+import { Types } from 'mongoose';
 import { TYPE_ATTRIBUTE } from '../../attribute/dto/attribute.dto';
 import { DetailsDto } from './details.dto';
+import { DiscountDto } from './discount.dto';
+import { TagsDto } from './tag.dto';
 
 export class CreateProductDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
@@ -16,7 +22,7 @@ export class CreateProductDto {
   // discount: DiscountDto;
 
   @IsNotEmpty()
-  category: CategoryDto;
+  category: Types.ObjectId;
 
   @IsOptional()
   tags: TagsDto[];
@@ -24,7 +30,7 @@ export class CreateProductDto {
   @IsNotEmpty()
   images?: string[];
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   brand: string;
 
@@ -59,9 +65,9 @@ export class UpdateProductDto {
   @IsOptional()
   discount: DiscountDto;
 
-  @IsNotEmpty()
-  category: CategoryDto;
-  
+  @IsOptional()
+  category: Types.ObjectId;
+
   @IsOptional()
   tags: TagsDto[];
 

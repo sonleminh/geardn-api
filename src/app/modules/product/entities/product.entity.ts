@@ -43,7 +43,7 @@ export class Product {
   // discount: Discount;
 
   @Prop({ type: Types.ObjectId, ref: Category.name })
-  category: Category;
+  category: Types.ObjectId;
 
   @Prop({ required: true })
   tags: TagsDto[];

@@ -50,18 +50,6 @@ export class ProductService {
     }
   }
 
-  async getProductByCategory(id: string) {
-    try {
-      const res = await this.productModel
-        .find({ 'category._id': id })
-        .lean()
-        .exec();
-      return res;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
-  }
-
   async findAll({ s, page, limit, find_option }) {
     try {
       const filterObject = {
@@ -84,27 +72,7 @@ export class ProductService {
 
       const { resPerPage, passedPage } = paginateCalculator(page, limit);
 
-      let pipeline = [];
-
-      if (find_option === 'HOME') {
-        pipeline = [
-          { $match: filterObject },
-          {
-            $facet: {
-              // recent_articles: [{ $sort: { date: -1 } }, { $limit: 10 }],
-              FE_articles: [
-                { $match: { 'tags.value': 'front-end' } },
-                { $limit: 6 },
-              ],
-              BE_articles: [
-                { $match: { 'tags.value': 'back-end' } },
-                { $limit: 6 },
-              ],
-              trending_articles: [{ $sort: { views: -1 } }, { $limit: 4 }],
-            },
-          },
-        ];
-      }
+      const pipeline = [];
 
       const [res, total] = await Promise.all([
         pipeline.length
@@ -113,25 +81,12 @@ export class ProductService {
               .find(filterObject)
               .limit(resPerPage)
               .skip(passedPage)
+              .populate('category', 'name')
               .lean()
               .exec(),
 
         this.productModel.countDocuments(filterObject),
       ]);
-
-      if (pipeline.length) {
-        const { FE_articles, BE_articles, recent_articles, trending_articles } =
-          res[0];
-
-        return {
-          recent_articles,
-          FE_articles,
-          BE_articles,
-          trending_articles,
-          total,
-        };
-      }
-
       const categories = await this.categoryService.getCategoryInitial();
 
       return {
@@ -146,15 +101,24 @@ export class ProductService {
 
   async getProductById(id: Types.ObjectId) {
     try {
-      const product = await this.productModel
+      const res = await this.productModel
         .findById(id)
         .populate('category', 'name');
-      if (!product) {
+      if (!res) {
         throw new NotFoundException('Không tìm thấy sản phẩm!');
       }
-      return product;
+      return res;
     } catch {
       throw new NotFoundException('Không tìm thấy sản phẩm!');
+    }
+  }
+
+  async getProductByCategory(id: string) {
+    try {
+      const res = await this.productModel.find({ category: id }).lean().exec();
+      return res;
+    } catch (error) {
+      throw new BadRequestException(error);
     }
   }
 
@@ -209,20 +173,41 @@ export class ProductService {
 
   async getCategoriesWithProducts() {
     try {
-      const res = await this.productModel.aggregate([
-        {
-          $group: {
-            _id: '$category._id',
-            name: { $first: '$category.name' },
+      const res = await this.productModel
+        .aggregate([
+          {
+            $match: { is_deleted: false },
           },
-        },
-        {
-          $project: {
-            _id: 1,
-            name: 1,
+          {
+            $group: {
+              _id: '$category',
+            },
           },
-        },
-      ]);
+          {
+            // Convert the _id (category field) to ObjectId for lookup if needed
+            $addFields: {
+              categoryObjectId: { $toObjectId: '$_id' }, // Convert to ObjectId
+            },
+          },
+          {
+            $lookup: {
+              from: 'categories', // Category collection
+              localField: 'categoryObjectId', // Use the converted ObjectId
+              foreignField: '_id', // Match with _id in the categories collection
+              as: 'categoryDetails',
+            },
+          },
+          {
+            $unwind: '$categoryDetails',
+          },
+          {
+            $project: {
+              _id: '$_id', // Original category ID
+              name: '$categoryDetails.name', // Category name from details
+            },
+          },
+        ])
+        .exec();
       return res;
     } catch (error) {
       throw new BadRequestException(error);

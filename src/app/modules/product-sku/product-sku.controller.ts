@@ -46,14 +46,12 @@ export class ProductSkuController {
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   async findById(@Param() { id }: ObjectIdParamDto) {
-    return await this.productSkuService.findById(id);
+    return this.productSkuService.findById(id);
   }
 
   @Get('/product/:id')
   @HttpCode(HttpStatus.OK)
   async findByProductId(@Param() { id }: ObjectIdParamDto) {
-    console.log(id);
-
     return await this.productSkuService.findByProductId(id);
   }
 

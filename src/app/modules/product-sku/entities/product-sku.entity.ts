@@ -20,7 +20,7 @@ export class ProductSku {
   @Prop({ require: true, type: String })
   product_sku: string;
 
-  @Prop({ type: Array })
+  @Prop({ type: [{ type: Types.ObjectId, ref: Attribute.name }], default: [] })
   attributes: Types.ObjectId[];
 
   @Prop({ require: true, type: String })
