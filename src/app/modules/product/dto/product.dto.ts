@@ -34,7 +34,7 @@ export class CreateProductDto {
   @IsString()
   brand: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsString()
   @Length(1, 10000, { message: 'Độ dài đoạn mô tả từ 1-10000 ký tự!' })
   description: string;
@@ -88,6 +88,43 @@ export class UpdateProductDto {
   @IsString()
   @Length(1, 10000, { message: 'Độ dài đoạn mô tả từ 1-10000 ký tự!' })
   description: string;
+
+  @IsOptional()
+  details: DetailsDto;
+}
+
+export class UploadProductDto {
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  @Length(0, 100, { message: 'Độ dài tên từ 0-100 ký tự!' })
+  name: string;
+
+  @IsNotEmpty()
+  category: Types.ObjectId;
+
+  @IsOptional()
+  tags: TagsDto[];
+
+  @IsNotEmpty()
+  images?: string;
+
+  @IsOptional()
+  @IsString()
+  brand: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(1, 10000, { message: 'Độ dài đoạn mô tả từ 1-10000 ký tự!' })
+  description: string;
+
+  @IsOptional()
+  @IsArray()
+  attributes?: string;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  @Length(0, 30, { message: 'Độ dài tên từ 0-30 ký tự!' })
+  sku_name: string;
 
   @IsOptional()
   details: DetailsDto;

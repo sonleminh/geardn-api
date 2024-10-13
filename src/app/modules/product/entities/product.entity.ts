@@ -60,7 +60,7 @@ export class Product {
   @Prop({ type: Details })
   details: Details;
 
-  @Prop({ required: true })
+  @Prop({})
   description: string;
 
   @Prop({ default: false })

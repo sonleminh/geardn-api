@@ -1,20 +1,24 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { FirebaseService } from '../firebase/firebase.service';
-import { Product } from './entities/product.entity';
 import { escapeRegExp } from 'src/app/utils/escapeRegExp';
 import { paginateCalculator } from 'src/app/utils/page-helpers';
-import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
-import { TAGS } from './dto/tag.dto';
 import { CategoryService } from '../category/category.service';
+import { FirebaseService } from '../firebase/firebase.service';
+import { CreateProductDto, UpdateProductDto, UploadProductDto } from './dto/product.dto';
+import { TAGS } from './dto/tag.dto';
+import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductService {
+  private readonly logger = new Logger(ProductService.name);
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
     private readonly firebaseService: FirebaseService,
@@ -26,6 +30,51 @@ export class ProductService {
       return await this.productModel.create(body);
     } catch (error) {
       throw error;
+    }
+  }
+
+  async processExcelData(
+    data: UploadProductDto[],
+  ): Promise<{ message: string }> {
+    try {
+      const products = data.map((item, index) => {
+        if (!item.name || !item.category || !item.sku_name) {
+          this.logger.error(
+            `Invalid data at index ${index}: ${JSON.stringify(item)}`,
+          );
+          throw new HttpException(
+            `Missing required fields in row ${index + 1}`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        const attributes = item.attributes ? item.attributes?.split(',') : [];
+        const images = item.images ? item.images.split(',') : [];
+
+        return {
+          name: item.name,
+          category: item.category,
+          images: images,
+          sku_name: item.sku_name,
+          attributes,
+        };
+      });
+      await this.productModel.insertMany(products);
+
+      return { message: 'Products added successfully' };
+    } catch (error) {
+      this.logger.error(
+        `Error processing Excel data: ${error.message}`,
+        error.stack,
+      );
+      if (error instanceof HttpException) {
+        throw error; 
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while processing the Excel data',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
