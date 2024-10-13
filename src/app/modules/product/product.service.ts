@@ -100,23 +100,24 @@ export class ProductService {
   }
 
   async findAll({ s, page, limit, find_option }) {
+    console.log(limit)
     try {
       const filterObject = {
-        is_deleted: { $ne: true },
-        ...(s?.length && {
-          $or: [
-            {
-              title: {
-                $regex: new RegExp(escapeRegExp(s), 'i'),
-              },
-            },
-            {
-              content: {
-                $regex: new RegExp(escapeRegExp(s), 'i'),
-              },
-            },
-          ],
-        }),
+        // is_deleted: { $ne: true },
+        // ...(s?.length && {
+        //   $or: [
+        //     {
+        //       title: {
+        //         $regex: new RegExp(escapeRegExp(s), 'i'),
+        //       },
+        //     },
+        //     {
+        //       content: {
+        //         $regex: new RegExp(escapeRegExp(s), 'i'),
+        //       },
+        //     },
+        //   ],
+        // }),
       };
 
       const { resPerPage, passedPage } = paginateCalculator(page, limit);
@@ -128,6 +129,7 @@ export class ProductService {
           ? this.productModel.aggregate(pipeline).exec()
           : this.productModel
               .find(filterObject)
+              .sort({ createdAt: -1 })
               .limit(resPerPage)
               .skip(passedPage)
               .populate('category', 'name')

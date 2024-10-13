@@ -43,6 +43,7 @@ export class ProductController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
   @UseInterceptors(FileInterceptor('file'))
+
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     const workbook = XLSX.read(file?.buffer, { type: 'buffer' });
     const worksheet = workbook?.Sheets[workbook?.SheetNames?.[0]];
