@@ -43,7 +43,6 @@ export class ProductController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RBAC.ADMIN)
   @UseInterceptors(FileInterceptor('file'))
-
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     const workbook = XLSX.read(file?.buffer, { type: 'buffer' });
     const worksheet = workbook?.Sheets[workbook?.SheetNames?.[0]];
@@ -63,8 +62,8 @@ export class ProductController {
   }
 
   @Get('/category/:id')
-  async getProductByCategory(@Param('id') id: string) {
-    return await this.productService.getProductByCategory(id);
+  async getProductByCategory(@Param('id') id: string, @Query() queryParam) {
+    return await this.productService.getProductByCategory(id, queryParam);
   }
 
   @Get(':id')

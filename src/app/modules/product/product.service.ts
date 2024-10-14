@@ -12,7 +12,11 @@ import { escapeRegExp } from 'src/app/utils/escapeRegExp';
 import { paginateCalculator } from 'src/app/utils/page-helpers';
 import { CategoryService } from '../category/category.service';
 import { FirebaseService } from '../firebase/firebase.service';
-import { CreateProductDto, UpdateProductDto, UploadProductDto } from './dto/product.dto';
+import {
+  CreateProductDto,
+  UpdateProductDto,
+  UploadProductDto,
+} from './dto/product.dto';
 import { TAGS } from './dto/tag.dto';
 import { Product } from './entities/product.entity';
 
@@ -68,7 +72,7 @@ export class ProductService {
         error.stack,
       );
       if (error instanceof HttpException) {
-        throw error; 
+        throw error;
       }
 
       throw new HttpException(
@@ -100,7 +104,6 @@ export class ProductService {
   }
 
   async findAll({ s, page, limit, find_option }) {
-    console.log(limit)
     try {
       const filterObject = {
         // is_deleted: { $ne: true },
@@ -164,9 +167,19 @@ export class ProductService {
     }
   }
 
-  async getProductByCategory(id: string) {
+
+  async getProductByCategory(id: string, queryParam) {
     try {
-      const res = await this.productModel.find({ category: id }).lean().exec();
+      const { resPerPage, passedPage } = paginateCalculator(
+        queryParam.page,
+        queryParam.limit,
+      );
+      const res = await this.productModel
+        .find({ category: id })
+        .limit(resPerPage)
+        .skip(passedPage)
+        .lean()
+        .exec();
       return res;
     } catch (error) {
       throw new BadRequestException(error);
