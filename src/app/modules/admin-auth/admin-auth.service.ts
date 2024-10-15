@@ -112,9 +112,9 @@ export class AdminAuthService {
       );
     }
     const refreshToken = tokens
-      .split('; ')
+      ?.split('; ')
       .find((tokens) => tokens.startsWith('rt='))
-      .split('=')[1];
+      ?.split('=')[1];
     try {
       const payload = await this.jwtService.verify(refreshToken, {
         secret:
