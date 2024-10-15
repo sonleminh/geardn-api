@@ -106,7 +106,7 @@ export class ProductService {
   async findAll({ s, page, limit, find_option }) {
     try {
       const filterObject = {
-        // is_deleted: { $ne: true },
+        is_deleted: { $ne: true },
         // ...(s?.length && {
         //   $or: [
         //     {
@@ -167,7 +167,6 @@ export class ProductService {
     }
   }
 
-
   async getProductByCategory(id: string, queryParam) {
     try {
       const { resPerPage, passedPage } = paginateCalculator(
@@ -218,23 +217,6 @@ export class ProductService {
       .exec();
   }
 
-  async deleteSoft(id: string): Promise<{ deleteCount: number }> {
-    const entity = await this.productModel
-      .findById(id)
-      .where({ is_deleted: { $ne: true } })
-      .lean()
-      .exec();
-    if (!entity) {
-      throw new NotFoundException('Đối tượng không tồn tại!!');
-    }
-    await this.productModel
-      .findByIdAndUpdate(id, { is_deleted: true }, { new: true })
-      .exec();
-    return {
-      deleteCount: 1,
-    };
-  }
-
   async getCategoriesWithProducts() {
     try {
       const res = await this.productModel
@@ -276,5 +258,31 @@ export class ProductService {
     } catch (error) {
       throw new BadRequestException(error);
     }
+  }
+
+  async softDelete(id: string): Promise<{ deleteCount: number }> {
+    const entity = await this.productModel
+      .findById(id)
+      .where({ is_deleted: { $ne: true } })
+      .lean()
+      .exec();
+    if (!entity) {
+      throw new NotFoundException('Đối tượng không tồn tại!!');
+    }
+    await this.productModel
+      .findByIdAndUpdate(id, { is_deleted: true }, { new: true })
+      .exec();
+    return {
+      deleteCount: 1,
+    };
+  }
+
+  async softDeleteMany(ids: string[]): Promise<number> {
+    const res = await this.productModel.updateMany(
+      { _id: { $in: ids }, is_deleted: false },
+      { $set: { is_deleted: true } },
+    );
+
+    return res.modifiedCount;
   }
 }

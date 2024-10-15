@@ -11,7 +11,7 @@ import {
   Query,
   UploadedFile,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Types } from 'mongoose';
@@ -87,6 +87,13 @@ export class ProductController {
   async softDelete(
     @Param() { id }: ObjectIdParamDto,
   ): Promise<{ deleteCount: number }> {
-    return await this.productService.deleteSoft(id);
+    return await this.productService.softDelete(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  @HttpCode(HttpStatus.CREATED)
+  async softDeleteMany(@Body() ids: any) {
+    return this.productService.softDeleteMany(ids);
   }
 }
