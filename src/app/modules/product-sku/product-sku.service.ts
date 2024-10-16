@@ -67,6 +67,11 @@ export class ProductSkuService {
   async findByProductId(id: string) {
     try {
       const res = await this.ProductSkuModel.find({ product_id: id })
+        .populate({
+          path: 'attributes',
+          model: Attribute.name,
+          select: ['name', 'value'],
+        })
         .lean()
         .exec();
       if (!res) {

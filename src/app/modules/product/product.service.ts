@@ -19,12 +19,14 @@ import {
 } from './dto/product.dto';
 import { TAGS } from './dto/tag.dto';
 import { Product } from './entities/product.entity';
+import { ProductSku } from '../product-sku/entities/product-sku.entity';
 
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
+    @InjectModel(ProductSku.name) private productSkuModel: Model<ProductSku>,
     private readonly firebaseService: FirebaseService,
     private readonly categoryService: CategoryService,
   ) {}
@@ -143,8 +145,25 @@ export class ProductService {
       ]);
       const categories = await this.categoryService.getCategoryInitial();
 
+      const products = await Promise.all(
+        res.map(async (product) => {
+          // Find the lowest price for each product's SKU
+          const lowestPriceSku = await this.productSkuModel
+            .findOne({ product_id: product._id }) // Match product ID
+            .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
+            .select('price') // Only fetch the price field
+            .lean()
+            .exec();
+
+          return {
+            ...product,
+            original_price: lowestPriceSku ? lowestPriceSku.price : null,
+          };
+        }),
+      );
+
       return {
-        productList: res,
+        productList: products,
         categories: categories,
         total,
       };
