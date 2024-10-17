@@ -22,7 +22,6 @@ import {
 } from './dto/product-sku.dto';
 
 @Controller('product-sku')
-@UseGuards(JwtAuthGuard)
 export class ProductSkuController {
   constructor(private productSkuService: ProductSkuService) {}
 

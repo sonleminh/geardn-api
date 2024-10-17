@@ -180,7 +180,21 @@ export class ProductService {
       if (!res) {
         throw new NotFoundException('Không tìm thấy sản phẩm!');
       }
-      return res;
+      const lowestPriceSku = await this.productSkuModel
+        .findOne({ product_id: id }) // Match product ID
+        .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
+        .select('price') // Only fetch the price field
+        .lean()
+        .exec();
+
+      const result = res.toObject() as Product & { original_price?: number };
+
+      // Add original_price if lowestPriceSku is found
+      if (lowestPriceSku && lowestPriceSku.price) {
+        result.original_price = lowestPriceSku.price;
+      }
+
+      return result;
     } catch {
       throw new NotFoundException('Không tìm thấy sản phẩm!');
     }
