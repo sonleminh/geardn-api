@@ -18,5 +18,6 @@ import { ProductSkuService } from './product-sku.service';
   ],
   providers: [ProductSkuService],
   controllers: [ProductSkuController],
+  exports: [ProductSkuService],
 })
 export class ProductSkuModule {}
