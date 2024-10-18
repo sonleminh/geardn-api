@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   UseGuards
 } from '@nestjs/common';
@@ -16,9 +17,9 @@ export class CartController {
   @Post('add')
   async addToCart(
     @AuthUser() { _id },
-    @Body() body: { sku_id: string; quantity: number },
+    @Body() body: { sku: string; quantity: number },
   ) {
-    return this.cartService.upsertCart(_id, body.sku_id, body.quantity);
+    return this.cartService.upsertCart(_id, body.sku, body.quantity);
   }
 
   @Post('reduce')
@@ -27,5 +28,10 @@ export class CartController {
     @Body() body: { sku_id: string; quantity: number },
   ) {
     return this.cartService.reduceQuantity(_id, body.sku_id, body.quantity);
+  }
+
+  @Get()
+  async getCartById(@AuthUser() { _id }) {
+    return this.cartService.getCartById(_id);
   }
 }

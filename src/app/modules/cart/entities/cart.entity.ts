@@ -1,13 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { ProductSku } from '../../product-sku/entities/product-sku.entity';
+import { HydratedDocument, Types } from 'mongoose';
+
 
 export type CartDocument = HydratedDocument<Cart>;
 
 // Define the item sub-schema
 @Schema({ _id: false })
 export class CartItem {
-  @Prop({ required: true })
-  sku_id: string;
+  @Prop({ type: Types.ObjectId, ref: ProductSku.name })
+  sku: string;
 
   @Prop({ required: true })
   quantity: number;

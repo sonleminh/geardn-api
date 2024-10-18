@@ -20,6 +20,9 @@ export class ProductSku {
   @Prop({ require: true, type: String })
   product_sku: string;
 
+  @Prop({ require: true, type: String })
+  sku_image: string;
+
   @Prop({ type: [{ type: Types.ObjectId, ref: Attribute.name }], default: [] })
   attributes: Types.ObjectId[];
 

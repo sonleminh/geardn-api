@@ -14,10 +14,10 @@ export class CartService {
     private readonly productSkuService: ProductSkuService,
   ) {}
 
-  async upsertCart(user_id: string, sku_id: string, quantity: number) {
+  async upsertCart(user_id: string, sku: string, quantity: number) {
     // Step 1: Verify that the product with the given SKU exists
-    const sku = await this.productSkuService.findById(sku_id);
-    if (!sku) {
+    const res = await this.productSkuService.findById(sku);
+    if (!res) {
       throw new NotFoundException('SKU not found');
     }
 
@@ -26,7 +26,7 @@ export class CartService {
 
     if (cart) {
       // Step 3: Check if the cart already contains the product
-      const itemIndex = cart.items.findIndex((item) => item.sku_id === sku_id);
+      const itemIndex = cart.items.findIndex((item) => item.sku === sku);
 
       if (itemIndex > -1) {
         // If the product exists in the cart, update its quantity
@@ -34,7 +34,7 @@ export class CartService {
       } else {
         // Add new item to the cart
         cart.items.push({
-          sku_id: sku._id.toString(),
+          sku: res?._id.toString(),
           quantity,
         });
       }
@@ -44,7 +44,7 @@ export class CartService {
         user_id: user_id,
         items: [
           {
-            sku_id: sku._id,
+            sku,
             quantity,
           },
         ],
@@ -62,7 +62,7 @@ export class CartService {
       throw new NotFoundException('Cart not found');
     }
 
-    const itemIndex = cart.items.findIndex((item) => item.sku_id === sku_id);
+    const itemIndex = cart.items.findIndex((item) => item.sku === sku_id);
     if (itemIndex === -1) {
       throw new NotFoundException('Item not found in cart');
     }
@@ -76,5 +76,24 @@ export class CartService {
 
     // Step 5: Save the updated cart
     return cart.save();
+  }
+
+  async getCartById(user_id: string) {
+    try {
+      const res = await this.cartModel
+        .findOne({ user_id: user_id })
+        .populate({
+          path: 'items.sku',
+          model: ProductSku.name,
+          select: 'product_name price',
+        })
+        .exec();
+      if (!res) {
+        throw new NotFoundException('Không tìm thấy giỏ hàng!');
+      }
+      return res;
+    } catch {
+      throw new NotFoundException('Không tìm thấy giỏ hàng!');
+    }
   }
 }
