@@ -1,0 +1,596 @@
+{
+  "bff_meta": null,
+  "error": null,
+  "error_msg": null,
+  "data": {
+    "item": {
+      "item_id": 3014174490,
+      "shop_id": 391575467,
+      "item_status": "normal",
+      "status": 1,
+      "item_type": 0,
+      "reference_item_id": "",
+      "title": "❌Free Ship❌ Dép Đi Trong Nhà Nguyên Khối Siêu Bền Siêu Nhẹ Êm Chân 2067 Lamon Store",
+      "image": "vn-11134211-7r98o-lnmo50lb3cvh70",
+      "is_adult": false,
+      "is_preview": false,
+      "currency": "VND",
+      "brand": null,
+      "brand_id": 0,
+      "item_rating": {
+        "rating_star": 4.790128577353795
+      },
+      "cb_option": 0,
+      "has_model_with_available_shopee_stock": false,
+      "shop_location": "TP. Hồ Chí Minh",
+      "attributes": [
+        {
+          "name": "Chất liệu",
+          "value": "Khác",
+          "id": 100134,
+          "is_timestamp": false,
+          "brand_option": null,
+          "val_id": 1257,
+          "url": null,
+          "brand_id": null,
+          "full_url": null,
+          "type": null
+        },
+        {
+          "name": "Xuất xứ",
+          "value": "Trung Quốc",
+          "id": 100037,
+          "is_timestamp": false,
+          "brand_option": null,
+          "val_id": 35,
+          "url": null,
+          "brand_id": null,
+          "full_url": null,
+          "type": null
+        },
+        {
+          "name": "Giày cao gót",
+          "value": "Thấp",
+          "id": 100200,
+          "is_timestamp": false,
+          "brand_option": null,
+          "val_id": 1675,
+          "url": null,
+          "brand_id": null,
+          "full_url": null,
+          "type": null
+        }
+      ],
+
+      "description": " pđinh",
+      "categories": [
+        {
+          "catid": 100532,
+          "display_name": "Giày Dép Nữ",
+          "no_sub": false,
+          "is_default_subcat": false
+        },
+        {
+          "catid": 100561,
+          "display_name": "Xăng-đan và dép",
+          "no_sub": false,
+          "is_default_subcat": false
+        },
+        {
+          "catid": 100596,
+          "display_name": "Dép đi trong nhà",
+          "no_sub": true,
+          "is_default_subcat": false
+        }
+      ],
+      "models": [
+        {
+          "item_id": 3014174490,
+          "status": 1,
+          "current_promotion_reserved_stock": 0,
+          "name": "DÉP LỖ 1899 X.DƯƠNG,42/43",
+          "promotion_id": 0,
+          "price": 3500000000,
+          "price_stocks": [
+            {
+              "allocated_stock": 0,
+              "stock_breakdown_by_location": [
+                {
+                  "location_id": "VN01015UZ",
+                  "available_stock": 0,
+                  "fulfilment_type": 2,
+                  "address_id": 200113504,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VNZ",
+                  "available_stock": 0,
+                  "fulfilment_type": 2,
+                  "address_id": 73776611,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VN00YZIQZ",
+                  "available_stock": 0,
+                  "fulfilment_type": 2,
+                  "address_id": 200085665,
+                  "allocated_stock": null
+                }
+              ],
+              "promotion_type": 0
+            }
+          ],
+          "extinfo": {
+            "tier_index": [8, 3],
+            "is_pre_order": false,
+            "estimated_days": 2
+          },
+          "price_before_discount": 0,
+          "model_id": 165391169876,
+          "stock": 0
+        },
+        {
+          "item_id": 3014174490,
+          "status": 1,
+          "current_promotion_reserved_stock": 200,
+          "name": "HỒNG NHẠT,36/37",
+          "promotion_id": 64411423801348,
+          "price": 2170000000,
+          "price_stocks": [
+            {
+              "allocated_stock": 200,
+              "stock_breakdown_by_location": [
+                {
+                  "location_id": "VN01015UZ",
+                  "available_stock": 200,
+                  "fulfilment_type": 2,
+                  "address_id": 200113504,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VNZ",
+                  "available_stock": 200,
+                  "fulfilment_type": 2,
+                  "address_id": 73776611,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VN00YZIQZ",
+                  "available_stock": 200,
+                  "fulfilment_type": 2,
+                  "address_id": 200085665,
+                  "allocated_stock": null
+                }
+              ],
+              "promotion_type": 312
+            },
+            {
+              "allocated_stock": 0,
+              "stock_breakdown_by_location": [
+                {
+                  "location_id": "VN00YZIQZ",
+                  "available_stock": 228,
+                  "fulfilment_type": 2,
+                  "address_id": null,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VN01015UZ",
+                  "available_stock": 967,
+                  "fulfilment_type": 2,
+                  "address_id": null,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VNZ",
+                  "available_stock": 1818,
+                  "fulfilment_type": 2,
+                  "address_id": null,
+                  "allocated_stock": null
+                }
+              ],
+              "promotion_type": 0
+            }
+          ],
+          "current_promotion_has_reserve_stock": true,
+          "normal_stock": 2011,
+          "extinfo": {
+            "tier_index": [1, 0],
+            "is_pre_order": false,
+            "estimated_days": 2
+          },
+          "price_before_discount": 3500000000,
+          "model_id": 54097522032,
+          "stock": 200,
+          "has_gimmick_tag": false,
+          "key_measurement": null,
+          "sold": 1647,
+          "is_lowest_price_at_shopee": false
+        },
+        {
+          "item_id": 3014174490,
+          "status": 1,
+          "current_promotion_reserved_stock": 20,
+          "name": "MÀU ĐEN,44/45",
+          "promotion_id": 64411423801348,
+          "price": 2170000000,
+          "price_stocks": [
+            {
+              "allocated_stock": 20,
+              "stock_breakdown_by_location": [
+                {
+                  "location_id": "VN01015UZ",
+                  "available_stock": 20,
+                  "fulfilment_type": 2,
+                  "address_id": 200113504,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VNZ",
+                  "available_stock": 20,
+                  "fulfilment_type": 2,
+                  "address_id": 73776611,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VN00YZIQZ",
+                  "available_stock": 20,
+                  "fulfilment_type": 2,
+                  "address_id": 200085665,
+                  "allocated_stock": null
+                }
+              ],
+              "promotion_type": 312
+            },
+            {
+              "allocated_stock": 0,
+              "stock_breakdown_by_location": [
+                {
+                  "location_id": "VN00YZIQZ",
+                  "available_stock": 68,
+                  "fulfilment_type": 2,
+                  "address_id": null,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VN01015UZ",
+                  "available_stock": 531,
+                  "fulfilment_type": 2,
+                  "address_id": null,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VNZ",
+                  "available_stock": 1401,
+                  "fulfilment_type": 2,
+                  "address_id": null,
+                  "allocated_stock": null
+                }
+              ],
+              "promotion_type": 0
+            }
+          ],
+          "current_promotion_has_reserve_stock": true,
+          "normal_stock": 1895,
+          "extinfo": {
+            "tier_index": [3, 4],
+            "is_pre_order": false,
+            "estimated_days": 2
+          },
+          "price_before_discount": 3500000000,
+          "model_id": 54097521999,
+          "stock": 20,
+          "has_gimmick_tag": false,
+          "key_measurement": null,
+          "sold": 557,
+          "is_lowest_price_at_shopee": false
+        },
+        {
+          "item_id": 3014174490,
+          "status": 1,
+          "current_promotion_reserved_stock": 20,
+          "name": "MÀU ĐEN,40/41",
+          "promotion_id": 64411423801348,
+          "price": 2170000000,
+          "price_stocks": [
+            {
+              "allocated_stock": 20,
+              "stock_breakdown_by_location": [
+                {
+                  "location_id": "VN01015UZ",
+                  "available_stock": 20,
+                  "fulfilment_type": 2,
+                  "address_id": 200113504,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VNZ",
+                  "available_stock": 20,
+                  "fulfilment_type": 2,
+                  "address_id": 73776611,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VN00YZIQZ",
+                  "available_stock": 0,
+                  "fulfilment_type": 2,
+                  "address_id": 200085665,
+                  "allocated_stock": null
+                }
+              ],
+              "promotion_type": 312
+            },
+            {
+              "allocated_stock": 0,
+              "stock_breakdown_by_location": [
+                {
+                  "location_id": "VN00YZIQZ",
+                  "available_stock": 0,
+                  "fulfilment_type": 2,
+                  "address_id": null,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VN01015UZ",
+                  "available_stock": 1243,
+                  "fulfilment_type": 2,
+                  "address_id": null,
+                  "allocated_stock": null
+                },
+                {
+                  "location_id": "VNZ",
+                  "available_stock": 1911,
+                  "fulfilment_type": 2,
+                  "address_id": null,
+                  "allocated_stock": null
+                }
+              ],
+              "promotion_type": 0
+            }
+          ],
+          "current_promotion_has_reserve_stock": true,
+          "normal_stock": 3049,
+          "extinfo": {
+            "tier_index": [3, 2],
+            "is_pre_order": false,
+            "estimated_days": 2
+          },
+          "price_before_discount": 3500000000,
+          "model_id": 54097522017,
+          "stock": 20,
+          "has_gimmick_tag": false,
+          "key_measurement": null,
+          "sold": 1441,
+          "is_lowest_price_at_shopee": false
+        },
+        {
+          "item_id": 3014174490,
+          "status": 1,
+          "current_promotion_reserved_stock": 0,
+          "name": "XANH THAN,36/37",
+          "promotion_id": 0,
+          "price": 3500000000,
+          "price_stocks": [
+            {
+              "allocated_stock": 0,
+              "stock_breakdown_by_location": [
+                {
+                  "location_id": "VNZ",
+                  "available_stock": 0,
+                  "fulfilment_type": 2,
+                  "address_id": 73776611,
+                  "allocated_stock": null
+                }
+              ],
+              "promotion_type": 0
+            }
+          ],
+          "current_promotion_has_reserve_stock": false,
+          "normal_stock": 0,
+          "extinfo": {
+            "tier_index": [5, 0],
+            "is_pre_order": false,
+            "estimated_days": 2
+          },
+          "price_before_discount": 0,
+          "model_id": 54097522020,
+          "stock": 0,
+          "has_gimmick_tag": false,
+          "key_measurement": null,
+          "sold": 0,
+          "is_lowest_price_at_shopee": false
+        }
+      ],
+      "tier_variations": [
+        {
+          "name": "MÀU SẮC",
+          "options": [
+            "CAM ĐẬM",
+            "HỒNG NHẠT",
+            "XANH LÁ ĐẬM",
+            "MÀU ĐEN",
+            "MÀU GHI",
+            "XANH THAN",
+            "MÀU VÀNG",
+            "DÉP LỖ 1899 ĐEN",
+            "DÉP LỖ 1899 X.DƯƠNG",
+            "DÉP TỔ ONG NHỰA ĐEN"
+          ],
+          "images": [
+            "4fca0d99ff9f2f723d41decd2b240b53",
+            "d117310f37a873692d1a7ef1a39de288",
+            "1a0a254d934840413cd3506a2d8317cc",
+            "efed099519adac6aa6f2587b76c0daab",
+            "643a9a5a041f3895f81478578b5c8ce4",
+            "96139f5f24d8a1f1930d52d4e51257be",
+            "f3af4a790ac1a1ce231267fbc268477e",
+            "sg-11134201-22120-gwtd38atkclvdc",
+            "vn-11134207-7r98o-lns3gf2d6hdm3d",
+            "vn-11134207-7r98o-lo230zv3l6d6dd"
+          ],
+          "properties": null,
+          "type": 0,
+          "summed_stocks": null,
+          "display_indicators": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          "name": "SIZE",
+          "options": ["36/37", "38/39", "40/41", "42/43", "44/45"],
+          "images": null,
+          "properties": null,
+          "type": 0,
+          "summed_stocks": null,
+          "display_indicators": [0, 0, 0, 0, 0]
+        }
+      ]
+    },
+
+    "product_images": {
+      "images": [
+        "vn-11134211-7r98o-lnmo50lb3cvh70",
+        "vn-11134211-7r98o-lnmo50lb1yb174",
+        "vn-11134211-7r98o-lnmo50lb4rfx77",
+        "vn-11134211-7r98o-lnmo50lb660d75",
+        "vn-11134211-7r98o-lnmo50lb7kkt00",
+        "vn-11134211-7r98o-lnmo50lb8z5900",
+        "vn-11134211-7r98o-lnmo50lbadpp2a",
+        "vn-11134211-7r98o-lnmo50lbbsa5aa",
+        "vn-11134211-7r98o-lnmo50lbd6ulb8"
+      ],
+      "first_tier_variations": [
+        {
+          "name": "CAM ĐẬM",
+          "image": "4fca0d99ff9f2f723d41decd2b240b53",
+          "summed_stock": 60,
+          "display_indicator": 0
+        },
+        {
+          "name": "HỒNG NHẠT",
+          "image": "d117310f37a873692d1a7ef1a39de288",
+          "summed_stock": 240,
+          "display_indicator": 0
+        },
+        {
+          "name": "XANH LÁ ĐẬM",
+          "image": "1a0a254d934840413cd3506a2d8317cc",
+          "summed_stock": 60,
+          "display_indicator": 0
+        },
+        {
+          "name": "MÀU ĐEN",
+          "image": "efed099519adac6aa6f2587b76c0daab",
+          "summed_stock": 60,
+          "display_indicator": 0
+        },
+        {
+          "name": "MÀU GHI",
+          "image": "643a9a5a041f3895f81478578b5c8ce4",
+          "summed_stock": 240,
+          "display_indicator": 0
+        },
+        {
+          "name": "XANH THAN",
+          "image": "96139f5f24d8a1f1930d52d4e51257be",
+          "summed_stock": 60,
+          "display_indicator": 0
+        },
+        {
+          "name": "MÀU VÀNG",
+          "image": "f3af4a790ac1a1ce231267fbc268477e",
+          "summed_stock": 60,
+          "display_indicator": 0
+        },
+        {
+          "name": "DÉP LỖ 1899 ĐEN",
+          "image": "sg-11134201-22120-gwtd38atkclvdc",
+          "summed_stock": 60,
+          "display_indicator": 0
+        },
+        {
+          "name": "DÉP LỖ 1899 X.DƯƠNG",
+          "image": "vn-11134207-7r98o-lns3gf2d6hdm3d",
+          "summed_stock": 60,
+          "display_indicator": 0
+        },
+        {
+          "name": "DÉP TỔ ONG NHỰA ĐEN",
+          "image": "vn-11134207-7r98o-lo230zv3l6d6dd",
+          "summed_stock": 100,
+          "display_indicator": 0
+        }
+      ],
+      "sorted_variation_image_index_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    "product_price": {
+      "discount": null,
+      "installment_info": null,
+      "spl_installment_info": null,
+      "pack_size": "",
+      "hide_price": true,
+      "price": {
+        "single_value": -1,
+        "range_min": 640000000,
+        "range_max": 2170000000,
+        "price_mask": null
+      },
+      "price_before_discount": {
+        "single_value": 3500000000,
+        "range_min": -1,
+        "range_max": -1,
+        "price_mask": null
+      },
+      "presale_price": null,
+      "lowest_past_price": null
+    },
+
+    "product_attributes": {
+      "attrs": [
+        {
+          "name": "Số lượng hàng khuyến mãi",
+          "value": "1000",
+          "id": null,
+          "is_timestamp": null,
+          "brand_option": null,
+          "val_id": null,
+          "url": null,
+          "brand_id": null,
+          "full_url": null,
+          "type": 9
+        },
+        {
+          "name": "Số sản phẩm còn lại",
+          "value": "63999",
+          "id": null,
+          "is_timestamp": null,
+          "brand_option": null,
+          "val_id": null,
+          "url": null,
+          "brand_id": null,
+          "full_url": null,
+          "type": 10
+        }
+      ],
+      "categories": [
+        {
+          "catid": 11035801,
+          "display_name": "Giày Dép Nam",
+          "no_sub": false,
+          "is_default_subcat": false
+        },
+        {
+          "catid": 11035811,
+          "display_name": "Xăng-đan và Dép",
+          "no_sub": false,
+          "is_default_subcat": false
+        },
+        {
+          "catid": 11035814,
+          "display_name": "Dép Đi Trong Nhà",
+          "no_sub": true,
+          "is_default_subcat": false
+        }
+      ],
+      "related_items": []
+    }
+  }
+}

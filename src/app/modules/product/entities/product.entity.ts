@@ -28,6 +28,18 @@ class Details {
   material: string;
 }
 
+@Schema({ _id: false })
+export class TierVariant extends Document {
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true })
+  options: string[];
+
+  @Prop()
+  images: string[];
+}
+
 @Schema({ collection: 'products', timestamps: true })
 export class Product {
   @Transform(({ value }) => value.toString(), { toPlainOnly: true })
@@ -36,8 +48,8 @@ export class Product {
   @Prop({ require: true, unique: true })
   name: string;
 
-  @Prop({ require: true, unique: true })
-  sku_name: string;
+  // @Prop({ require: true, unique: true })
+  // sku_name: string;
 
   // @Prop({ type: Discount })
   // discount: Discount;
@@ -51,8 +63,11 @@ export class Product {
   @Prop({ required: true })
   images: string[];
 
-  @Prop({ default: undefined })
-  attributes: TYPE_ATTRIBUTE[];
+  @Prop()
+  tier_variations: TierVariant[];
+
+  // @Prop({ default: undefined })
+  // attributes: TYPE_ATTRIBUTE[];
 
   @Prop({ default: 'Không' })
   brand: string;

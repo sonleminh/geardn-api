@@ -44,7 +44,7 @@ export class ProductService {
   ): Promise<{ message: string }> {
     try {
       const products = data.map((item, index) => {
-        if (!item.name || !item.category || !item.sku_name) {
+        if (!item.name || !item.category) {
           this.logger.error(
             `Invalid data at index ${index}: ${JSON.stringify(item)}`,
           );
@@ -54,15 +54,15 @@ export class ProductService {
           );
         }
 
-        const attributes = item.attributes ? item.attributes?.split(',') : [];
+        // const attributes = item.attributes ? item.attributes?.split(',') : [];
         const images = item.images ? item.images.split(',') : [];
 
         return {
           name: item.name,
           category: item.category,
           images: images,
-          sku_name: item.sku_name,
-          attributes,
+          // sku_name: item.sku_name,
+          // attributes,
         };
       });
       await this.productModel.insertMany(products);

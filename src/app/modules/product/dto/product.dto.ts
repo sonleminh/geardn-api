@@ -39,14 +39,14 @@ export class CreateProductDto {
   @Length(1, 10000, { message: 'Độ dài đoạn mô tả từ 1-10000 ký tự!' })
   description: string;
 
-  @IsOptional()
-  @IsArray()
-  @IsEnum(TYPE_ATTRIBUTE, {
-    message: `Vui lòng chọn 1 trong ${Object.values(TYPE_ATTRIBUTE).length} loại sau: ${Object.values(
-      TYPE_ATTRIBUTE,
-    ).join(' | ')}`,
-  })
-  attributes?: TYPE_ATTRIBUTE[];
+  // @IsOptional()
+  // @IsArray()
+  // @IsEnum(TYPE_ATTRIBUTE, {
+  //   message: `Vui lòng chọn 1 trong ${Object.values(TYPE_ATTRIBUTE).length} loại sau: ${Object.values(
+  //     TYPE_ATTRIBUTE,
+  //   ).join(' | ')}`,
+  // })
+  // attributes?: TYPE_ATTRIBUTE[];
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
@@ -62,8 +62,8 @@ export class UpdateProductDto {
   @Length(0, 490, { message: 'Độ dài tiêu đề từ 0-490 ký tự!' })
   name: string;
 
-  @IsOptional()
-  discount: DiscountDto;
+  // @IsOptional()
+  // discount: DiscountDto;
 
   @IsOptional()
   category: Types.ObjectId;
@@ -78,11 +78,11 @@ export class UpdateProductDto {
   @IsString()
   brand: string;
 
-  @IsOptional()
-  attributes: string[];
+  // @IsOptional()
+  // attributes: string[];
 
-  @IsOptional()
-  sku_name: string;
+  // @IsOptional()
+  // sku_name: string;
 
   @IsOptional()
   @IsString()
@@ -117,14 +117,14 @@ export class UploadProductDto {
   @Length(1, 10000, { message: 'Độ dài đoạn mô tả từ 1-10000 ký tự!' })
   description: string;
 
-  @IsOptional()
-  @IsArray()
-  attributes?: string;
+  // @IsOptional()
+  // @IsArray()
+  // attributes?: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
-  @IsString()
-  @Length(0, 30, { message: 'Độ dài tên từ 0-30 ký tự!' })
-  sku_name: string;
+  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  // @IsString()
+  // @Length(0, 30, { message: 'Độ dài tên từ 0-30 ký tự!' })
+  // sku_name: string;
 
   @IsOptional()
   details: DetailsDto;
