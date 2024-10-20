@@ -1,16 +1,13 @@
 import {
-  IsArray,
-  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
-  Length,
+  Length
 } from 'class-validator';
 import { Types } from 'mongoose';
-import { TYPE_ATTRIBUTE } from '../../attribute/dto/attribute.dto';
 import { DetailsDto } from './details.dto';
-import { DiscountDto } from './discount.dto';
 import { TagsDto } from './tag.dto';
+import { VariantDTO } from './variant.dto';
 
 export class CreateProductDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
@@ -31,6 +28,9 @@ export class CreateProductDto {
   images?: string[];
 
   @IsOptional()
+  tier_variations: VariantDTO[];
+
+  @IsOptional()
   @IsString()
   brand: string;
 
@@ -48,10 +48,10 @@ export class CreateProductDto {
   // })
   // attributes?: TYPE_ATTRIBUTE[];
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
-  @IsString()
-  @Length(0, 30, { message: 'Độ dài tên từ 0-30 ký tự!' })
-  sku_name: string;
+  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  // @IsString()
+  // @Length(0, 30, { message: 'Độ dài tên từ 0-30 ký tự!' })
+  // sku_name: string;
 
   @IsOptional()
   details: DetailsDto;
@@ -73,6 +73,9 @@ export class UpdateProductDto {
 
   @IsOptional()
   images: string[];
+
+  @IsOptional()
+  tier_variations: VariantDTO[];
 
   @IsOptional()
   @IsString()

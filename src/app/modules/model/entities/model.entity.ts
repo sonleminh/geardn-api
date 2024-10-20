@@ -1,14 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
 import { HydratedDocument, Types } from 'mongoose';
-import { STATUS } from '../dto/product-sku.dto';
 
-export type ProductSkuDocument = HydratedDocument<ProductSku>;
+export type ModelDocument = HydratedDocument<Model>;
 
 @Schema({ collection: 'models', timestamps: true })
-export class ProductSku {
+export class Model {
   @Transform(({ value }) => value.toString(), { toPlainOnly: true })
-  model_id: Types.ObjectId;
+  _id: Types.ObjectId;
 
   @Prop({ require: true, type: String })
   product_id: string;
@@ -21,14 +20,6 @@ export class ProductSku {
 
   @Prop({ require: true, type: Number, default: 0 })
   stock: number;
-
-  @Prop({
-    enum: STATUS,
-    require: true,
-    type: String,
-    default: STATUS.OUT_OF_STOCK,
-  })
-  status: string;
 }
 
-export const ProductSkuSchema = SchemaFactory.createForClass(ProductSku);
+export const ModelSchema = SchemaFactory.createForClass(Model);

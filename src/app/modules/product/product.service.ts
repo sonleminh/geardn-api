@@ -202,17 +202,41 @@ export class ProductService {
 
   async getProductByCategory(id: string, queryParam) {
     try {
+      const filterObject = {
+        is_deleted: { $ne: true },
+      };
+
       const { resPerPage, passedPage } = paginateCalculator(
         queryParam.page,
         queryParam.limit,
       );
+
       const res = await this.productModel
         .find({ category: id })
+        .select('name category tags images')
+        .sort({ createdAt: -1 })
         .limit(resPerPage)
         .skip(passedPage)
+        .populate('category', 'name')
         .lean()
         .exec();
-      return res;
+
+      return await Promise.all(
+        res.map(async (product) => {
+          // Find the lowest price for each product's SKU
+          const lowestPriceSku = await this.productSkuModel
+            .findOne({ product_id: product._id }) // Match product ID
+            .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
+            .select('price') // Only fetch the price field
+            .lean()
+            .exec();
+
+          return {
+            ...product,
+            original_price: lowestPriceSku ? lowestPriceSku.price : null,
+          };
+        }),
+      );
     } catch (error) {
       throw new BadRequestException(error);
     }
