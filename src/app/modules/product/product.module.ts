@@ -6,13 +6,13 @@ import { Product, ProductSchema } from './entities/product.entity';
 import { ProductController } from './product.controller';
 import { CategoryModule } from '../category/category.module';
 import { ProductService } from './product.service';
-import { ProductSku, ProductSkuSchema } from '../product-sku/entities/product-sku.entity';
+import { Model, ModelSchema } from '../model/entities/model.entity';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Product.name, schema: ProductSchema },
-      { name: ProductSku.name, schema: ProductSkuSchema },
+      { name: Model.name, schema: ModelSchema },
     ]),
     forwardRef(() => AuthModule),
     FirebaseModule,

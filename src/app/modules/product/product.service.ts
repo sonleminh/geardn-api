@@ -20,15 +20,17 @@ import {
 import { TAGS } from './dto/tag.dto';
 import { Product } from './entities/product.entity';
 import { ProductSku } from '../product-sku/entities/product-sku.entity';
+import { Model as ModelEntity } from '../model/entities/model.entity';
 
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
-    @InjectModel(ProductSku.name) private productSkuModel: Model<ProductSku>,
+    @InjectModel(ModelEntity.name) private modelModel: Model<ModelEntity>,
     private readonly firebaseService: FirebaseService,
     private readonly categoryService: CategoryService,
+    // private readonly modelService: ModelService,
   ) {}
 
   async createProduct(body: CreateProductDto) {
@@ -148,7 +150,7 @@ export class ProductService {
       const products = await Promise.all(
         res.map(async (product) => {
           // Find the lowest price for each product's SKU
-          const lowestPriceSku = await this.productSkuModel
+          const lowestPriceSku = await this.modelModel
             .findOne({ product_id: product._id }) // Match product ID
             .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
             .select('price') // Only fetch the price field
@@ -180,10 +182,16 @@ export class ProductService {
       if (!res) {
         throw new NotFoundException('Không tìm thấy sản phẩm!');
       }
-      const lowestPriceSku = await this.productSkuModel
+      const lowestPriceSku = await this.modelModel
         .findOne({ product_id: id }) // Match product ID
         .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
         .select('price') // Only fetch the price field
+        .lean()
+        .exec();
+
+        const models = await this.modelModel
+        .find({ product_id: id }) // Match product ID
+        .select('name price stock extinfo')
         .lean()
         .exec();
 
@@ -194,7 +202,7 @@ export class ProductService {
         result.original_price = lowestPriceSku.price;
       }
 
-      return result;
+      return { ...result, models };
     } catch {
       throw new NotFoundException('Không tìm thấy sản phẩm!');
     }
@@ -224,7 +232,7 @@ export class ProductService {
       return await Promise.all(
         res.map(async (product) => {
           // Find the lowest price for each product's SKU
-          const lowestPriceSku = await this.productSkuModel
+          const lowestPriceSku = await this.modelModel
             .findOne({ product_id: product._id }) // Match product ID
             .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
             .select('price') // Only fetch the price field
