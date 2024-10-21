@@ -4,6 +4,14 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type ModelDocument = HydratedDocument<Model>;
 
+class ExtInfo {
+  @Prop()
+  tier_index: number[];
+  
+  @Prop({ require: true, default: false })
+  is_pre_order: boolean;
+} 
+
 @Schema({ collection: 'models', timestamps: true })
 export class Model {
   @Transform(({ value }) => value.toString(), { toPlainOnly: true })
@@ -20,6 +28,9 @@ export class Model {
 
   @Prop({ require: true, type: Number, default: 0 })
   stock: number;
+
+  @Prop({ require: true })
+  extinfo: ExtInfo;
 }
 
 export const ModelSchema = SchemaFactory.createForClass(Model);
