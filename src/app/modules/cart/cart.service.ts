@@ -2,23 +2,24 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
-import { ProductSku } from '../product-sku/entities/product-sku.entity';
-import { ProductSkuService } from '../product-sku/product-sku.service';
 import { Cart } from './entities/cart.entity';
+import { Model as ModelEntity } from '../model/entities/model.entity';
+import { ModelService } from '../model/model.service';
 
 @Injectable()
 export class CartService {
   constructor(
     @InjectModel(Cart.name) private cartModel: Model<Cart>,
-    @InjectModel(ProductSku.name) private productSkuModel: Model<ProductSku>,
-    private readonly productSkuService: ProductSkuService,
+    @InjectModel(ModelEntity.name) private modelModel: Model<ModelEntity>,
+    private readonly modelService: ModelService,
   ) {}
 
-  async upsertCart(user_id: string, sku: string, quantity: number) {
+  async upsertCart(user_id: string, model: string, quantity: number) {
     // Step 1: Verify that the product with the given SKU exists
-    const res = await this.productSkuService.findById(sku);
+    console.log(model)
+    const res = await this.modelService.findById(model);
     if (!res) {
-      throw new NotFoundException('SKU not found');
+      throw new NotFoundException('Model not found');
     }
 
     // Step 2: Find the user's cart
@@ -26,7 +27,7 @@ export class CartService {
 
     if (cart) {
       // Step 3: Check if the cart already contains the product
-      const itemIndex = cart.items.findIndex((item) => item.sku === sku);
+      const itemIndex = cart.items.findIndex((item) => item.model === model);
 
       if (itemIndex > -1) {
         // If the product exists in the cart, update its quantity
@@ -34,7 +35,7 @@ export class CartService {
       } else {
         // Add new item to the cart
         cart.items.push({
-          sku: res?._id.toString(),
+          model: res?._id.toString(),
           quantity,
         });
       }
@@ -44,7 +45,7 @@ export class CartService {
         user_id: user_id,
         items: [
           {
-            sku,
+            model,
             quantity,
           },
         ],
@@ -55,14 +56,14 @@ export class CartService {
     return cart.save();
   }
 
-  async reduceQuantity(user_id: string, sku_id: string, quantity: number) {
+  async reduceQuantity(user_id: string, model_id: string, quantity: number) {
     const cart = await this.cartModel.findOne({ user_id: user_id }).exec();
 
     if (!cart) {
       throw new NotFoundException('Cart not found');
     }
 
-    const itemIndex = cart.items.findIndex((item) => item.sku === sku_id);
+    const itemIndex = cart.items.findIndex((item) => item.model === model_id);
     if (itemIndex === -1) {
       throw new NotFoundException('Item not found in cart');
     }
@@ -83,8 +84,8 @@ export class CartService {
       const res = await this.cartModel
         .findOne({ user_id: user_id })
         .populate({
-          path: 'items.sku',
-          model: ProductSku.name,
+          path: 'items.model',
+          model: ModelEntity.name,
           select: 'product_name price',
         })
         .exec();

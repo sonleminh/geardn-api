@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ProductSku } from '../../product-sku/entities/product-sku.entity';
 import { HydratedDocument, Types } from 'mongoose';
+import { Model } from '../../model/entities/model.entity';
 
 
 export type CartDocument = HydratedDocument<Cart>;
@@ -8,8 +9,8 @@ export type CartDocument = HydratedDocument<Cart>;
 // Define the item sub-schema
 @Schema({ _id: false })
 export class CartItem {
-  @Prop({ type: Types.ObjectId, ref: ProductSku.name })
-  sku: string;
+  @Prop({ type: Types.ObjectId, ref: Model.name })
+  model: string;
 
   @Prop({ required: true })
   quantity: number;
