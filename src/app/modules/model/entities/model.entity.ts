@@ -18,7 +18,7 @@ export class Model {
   _id: Types.ObjectId;
 
   @Prop({ require: true, type: String })
-  product_id: string;
+  product: string;
 
   @Prop({ require: true, type: String })
   name: string;

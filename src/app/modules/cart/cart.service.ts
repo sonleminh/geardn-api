@@ -86,12 +86,20 @@ export class CartService {
         .populate({
           path: 'items.model',
           model: ModelEntity.name,
-          select: 'product_name price',
+          populate: {
+            path: 'product', // This will populate the product_id from the Model schema
+            model: 'Product', // Assuming the model name is 'Product'
+            select: 'name price tier_variations', // Select the fields from the Product schema that you want
+          },
+          select: 'product_id name price extinfo',
         })
         .exec();
       if (!res) {
         throw new NotFoundException('Không tìm thấy giỏ hàng!');
       }
+
+     
+  
       return res;
     } catch {
       throw new NotFoundException('Không tìm thấy giỏ hàng!');
