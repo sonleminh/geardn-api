@@ -6,6 +6,52 @@ import { Cart } from './entities/cart.entity';
 import { Model as ModelEntity } from '../model/entities/model.entity';
 import { ModelService } from '../model/model.service';
 
+interface CartItemUnpopulated {
+  model: string; // The model is just an ObjectId (string)
+  quantity: number;
+}
+interface CartItemPopulated {
+  model: {
+    _id: string;
+    // name: string;
+    // price: number;
+    // extinfo: {
+    //   tier_index: number[];
+    // };
+    // product: {
+    //   _id: string;
+    //   name: string;
+    // };
+  };
+  quantity: number;
+}
+
+type CartItem = CartItemUnpopulated | CartItemPopulated;
+
+interface ICart {
+  _id: string;
+  user_id: string;
+  items: CartItem[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+// interface CartItem {
+//   model: {
+//     _id: string;
+//     name: string;
+//     price: number;
+//     extinfo: {
+//       tier_index: number[];
+//     };
+//     product: {
+//       _id: string;
+//       name: string;
+//     };
+//   };
+//   quantity: number;
+// }
 @Injectable()
 export class CartService {
   constructor(
@@ -16,7 +62,7 @@ export class CartService {
 
   async upsertCart(user_id: string, model: string, quantity: number) {
     // Step 1: Verify that the product with the given SKU exists
-    console.log(model)
+    console.log(model);
     const res = await this.modelService.findById(model);
     if (!res) {
       throw new NotFoundException('Model not found');
@@ -89,18 +135,38 @@ export class CartService {
           populate: {
             path: 'product', // This will populate the product_id from the Model schema
             model: 'Product', // Assuming the model name is 'Product'
-            select: 'name price tier_variations', // Select the fields from the Product schema that you want
+            select: 'name price', // Select the fields from the Product schema that you want
           },
-          select: 'product_id name price extinfo',
+          select: 'product_id name price',
         })
         .exec();
       if (!res) {
         throw new NotFoundException('Không tìm thấy giỏ hàng!');
       }
 
-     
-  
-      return res;
+      const transformedRes: ICart = {
+        _id: res._id.toString(),
+        user_id: res.user_id,
+        items: res.items.map((item: CartItem) => {
+          if (typeof item.model === 'string') {
+            // If model is still a string, meaning it's not populated
+            return {
+              model: item.model,
+              quantity: item.quantity,
+            };
+          } else {
+            return {
+              model: {
+                _id: item.model._id,
+              },
+              quantity: item.quantity,
+            };
+          }
+        }),
+      };
+
+      return transformedRes;
+      // return res;
     } catch {
       throw new NotFoundException('Không tìm thấy giỏ hàng!');
     }
