@@ -13,28 +13,44 @@ interface CartItemUnpopulated {
 interface CartItemPopulated {
   model: {
     _id: string;
-    // name: string;
-    // price: number;
-    // extinfo: {
-    //   tier_index: number[];
-    // };
-    // product: {
-    //   _id: string;
-    //   name: string;
-    // };
+    name: string;
+    price: number;
+    extinfo: {
+      tier_index: number[];
+    };
+    product: {
+      _id: string;
+      name: string;
+      tier_variations: object;
+    };
+  };
+  quantity: number;
+}
+
+interface CartItemRes {
+  model: {
+    _id: string;
+    name: string;
+    price: number;
+    extinfo: {
+      tier_index: number[];
+    };
+    product_id: string;
+    product_name: string;
+    tier_variations: object;
   };
   quantity: number;
 }
 
 type CartItem = CartItemUnpopulated | CartItemPopulated;
 
-interface ICart {
+export interface ICart {
   _id: string;
   user_id: string;
   items: CartItem[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+  // createdAt: string;
+  // updatedAt: string;
+  // __v: number;
 }
 
 // interface CartItem {
@@ -135,16 +151,16 @@ export class CartService {
           populate: {
             path: 'product', // This will populate the product_id from the Model schema
             model: 'Product', // Assuming the model name is 'Product'
-            select: 'name price', // Select the fields from the Product schema that you want
+            select: 'name price tier_variations', // Select the fields from the Product schema that you want
           },
-          select: 'product_id name price',
+          select: 'product_id name price extinfo',
         })
         .exec();
       if (!res) {
         throw new NotFoundException('Không tìm thấy giỏ hàng!');
       }
 
-      const transformedRes: ICart = {
+      const transformedRes = {
         _id: res._id.toString(),
         user_id: res.user_id,
         items: res.items.map((item: CartItem) => {
@@ -158,6 +174,15 @@ export class CartService {
             return {
               model: {
                 _id: item.model._id,
+                name: item.model.name,
+                price: item.model.price,
+                extinfo: item.model.extinfo,
+                product_id: item.model.product._id,
+                // product: {
+                //   _id: item.model.product._id,
+                //   name: item.model.product.name,
+                // }
+                tier_variations: item.model.product.tier_variations,
               },
               quantity: item.quantity,
             };
