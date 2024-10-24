@@ -47,7 +47,7 @@ export class ModelService {
 
   async findByProductId(id: string) {
     try {
-      const res = await this.modelModel.find({ product_id: id }).lean().exec();
+      const res = await this.modelModel.find({ product: id }).lean().exec();
       if (!res) {
         throw new NotFoundException('Không tìm thấy loại hàng!');
       }

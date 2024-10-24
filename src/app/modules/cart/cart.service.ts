@@ -21,7 +21,8 @@ interface CartItemPopulated {
     product: {
       _id: string;
       name: string;
-      tier_variations: object;
+      tier_variations: { name: string; options: string[]; images: string[] }[];
+      images: string[];
     };
   };
   quantity: number;
@@ -32,6 +33,7 @@ interface CartItemRes {
     _id: string;
     name: string;
     price: number;
+    image: string;
     extinfo: {
       tier_index: number[];
     };
@@ -151,7 +153,7 @@ export class CartService {
           populate: {
             path: 'product', // This will populate the product_id from the Model schema
             model: 'Product', // Assuming the model name is 'Product'
-            select: 'name price tier_variations', // Select the fields from the Product schema that you want
+            select: 'name price tier_variations images', // Select the fields from the Product schema that you want
           },
           select: 'product_id name price extinfo',
         })
@@ -171,18 +173,25 @@ export class CartService {
               quantity: item.quantity,
             };
           } else {
+            console.log(
+              item?.model?.product?.tier_variations,
+              item?.model?.extinfo,
+            );
             return {
               model: {
                 _id: item.model._id,
-                name: item.model.name,
+                name: item.model.name ? item.model.name : '',
                 price: item.model.price,
+                image:
+                  item?.model?.product?.tier_variations?.length &&
+                  item?.model?.extinfo
+                    ? item?.model?.product?.tier_variations[0]?.images[
+                        item?.model?.extinfo?.tier_index[0]
+                      ]
+                    : item?.model?.product?.images[0],
                 extinfo: item.model.extinfo,
                 product_id: item.model.product._id,
-                // product: {
-                //   _id: item.model.product._id,
-                //   name: item.model.product.name,
-                // }
-                tier_variations: item.model.product.tier_variations,
+                product_name: item.model.product.name,
               },
               quantity: item.quantity,
             };

@@ -151,7 +151,7 @@ export class ProductService {
         res.map(async (product) => {
           // Find the lowest price for each product's SKU
           const lowestPriceSku = await this.modelModel
-            .findOne({ product_id: product._id }) // Match product ID
+            .findOne({ product: product._id }) // Match product ID
             .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
             .select('price') // Only fetch the price field
             .lean()
@@ -183,14 +183,14 @@ export class ProductService {
         throw new NotFoundException('Không tìm thấy sản phẩm!');
       }
       const lowestPriceSku = await this.modelModel
-        .findOne({ product_id: id }) // Match product ID
+        .findOne({ product: id }) // Match product ID
         .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
         .select('price') // Only fetch the price field
         .lean()
         .exec();
 
         const models = await this.modelModel
-        .find({ product_id: id }) // Match product ID
+        .find({ product: id }) // Match product ID
         .select('name price stock extinfo')
         .lean()
         .exec();

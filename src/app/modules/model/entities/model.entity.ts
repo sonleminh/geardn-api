@@ -20,7 +20,7 @@ export class Model {
   @Prop({ require: true, type: String })
   product: string;
 
-  @Prop({ require: true, type: String })
+  @Prop({ type: String })
   name: string;
 
   @Prop({ require: true, type: Number })

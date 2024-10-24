@@ -6,9 +6,9 @@ import { ExtInfoDto } from './extinfo.dto';
 export class CreateModelDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
-  product_id: string;
+  product: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsOptional({ message: 'Nội dung này không được để trống!' })
   @IsString()
   name: string;
 
@@ -28,7 +28,7 @@ export class CreateModelDto {
 export class UpdateModelDto {
   @IsOptional({ message: 'Nội dung này không được để trống!' })
   @IsString()
-  product_id: string;
+  product: string;
 
   @IsOptional({ message: 'Nội dung này không được để trống!' })
   @IsString()
