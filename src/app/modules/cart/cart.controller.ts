@@ -11,7 +11,7 @@ export class CartController {
 
   @Post('add')
   async addToCart(@AuthUser() { _id }, @Body() body: UpsertCartDto) {
-    return this.cartService.upsertCart(_id, body.model, body.quantity);
+    return this.cartService.addCart(_id, body.model, body.quantity);
   }
 
   @Post('subtract')

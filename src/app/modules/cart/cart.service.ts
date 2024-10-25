@@ -63,9 +63,8 @@ export class CartService {
     private readonly modelService: ModelService,
   ) {}
 
-  async upsertCart(user_id: string, model: string, quantity: number) {
+  async addCart(user_id: string, model: string, quantity: number) {
     // Step 1: Verify that the product with the given SKU exists
-    console.log(model);
     const res = await this.modelService.findById(model);
     if (!res) {
       throw new NotFoundException('Model not found');
@@ -203,12 +202,6 @@ export class CartService {
 
     cart.items[itemIndex].quantity = body.quantity;
 
-    // Step 4: Remove the item if its quantity reaches zero
-    // if (cart.items[itemIndex].quantity <= 0) {
-    //   cart.items.splice(itemIndex, 1);
-    // }
-
-    // Step 5: Save the updated cart
     return cart.save();
   }
 }
