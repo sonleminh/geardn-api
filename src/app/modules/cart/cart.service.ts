@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Cart } from './entities/cart.entity';
 import { Model as ModelEntity } from '../model/entities/model.entity';
 import { ModelService } from '../model/model.service';
+import { UpdateCartDto } from './dto/cart.dto';
 
 interface CartItemUnpopulated {
   model: string; // The model is just an ObjectId (string)
@@ -24,22 +25,6 @@ interface CartItemPopulated {
       tier_variations: { name: string; options: string[]; images: string[] }[];
       images: string[];
     };
-  };
-  quantity: number;
-}
-
-interface CartItemRes {
-  model: {
-    _id: string;
-    name: string;
-    price: number;
-    image: string;
-    extinfo: {
-      tier_index: number[];
-    };
-    product_id: string;
-    product_name: string;
-    tier_variations: object;
   };
   quantity: number;
 }
@@ -120,7 +105,7 @@ export class CartService {
     return cart.save();
   }
 
-  async reduceQuantity(user_id: string, model_id: string, quantity: number) {
+  async subtractQuantity(user_id: string, model_id: string, quantity: number) {
     const cart = await this.cartModel.findOne({ user_id: user_id }).exec();
 
     if (!cart) {
@@ -173,10 +158,6 @@ export class CartService {
               quantity: item.quantity,
             };
           } else {
-            console.log(
-              item?.model?.product?.tier_variations,
-              item?.model?.extinfo,
-            );
             return {
               model: {
                 _id: item.model._id,
@@ -204,5 +185,30 @@ export class CartService {
     } catch {
       throw new NotFoundException('Không tìm thấy giỏ hàng!');
     }
+  }
+
+  async updateCartQuantity(user_id: string, body: UpdateCartDto) {
+    const cart = await this.cartModel.findOne({ user_id: user_id }).exec();
+
+    if (!cart) {
+      throw new NotFoundException('Cart not found');
+    }
+
+    const itemIndex = cart.items.findIndex(
+      (item) => item.model === body?.model,
+    );
+    if (itemIndex === -1) {
+      throw new NotFoundException('Item not found in cart');
+    }
+
+    cart.items[itemIndex].quantity = body.quantity;
+
+    // Step 4: Remove the item if its quantity reaches zero
+    // if (cart.items[itemIndex].quantity <= 0) {
+    //   cart.items.splice(itemIndex, 1);
+    // }
+
+    // Step 5: Save the updated cart
+    return cart.save();
   }
 }
