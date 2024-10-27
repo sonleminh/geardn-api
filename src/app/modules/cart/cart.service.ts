@@ -204,4 +204,22 @@ export class CartService {
 
     return cart.save();
   }
+
+  async deleteItem(user_id: string, item_id: string) {
+    const cart = await this.cartModel.findOne({ user_id: user_id }).exec();
+
+    if (!cart) {
+      throw new NotFoundException('Cart not found');
+    }
+    
+    const itemIndex = cart.items.findIndex((item) => item.model === item_id);
+    
+    if (itemIndex === -1) {
+      throw new NotFoundException('Item not found in cart');
+    }
+
+    cart.items.splice(itemIndex, 1)
+
+    return cart.save()
+  }
 }
