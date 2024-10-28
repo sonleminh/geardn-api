@@ -23,13 +23,27 @@ export class OrderItem {
   total: number;
 }
 
+export class Address {
+  @Prop({ required: true })
+  street: number;
+
+  @Prop({ required: true })
+  city: string;
+
+  @Prop({ required: true })
+  state: string;
+
+  @Prop({ required: true })
+  country: string;
+}
+
 // Create the schema for the items array
 export const OrderItemSchema = SchemaFactory.createForClass(OrderItem);
 
 @Schema({ collection: 'orders', timestamps: true })
 export class Order {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  userId: Types.ObjectId;
+  user_id: Types.ObjectId;
 
   @Prop({ type: [OrderItemSchema], required: true })
   items: OrderItem[];
@@ -40,23 +54,14 @@ export class Order {
   @Prop({ default: 'pending' })
   status: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Payment', required: true })
-  paymentId: Types.ObjectId;
+  // @Prop({ type: Types.ObjectId, ref: 'Payment', required: true })
+  // paymentId: Types.ObjectId;
+
+  // @Prop({ required: true })
+  // payment_status: string; 
 
   @Prop({ required: true })
-  payment_status: string; 
-
-  @Prop({ required: true })
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-    country: string;
-  };
-
-  @Prop({ type: Date, default: Date.now })
-  orderedAt: Date;
+  address: Address;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
