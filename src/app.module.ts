@@ -16,6 +16,7 @@ import { AttributeModule } from './app/modules/attribute/attribute.module';
 import { ProductSkuModule } from './app/modules/product-sku/product-sku.module';
 import { CartModule } from './app/modules/cart/cart.module';
 import { ModelModule } from './app/modules/model/model.module';
+import { OrderModule } from './app/modules/order/order.module';
 // import { AuthModule } from './app/modules/auth/auth.module';
 
 @Module({
@@ -55,6 +56,7 @@ import { ModelModule } from './app/modules/model/model.module';
     UploadModule,
     CartModule,
     ModelModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
