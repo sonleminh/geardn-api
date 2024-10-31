@@ -14,13 +14,16 @@ export class OrderItem {
   product_id: Types.ObjectId;
 
   @Prop({ required: true })
+  product_name: string;
+
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true })
   quantity: number;
 
   @Prop({ required: true })
   price: number;
-
-  @Prop()
-  total: number;
 }
 
 export class Address {
@@ -48,10 +51,10 @@ export class Order {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true})
+  @Prop({ required: true })
   phone: string;
 
-  @Prop({ required: true})
+  @Prop({ required: true })
   email: string;
 
   @Prop({ type: [OrderItemSchema], required: true })

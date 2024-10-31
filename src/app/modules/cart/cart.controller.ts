@@ -21,7 +21,6 @@ export class CartController {
   }
 
   @Get()
-
   async getCartById(@AuthUser() { _id }) {
     return this.cartService.getCartById(_id);
   }

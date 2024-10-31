@@ -158,21 +158,34 @@ export class CartService {
             };
           } else {
             return {
-              model: {
-                _id: item.model._id,
-                name: item.model.name ? item.model.name : '',
-                price: item.model.price,
-                image:
-                  item?.model?.product?.tier_variations?.length &&
-                  item?.model?.extinfo
-                    ? item?.model?.product?.tier_variations[0]?.images[
-                        item?.model?.extinfo?.tier_index[0]
-                      ]
-                    : item?.model?.product?.images[0],
-                extinfo: item.model.extinfo,
-                product_id: item.model.product._id,
-                product_name: item.model.product.name,
-              },
+              // model: {
+              //   _id: item.model._id,
+              //   name: item.model.name ? item.model.name : '',
+              //   price: item.model.price,
+              //   image:
+              //     item?.model?.product?.tier_variations?.length &&
+              //     item?.model?.extinfo
+              //       ? item?.model?.product?.tier_variations[0]?.images[
+              //           item?.model?.extinfo?.tier_index[0]
+              //         ]
+              //       : item?.model?.product?.images[0],
+              //   extinfo: item.model.extinfo,
+              //   product_id: item.model.product._id,
+              //   product_name: item.model.product.name,
+              // },
+              model_id: item.model._id,
+              name: item.model.name ? item.model.name : '',
+              price: item.model.price,
+              image:
+                item?.model?.product?.tier_variations?.length &&
+                item?.model?.extinfo
+                  ? item?.model?.product?.tier_variations[0]?.images[
+                      item?.model?.extinfo?.tier_index[0]
+                    ]
+                  : item?.model?.product?.images[0],
+              extinfo: item.model.extinfo,
+              product_id: item.model.product._id,
+              product_name: item.model.product.name,
               quantity: item.quantity,
             };
           }
@@ -211,15 +224,15 @@ export class CartService {
     if (!cart) {
       throw new NotFoundException('Cart not found');
     }
-    
+
     const itemIndex = cart.items.findIndex((item) => item.model === item_id);
-    
+
     if (itemIndex === -1) {
       throw new NotFoundException('Item not found in cart');
     }
 
-    cart.items.splice(itemIndex, 1)
+    cart.items.splice(itemIndex, 1);
 
-    return cart.save()
+    return cart.save();
   }
 }
