@@ -45,8 +45,26 @@ export class Order {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   user_id: Types.ObjectId;
 
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true})
+  phone: string;
+
+  @Prop({ required: true})
+  email: string;
+
   @Prop({ type: [OrderItemSchema], required: true })
   items: OrderItem[];
+
+  @Prop({ required: true })
+  address: Address;
+
+  @Prop({ required: true })
+  receiveOption: string;
+
+  @Prop({})
+  note: string;
 
   @Prop({ required: true })
   totalAmount: number;
@@ -60,8 +78,7 @@ export class Order {
   // @Prop({ required: true })
   // payment_status: string; 
 
-  @Prop({ required: true })
-  address: Address;
+ 
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
