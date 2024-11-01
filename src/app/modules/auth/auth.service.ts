@@ -56,8 +56,8 @@ export class AuthService {
         role: user.role,
       });
 
-      this.storeToken(res, 'at', accessToken);
-      this.storeToken(res, 'rt', refreshToken);
+      this.storeToken(res, 'at', accessToken, 2);
+      this.storeToken(res, 'rt', refreshToken, 48);
 
       const { password, ...tempUser } = user['_doc'];
       return tempUser;
@@ -86,7 +86,7 @@ export class AuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '1d',
+          expiresIn: '2d',
         }),
       ]);
       return {
@@ -98,11 +98,15 @@ export class AuthService {
     }
   }
 
-  storeToken(res: Response, tokenName: string, token: string) {
+  storeToken(res: Response, tokenName: string, token: string, expiresInHours: number) {
+    const expires = new Date();
+    expires.setHours(expires.getHours() + expiresInHours);
+
     res.cookie(tokenName, token, {
       // sameSite: 'none',
       // httpOnly: true,
       // secure: true,
+      expires: expires,
       path: '/',
     });
   }
@@ -134,10 +138,13 @@ export class AuthService {
             AuthConfigKey.JWT_SECRET_KEY,
           ),
           expiresIn: '2h',
-        },
+        },  
       );
+      this.storeToken(res, 'at', newAccessToken, 2);
+
       return {
         accessToken: newAccessToken,
+        expires: 2,
         statusCode: HttpStatus.OK,
       };
       // return 2;

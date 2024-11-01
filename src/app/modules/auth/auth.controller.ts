@@ -39,6 +39,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('whoami')
   async getProfile(@Request() req) {
+    console.log('user:', req.user);
     return req.user;
   }
 
