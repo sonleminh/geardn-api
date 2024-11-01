@@ -16,7 +16,7 @@ export class OrderItem {
   @Prop({ required: true })
   product_name: string;
 
-  @Prop({ required: true })
+  @Prop({})
   name: string;
 
   @Prop({ required: true })
