@@ -1,5 +1,14 @@
 import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
 
+export enum ORDER_STATUS {
+  PENDING = 'pending',
+  CONFIRMED = 'confirmed',
+  SHIPPING = 'shipping',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+  RETURNED = 'returned',
+}
+
 export class UpsertCartDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()

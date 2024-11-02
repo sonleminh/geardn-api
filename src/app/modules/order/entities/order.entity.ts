@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { ORDER_STATUS } from '../dto/order.dto';
 
 
 export type OrderDocument = HydratedDocument<Order>;
@@ -72,7 +73,12 @@ export class Order {
   @Prop({ required: true })
   totalAmount: number;
 
-  @Prop({ default: 'pending' })
+  @Prop({
+    enum: ORDER_STATUS,
+    require: true,
+    type: String,
+    default: ORDER_STATUS.PENDING,
+  })
   status: string;
 
   // @Prop({ type: Types.ObjectId, ref: 'Payment', required: true })
@@ -80,8 +86,6 @@ export class Order {
 
   // @Prop({ required: true })
   // payment_status: string; 
-
- 
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
