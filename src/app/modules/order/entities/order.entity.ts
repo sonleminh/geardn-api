@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { ORDER_STATUS } from '../dto/order.dto';
+import { ORDER_STATUS, RECEIVE_OPTION } from '../dto/order.dto';
 
 
 export type OrderDocument = HydratedDocument<Order>;
@@ -46,40 +46,48 @@ export const OrderItemSchema = SchemaFactory.createForClass(OrderItem);
 
 @Schema({ collection: 'orders', timestamps: true })
 export class Order {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User' })
   user_id: Types.ObjectId;
 
-  @Prop({ required: true })
+  @Prop()
   name: string;
 
-  @Prop({ required: true })
+  @Prop()
   phone: string;
 
-  @Prop({ required: true })
+  @Prop()
   email: string;
 
   @Prop({ type: [OrderItemSchema], required: true })
   items: OrderItem[];
 
-  @Prop({ required: true })
+  @Prop()
   address: Address;
 
-  @Prop({ required: true })
-  receiveOption: string;
+  @Prop({ 
+    enum: ORDER_STATUS,
+    require: true,
+    type: String,
+   })
+  receive_option: string;
 
   @Prop({})
   note: string;
 
   @Prop({ required: true })
-  totalAmount: number;
+  total_amount: number;
 
   @Prop({
-    enum: ORDER_STATUS,
+    enum: RECEIVE_OPTION,
     require: true,
     type: String,
     default: ORDER_STATUS.PENDING,
   })
   status: string;
+
+  @Prop({ default: false })
+  is_order_online: boolean;
+
 
   // @Prop({ type: Types.ObjectId, ref: 'Payment', required: true })
   // paymentId: Types.ObjectId;

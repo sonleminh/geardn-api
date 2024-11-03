@@ -13,9 +13,10 @@ import { paginateCalculator } from 'src/app/utils/page-helpers';
 export class OrderService {
   constructor(@InjectModel(Order.name) private orderModel: Model<Order>) {}
 
-  async createOrder(user_id: string, body: any) {
+  async createOrder(user_id: string, role: string, body: any) {
     try {
-      return await this.orderModel.create({ ...body, user_id: user_id });
+      const orderData = user_id && role !== 'admin' ? { ...body, user_id } : { ...body };
+      return await this.orderModel.create(orderData);
     } catch (error) {
       throw error;
     }
@@ -69,4 +70,15 @@ export class OrderService {
       throw new NotFoundException('Không tìm thấy đơn hàng!');
     }
   }
+
+  // @Patch(':id')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Roles(RBAC.ADMIN)
+  // async updateProduct(
+  //   @Param() { id }: { id: Types.ObjectId },
+  //   @Body() updateProductDTO: UpdateProductDto,
+  // ) {
+  //   return await this.productService.update(id, updateProductDTO);
+  // }
+
 }

@@ -9,6 +9,11 @@ export enum ORDER_STATUS {
   RETURNED = 'returned',
 }
 
+export enum RECEIVE_OPTION {
+  DELIVERY = 'delivery',
+  STORE = 'store',
+}
+
 export class UpsertCartDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
