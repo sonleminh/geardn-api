@@ -48,9 +48,6 @@ export class Product {
   @Prop({ require: true, unique: true })
   name: string;
 
-  // @Prop({ require: true, unique: true })
-  // sku_name: string;
-
   // @Prop({ type: Discount })
   // discount: Discount;
 
@@ -65,6 +62,9 @@ export class Product {
 
   @Prop()
   tier_variations: TierVariant[];
+
+  @Prop({ require: true, unique: true })
+  sku_name: string;
 
   // @Prop({ default: undefined })
   // attributes: TYPE_ATTRIBUTE[];

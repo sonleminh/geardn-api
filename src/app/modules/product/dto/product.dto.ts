@@ -30,6 +30,11 @@ export class CreateProductDto {
   @IsOptional()
   tier_variations: VariantDTO[];
 
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  @Length(0, 30, { message: 'Độ dài tên từ 0-30 ký tự!' })
+  sku_name: string;
+
   @IsOptional()
   @IsString()
   brand: string;
@@ -47,11 +52,6 @@ export class CreateProductDto {
   //   ).join(' | ')}`,
   // })
   // attributes?: TYPE_ATTRIBUTE[];
-
-  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
-  // @IsString()
-  // @Length(0, 30, { message: 'Độ dài tên từ 0-30 ký tự!' })
-  // sku_name: string;
 
   @IsOptional()
   details: DetailsDto;
@@ -78,14 +78,14 @@ export class UpdateProductDto {
   tier_variations: VariantDTO[];
 
   @IsOptional()
+  sku_name: string;
+
+  @IsOptional()
   @IsString()
   brand: string;
 
   // @IsOptional()
   // attributes: string[];
-
-  // @IsOptional()
-  // sku_name: string;
 
   @IsOptional()
   @IsString()
