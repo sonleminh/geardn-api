@@ -38,17 +38,3 @@ export class Model {
 }
 
 export const ModelSchema = SchemaFactory.createForClass(Model);
-
-ModelSchema.pre<ModelDocument>('save', async function (next) {
-  // Only check for duplicates if tier_index is defined
-  if (this.extinfo?.tier_index && this.extinfo.tier_index.length > 0) {
-    const existingDoc = await this.model('Model').findOne({
-      'extinfo.tier_index': { $eq: this.extinfo.tier_index },
-    });
-
-    if (existingDoc && existingDoc._id.toString() !== this._id.toString()) {
-      throw new BadRequestException('Duplicate tier_index detected');
-    }
-  }
-  next();
-});

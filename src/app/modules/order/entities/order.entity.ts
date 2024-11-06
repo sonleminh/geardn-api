@@ -83,8 +83,6 @@ export class Order {
 
   // @Prop({ required: true })
   // payment_status: string; 
-
- 
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

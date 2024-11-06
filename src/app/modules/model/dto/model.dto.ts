@@ -13,6 +13,10 @@ export class CreateModelDto {
   name: string;
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  sku: string;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsNumber()
   price: number;
 
@@ -26,15 +30,19 @@ export class CreateModelDto {
 }
 
 export class UpdateModelDto {
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsString()
   product: string;
 
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsString()
   name: string;
 
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
+  @IsString()
+  sku: string;
+
+  @IsOptional()
   @IsNumber()
   price: number;
 

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -58,13 +59,13 @@ export class ModelController {
     return await this.modelService.update(id, body);
   }
 
-  // @Delete(':id')
-  // @UseGuards(JwtAuthGuard, RoleGuard)
-  // @Roles(RBAC.ADMIN)
-  // @HttpCode(HttpStatus.CREATED)
-  // async remove(
-  //   @Param() { id }: ObjectIdParamDto,
-  // ): Promise<{ deletedCount: number }> {
-  //   return await this.productSkuService.remove(id);
-  // }
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RBAC.ADMIN)
+  @HttpCode(HttpStatus.CREATED)
+  async remove(
+    @Param() { id }: ObjectIdParamDto,
+  ): Promise<{ deletedCount: number }> {
+    return await this.modelService.remove(id);
+  }
 }

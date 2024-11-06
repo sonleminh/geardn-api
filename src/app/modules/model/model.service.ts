@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
@@ -15,7 +19,26 @@ export class ModelService {
 
   async create(body: CreateModelDto) {
     try {
-      return await this.modelModel.create(body);
+      const existedModel = await this.modelModel
+        .findOne({ product: body.product, name: body.name })
+        .lean()
+        .exec();
+
+      if (existedModel) {
+        throw new BadRequestException('This model already exists');
+      }
+
+      const count = await this.modelModel.countDocuments({
+        product: body.product,
+      });
+      const newBody = {
+        ...body,
+        sku: body.extinfo.tier_index
+          ? `${body.sku}-` + (count + 1).toString().padStart(3, '0')
+          : body.sku,
+      };
+
+      return await this.modelModel.create(newBody);
     } catch (error) {
       throw error;
     }
@@ -63,22 +86,21 @@ export class ModelService {
   }
 
   async update(id: string, body: UpdateModelDto) {
-    const entity = await this.modelModel
-      .findById({ _id: id })
-      .where({ is_deleted: { $ne: true } })
-      .lean();
-    if (!entity) {
+    const existedModel = await this.modelModel
+      .findOne({ product: body.product, name: body.name })
+      .lean()
+      .exec();
+
+    if (!existedModel) {
       throw new NotFoundException(`Đối tượng này không tồn tại!!`);
     }
 
-    const updatedEntity = { ...entity, ...body };
+    if (existedModel._id.toString() !== id) {
+      throw new BadRequestException('This model already exists');
+    }
 
-    // if (body.quantity !== undefined) {
-    //   // Update status based on quantity
-    //   updatedEntity.status = body.quantity > 0 ? 'IN_STOCK' : 'OUT_OF_STOCK';
-    // }
+    const updatedEntity = { ...existedModel, ...body };
 
-    // Perform the update and return the updated document
     return await this.modelModel
       .findByIdAndUpdate(id, updatedEntity, {
         new: true,
@@ -86,16 +108,16 @@ export class ModelService {
       .exec();
   }
 
-  // async remove(id: string): Promise<{ deletedCount: number }> {
-  //   const entity = await this.ProductSkuModel.findById(id).lean();
-  //   if (!entity) {
-  //     throw new NotFoundException('Đối tượng không tồn tại!!');
-  //   }
+  async remove(id: string): Promise<{ deletedCount: number }> {
+    const entity = await this.modelModel.findById(id).lean();
+    if (!entity) {
+      throw new NotFoundException('Đối tượng không tồn tại!!');
+    }
 
-  //   const result = await this.ProductSkuModel.deleteOne({ _id: id }).exec();
+    const result = await this.modelModel.deleteOne({ _id: id }).exec();
 
-  //   return {
-  //     deletedCount: result.deletedCount,
-  //   };
-  // }
+    return {
+      deletedCount: result.deletedCount,
+    };
+  }
 }
