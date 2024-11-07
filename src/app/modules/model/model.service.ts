@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-
 import { Model } from 'mongoose';
+
 import { Model as ModelEntity } from './entities/model.entity';
 import { CreateModelDto, UpdateModelDto } from './dto/model.dto';
 import { ProductService } from '../product/product.service';
@@ -44,18 +44,6 @@ export class ModelService {
     }
   }
 
-  // async findAll() {
-  //   try {
-  //     const [res, total] = await Promise.all([
-  //       this.ProductSkuModel.find().lean().exec(),
-  //       this.ProductSkuModel.countDocuments(),
-  //     ]);
-  //     return { productSkuList: res, total };
-  //   } catch (error) {
-  //     throw new BadRequestException(error);
-  //   }
-  // }
-
   async findById(id: string) {
     try {
       const res = await this.modelModel.findById(id).exec();
@@ -86,20 +74,26 @@ export class ModelService {
   }
 
   async update(id: string, body: UpdateModelDto) {
+    const { sku, ...restBody } = body;
     const existedModel = await this.modelModel
-      .findOne({ product: body.product, name: body.name })
+      .find({ product: body.product })
       .lean()
       .exec();
-
     if (!existedModel) {
-      throw new NotFoundException(`Đối tượng này không tồn tại!!`);
+      throw new NotFoundException(`This model does not exist!!`);
     }
 
-    if (existedModel._id.toString() !== id) {
-      throw new BadRequestException('This model already exists');
+    const isExisted = existedModel
+      ?.find((model) => model.name === body.name)
+      ?._id.toString();
+
+    if (isExisted) {
+      throw new NotFoundException(`This model already exists!!`);
     }
 
-    const updatedEntity = { ...existedModel, ...body };
+    const model = existedModel.find((model) => model._id.toString() === id);
+
+    const updatedEntity = { ...model, ...restBody };
 
     return await this.modelModel
       .findByIdAndUpdate(id, updatedEntity, {

@@ -24,7 +24,7 @@ export class Model {
   @Prop({ type: String })
   name: string;
 
-  @Prop({ type: String })
+  @Prop({ type: String, unique: true })
   sku: string;
 
   @Prop({ require: true, type: Number })
