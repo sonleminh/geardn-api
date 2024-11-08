@@ -147,6 +147,8 @@ export class ProductService {
       ]);
       const categories = await this.categoryService.getCategoryInitial();
 
+      console.log('res', res);
+
       const products = await Promise.all(
         res.map(async (product) => {
           // Find the lowest price for each product's SKU
@@ -165,10 +167,58 @@ export class ProductService {
       );
 
       return {
-        productList: products,
+        products: products,
         categories: categories,
         total,
       };
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
+  async getProducts() {
+    try {
+      const filterObject = {
+        is_deleted: { $ne: true },
+        _id: { $in: [] }, // Placeholder for productIds to be added later
+      };
+
+      // Step 1: Find all models and get their product references
+      const models = await this.modelModel.find().select('product').exec();
+      if (!models.length) {
+        throw new NotFoundException('No models found in the database.');
+      }
+
+      // Step 2: Extract unique product IDs from models
+
+      const productIds = models.map((model) => model.product).filter(Boolean);
+      filterObject._id.$in = productIds;
+      // Step 3: Fetch products matching the product IDs from the Product collection
+      const [res, total] = await Promise.all([
+        this.productModel.find(filterObject).exec(),
+        this.productModel.countDocuments(filterObject),
+      ]);
+
+      const products = await Promise.all(
+        res.map(async (product) => {
+          // Find the lowest price for each product's SKU
+          const lowestPriceSku = await this.modelModel
+            .findOne({ product: product._id }) // Match product ID
+            .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
+            .select('price') // Only fetch the price field
+            .lean()
+            .exec();
+
+          return {
+            ...product.toObject(),
+            original_price: lowestPriceSku ? lowestPriceSku.price : null,
+          };
+        }),
+      );
+
+      console.log(res)
+
+      return { products: products, total: total };
     } catch (error) {
       throw new BadRequestException(error);
     }
@@ -189,7 +239,7 @@ export class ProductService {
         .lean()
         .exec();
 
-        const models = await this.modelModel
+      const models = await this.modelModel
         .find({ product: id }) // Match product ID
         .select('name price stock extinfo')
         .lean()
@@ -229,11 +279,13 @@ export class ProductService {
         .lean()
         .exec();
 
+        console.log(res)
+
       return await Promise.all(
         res.map(async (product) => {
           // Find the lowest price for each product's SKU
           const lowestPriceSku = await this.modelModel
-            .findOne({ product_id: product._id }) // Match product ID
+            .findOne({ product: product._id }) // Match product ID
             .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
             .select('price') // Only fetch the price field
             .lean()
