@@ -15,7 +15,12 @@ export class OrderService {
 
   async createOrder(user_id: string, role: string, body: any) {
     try {
-      const orderData = user_id && role !== 'admin' ? { ...body, user_id } : { ...body };
+      console.log(user_id, role)
+      const orderData =
+        user_id && role !== 'admin'
+          ? { ...body, user_id }
+          : { ...body, user_id: 'admin' };
+      console.log(orderData)
       return await this.orderModel.create(orderData);
     } catch (error) {
       throw error;

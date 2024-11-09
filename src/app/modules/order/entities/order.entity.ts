@@ -16,7 +16,7 @@ export class OrderItem {
   @Prop({ required: true })
   product_name: string;
 
-  @Prop({ required: true })
+  @Prop()
   name: string;
 
   @Prop({ required: true })
@@ -30,16 +30,16 @@ export class OrderItem {
 }
 
 export class Address {
-  @Prop({ required: true })
+  @Prop()
   city: string;
 
-  @Prop({ required: true })
+  @Prop()
   district: string;
 
-  @Prop({ required: true })
+  @Prop()
   ward: string;
 
-  @Prop({ required: true })
+  @Prop()
   address: string;
 }
 
@@ -51,29 +51,29 @@ export class Order {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   user_id: Types.ObjectId;
 
-  @Prop({ required: true })
+  @Prop()
   name: string;
 
   @Prop({ required: true })
   phone: string;
 
-  @Prop({ required: true })
+  @Prop()
   email: string;
 
   @Prop({ type: [OrderItemSchema], required: true })
   items: OrderItem[];
 
-  @Prop({ required: true })
+  @Prop()
   address: Address;
 
   @Prop({ required: true })
-  receiveOption: string;
+  receive_option: string;
 
   @Prop({})
   note: string;
 
   @Prop({ required: true })
-  totalAmount: number;
+  total_amount: number;
 
   @Prop({ default: 'pending' })
   status: string;
