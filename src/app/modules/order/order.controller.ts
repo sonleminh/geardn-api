@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthUser } from 'src/app/decorators/auth.decorators';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { OrderService } from './order.service';
+import { Types } from 'mongoose';
 
 @Controller('order')
 @UseGuards(JwtAuthGuard)
@@ -28,11 +29,10 @@ export class OrderController {
   //   return this.cartService.subtractQuantity(_id, body.model, body.quantity);
   // }
 
-  // @Get()
-
-  // async getCartById(@AuthUser() { _id }) {
-  //   return this.cartService.getCartById(_id);
-  // }
+  @Get(':id')
+  async getOrderById(@Param('id') id: Types.ObjectId) {
+    return this.orderService.getOrderById(id);
+  }
 
   // @Patch()
   // async updateCartQuantity(@AuthUser() { _id }, @Body() body: UpsertCartDto) {

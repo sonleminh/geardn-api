@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 
 import { Model } from 'mongoose';
 import { Order } from './entities/order.entity';
@@ -15,12 +16,12 @@ export class OrderService {
 
   async createOrder(user_id: string, role: string, body: any) {
     try {
-      console.log(user_id, role)
+      console.log(user_id, role);
       const orderData =
         user_id && role !== 'admin'
           ? { ...body, user_id }
           : { ...body, user_id: 'admin' };
-      console.log(orderData)
+      console.log(orderData);
       return await this.orderModel.create(orderData);
     } catch (error) {
       throw error;
@@ -76,6 +77,20 @@ export class OrderService {
     }
   }
 
+  async getOrderById(id: Types.ObjectId) {
+    try {
+      console.log(id);
+      const res = await this.orderModel.findById(id);
+      if (!res) {
+        throw new NotFoundException('Không tìm thấy đơn hàng!');
+      }
+
+      return res;
+    } catch {
+      throw new NotFoundException('Không tìm thấy đơn hàng!');
+    }
+  }
+
   // @Patch(':id')
   // @UseGuards(JwtAuthGuard, RoleGuard)
   // @Roles(RBAC.ADMIN)
@@ -85,5 +100,4 @@ export class OrderService {
   // ) {
   //   return await this.productService.update(id, updateProductDTO);
   // }
-
 }
