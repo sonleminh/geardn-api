@@ -54,7 +54,7 @@ export class Order {
   @Prop()
   name: string;
 
-  @Prop({ required: true })
+  @Prop()
   phone: string;
 
   @Prop()

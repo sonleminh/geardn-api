@@ -9,6 +9,7 @@ import { Types } from 'mongoose';
 import { Model } from 'mongoose';
 import { Order } from './entities/order.entity';
 import { paginateCalculator } from 'src/app/utils/page-helpers';
+import { ORDER_STATUS } from './dto/order.dto';
 
 @Injectable()
 export class OrderService {
@@ -16,7 +17,6 @@ export class OrderService {
 
   async createOrder(user_id: string, role: string, body: any) {
     try {
-      console.log(user_id, role);
       const orderData =
         user_id && role !== 'admin'
           ? { ...body, user_id }
@@ -79,7 +79,6 @@ export class OrderService {
 
   async getOrderById(id: Types.ObjectId) {
     try {
-      console.log(id);
       const res = await this.orderModel.findById(id);
       if (!res) {
         throw new NotFoundException('Không tìm thấy đơn hàng!');
@@ -91,13 +90,45 @@ export class OrderService {
     }
   }
 
-  // @Patch(':id')
-  // @UseGuards(JwtAuthGuard, RoleGuard)
-  // @Roles(RBAC.ADMIN)
-  // async updateProduct(
-  //   @Param() { id }: { id: Types.ObjectId },
-  //   @Body() updateProductDTO: UpdateProductDto,
-  // ) {
-  //   return await this.productService.update(id, updateProductDTO);
-  // }
+  async updateOrder(id: Types.ObjectId, body: any) {
+    const entity = await this.orderModel
+      .findById(id)
+      .where({ is_deleted: { $ne: true } })
+      .lean();
+
+    if (!entity) {
+      throw new NotFoundException('Đối tượng không tồn tại!!');
+    }
+
+    const newData = {
+      ...entity,
+      ...body,
+    };
+
+    // if (images) {
+    //   const [imageUrl] = await Promise.all([
+    //     this.firebaseService.uploadFile(images),
+    //     this.firebaseService.deleteFile(entity.images),
+    //   ]);
+    //   newData = {
+    //     ...newData,
+    //     images: imageUrl,
+    //   };
+    // }
+    return await this.orderModel
+      .findByIdAndUpdate(id, newData, {
+        new: true,
+      })
+      .exec();
+  }
+
+
+  async updateOrderStatus(id: Types.ObjectId, status: ORDER_STATUS) {
+    const order = await this.orderModel.findById(id);
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+    order.status = status;
+    return order.save();
+  }
 }

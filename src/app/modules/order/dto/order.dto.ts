@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
 
 export enum ORDER_STATUS {
   PENDING = 'pending',
@@ -34,4 +34,9 @@ export class UpdateCartDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsNumber()
   quantity: number;
+}
+
+export class StatusUpdateDto {
+  @IsEnum(ORDER_STATUS)
+  status: ORDER_STATUS;
 }

@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthUser } from 'src/app/decorators/auth.decorators';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { OrderService } from './order.service';
 import { Types } from 'mongoose';
+import { StatusUpdateDto } from './dto/order.dto';
 
 @Controller('order')
 @UseGuards(JwtAuthGuard)
@@ -24,20 +25,23 @@ export class OrderController {
     return this.orderService.getOrdersByUser(_id);
   }
 
-  // @Post('subtract')
-  // async subtractQuantity(@AuthUser() { _id }, @Body() body: UpsertCartDto) {
-  //   return this.cartService.subtractQuantity(_id, body.model, body.quantity);
-  // }
-
   @Get(':id')
   async getOrderById(@Param('id') id: Types.ObjectId) {
     return this.orderService.getOrderById(id);
   }
 
-  // @Patch()
-  // async updateCartQuantity(@AuthUser() { _id }, @Body() body: UpsertCartDto) {
-  //   return this.cartService.updateCartQuantity(_id, body);
-  // }
+  @Patch(':id')
+  async updateOrder(@Param('id') id: Types.ObjectId, @Body() body: any) {
+    return this.orderService.updateOrder(id, body);
+  }
+
+  @Patch(':id/status')
+  async updateOrderStatus(
+    @Param('id') id: Types.ObjectId,
+    @Body() statusUpdateDto: StatusUpdateDto
+  ) {
+    return this.orderService.updateOrderStatus(id, statusUpdateDto.status);
+  }
 
   // @Delete(':id')
   // async deleteItem(@AuthUser() { _id }, @Param() { id }: ObjectIdParamDto) {
