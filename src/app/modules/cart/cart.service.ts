@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
@@ -68,6 +68,10 @@ export class CartService {
     const res = await this.modelService.findById(model);
     if (!res) {
       throw new NotFoundException('Model not found');
+    }
+
+    if (quantity && res?.stock === 0) {
+      throw new ConflictException('This item is out of stock');
     }
 
     // Step 2: Find the user's cart

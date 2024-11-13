@@ -33,7 +33,7 @@ export class OrderService {
 
         if (model.stock < item.quantity) {
           throw new BadRequestException(
-            `Insufficient stock for model ${model.name}`,
+            `Insufficient stock for model ${model.sku}`,
           );
         }
 
@@ -59,7 +59,6 @@ export class OrderService {
         user_id && role !== 'admin'
           ? { ...body, user_id }
           : { ...body, user_id: 'admin' };
-      console.log(orderData);
       return await this.orderModel.create(orderData);
     } catch (error) {
       throw error;

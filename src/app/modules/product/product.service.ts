@@ -147,7 +147,6 @@ export class ProductService {
       ]);
       const categories = await this.categoryService.getCategoryInitial();
 
-      console.log('res', res);
 
       const products = await Promise.all(
         res.map(async (product) => {
@@ -216,8 +215,6 @@ export class ProductService {
         }),
       );
 
-      console.log(res)
-
       return { products: products, total: total };
     } catch (error) {
       throw new BadRequestException(error);
@@ -278,8 +275,6 @@ export class ProductService {
         .populate('category', 'name')
         .lean()
         .exec();
-
-        console.log(res)
 
       return await Promise.all(
         res.map(async (product) => {
