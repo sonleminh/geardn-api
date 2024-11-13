@@ -62,7 +62,7 @@ export class CategoryService {
       .exec();
   }
 
-  async remove(id: string): Promise<{ deletedCount: number }> {
+  async delete(id: string): Promise<{ deletedCount: number }> {
     const entity = await this.categoryModel.findById(id).lean();
     if (!entity) {
       throw new NotFoundException('Đối tượng không tồn tại!!');

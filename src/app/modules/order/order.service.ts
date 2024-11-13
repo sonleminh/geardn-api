@@ -10,13 +10,51 @@ import { Model } from 'mongoose';
 import { Order } from './entities/order.entity';
 import { paginateCalculator } from 'src/app/utils/page-helpers';
 import { ORDER_STATUS } from './dto/order.dto';
+import { Model as ModelEntity } from '../model/entities/model.entity';
 
 @Injectable()
 export class OrderService {
-  constructor(@InjectModel(Order.name) private orderModel: Model<Order>) {}
+  constructor(
+    @InjectModel(Order.name) private orderModel: Model<Order>,
+    @InjectModel(ModelEntity.name) private modelModel: Model<ModelEntity>,
+  ) {}
 
   async createOrder(user_id: string, role: string, body: any) {
     try {
+      const orderItems = body.items;
+      for (const item of orderItems) {
+        const model = await this.modelModel.findById(item.model_id);
+
+        if (!model) {
+          throw new BadRequestException(
+            `Model with ID ${item.model_id} not found`,
+          );
+        }
+
+        if (model.stock < item.quantity) {
+          throw new BadRequestException(
+            `Insufficient stock for model ${model.name}`,
+          );
+        }
+
+        if (item.quantity === 0) {
+          throw new BadRequestException(`Quantity must be greater than 0`);
+        }
+      }
+
+      for (const item of orderItems) {
+        await this.modelModel.findByIdAndUpdate(item.model_id, {
+          $inc: { stock: -item.quantity },
+        });
+      }
+
+      const totalAmount = orderItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0,
+      );
+
+      body.total_amount = totalAmount;
+
       const orderData =
         user_id && role !== 'admin'
           ? { ...body, user_id }
@@ -100,28 +138,56 @@ export class OrderService {
       throw new NotFoundException('Đối tượng không tồn tại!!');
     }
 
-    const newData = {
-      ...entity,
-      ...body,
-    };
+    const updatedItems = body.items;
+    const originalItems = entity.items;
 
-    // if (images) {
-    //   const [imageUrl] = await Promise.all([
-    //     this.firebaseService.uploadFile(images),
-    //     this.firebaseService.deleteFile(entity.images),
-    //   ]);
-    //   newData = {
-    //     ...newData,
-    //     images: imageUrl,
-    //   };
-    // }
+    // Step 1: Calculate stock adjustments for each item
+    for (const updatedItem of updatedItems) {
+      const originalItem = originalItems.find(
+        (item) => item.model_id.toString() === updatedItem.model_id.toString(),
+      );
+
+      const model = await this.modelModel.findById(updatedItem.model_id);
+      if (!model) {
+        throw new NotFoundException(
+          `Model with ID ${updatedItem.model_id} not found`,
+        );
+      }
+
+      const originalQuantity = originalItem ? originalItem.quantity : 0;
+      const quantityChange = updatedItem.quantity - originalQuantity;
+
+      // Step 2: Validate stock change
+      if (quantityChange > 0 && model.stock < quantityChange) {
+        throw new BadRequestException(
+          `Insufficient stock for model ${model.name}`,
+        );
+      }
+
+      if (updatedItem.quantity === 0) {
+        throw new BadRequestException(`Quantity must be greater than 0`);
+      }
+
+      // Step 3: Apply stock adjustment
+      await this.modelModel.findByIdAndUpdate(updatedItem.model_id, {
+        $inc: { stock: -quantityChange },
+      });
+    }
+
+    const totalAmount = updatedItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0,
+    );
+
+    entity.items = updatedItems;
+    entity.total_amount = totalAmount;
+
     return await this.orderModel
-      .findByIdAndUpdate(id, newData, {
+      .findByIdAndUpdate(id, entity, {
         new: true,
       })
       .exec();
   }
-
 
   async updateOrderStatus(id: Types.ObjectId, status: ORDER_STATUS) {
     const order = await this.orderModel.findById(id);
@@ -130,5 +196,28 @@ export class OrderService {
     }
     order.status = status;
     return order.save();
+  }
+
+  async delete(id: string) {
+    try {
+      const entity = await this.orderModel.findById(id).lean();
+      if (!entity) {
+        throw new NotFoundException('Đối tượng không tồn tại!!');
+      }
+
+      const orderItems = entity?.items
+
+      for (const item of orderItems) {
+        await this.modelModel.findByIdAndUpdate(item.model_id, {
+          $inc: { stock: +item.quantity },
+        });
+      }
+      const result = await this.orderModel.deleteOne({ _id: id }).exec();
+      return {
+        deletedCount: result.deletedCount,
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 }

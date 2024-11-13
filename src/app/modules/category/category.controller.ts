@@ -59,6 +59,6 @@ export class CategoryController {
   async remove(
     @Param() { id }: ObjectIdParamDto,
   ): Promise<{ deletedCount: number }> {
-    return await this.categoryService.remove(id);
+    return await this.categoryService.delete(id);
   }
 }

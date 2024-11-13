@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthUser } from 'src/app/decorators/auth.decorators';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { OrderService } from './order.service';
 import { Types } from 'mongoose';
 import { StatusUpdateDto } from './dto/order.dto';
+import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
 
 @Controller('order')
 @UseGuards(JwtAuthGuard)
@@ -43,8 +44,9 @@ export class OrderController {
     return this.orderService.updateOrderStatus(id, statusUpdateDto.status);
   }
 
-  // @Delete(':id')
-  // async deleteItem(@AuthUser() { _id }, @Param() { id }: ObjectIdParamDto) {
-  //   return this.cartService.deleteItem(_id, id);
-  // }
+  @Delete(':id')
+  @HttpCode(HttpStatus.CREATED)
+  async delete(@Param() { id }: ObjectIdParamDto) {
+    return await this.orderService.delete(id);
+  }
 }
