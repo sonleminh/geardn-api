@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsPositive, IsString, Length } from 'class-validator';
 
 export class UpsertCartDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
@@ -8,6 +8,7 @@ export class UpsertCartDto {
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsNumber()
+  @IsPositive()
   quantity: number;
 }
 
@@ -19,5 +20,6 @@ export class UpdateCartDto {
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsNumber()
+  @IsPositive()
   quantity: number;
 }

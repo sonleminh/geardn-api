@@ -65,17 +65,27 @@ export class CartService {
 
   async addCart(user_id: string, model: string, quantity: number) {
     // Step 1: Verify that the product with the given SKU exists
-    const res = await this.modelService.findById(model);
-    if (!res) {
+    const modelRes = await this.modelService.findById(model);
+    if (!modelRes) {
       throw new NotFoundException('Model not found');
     }
 
-    if (quantity && res?.stock === 0) {
+    if (quantity && modelRes?.stock === 0) {
       throw new ConflictException('This item is out of stock');
     }
 
     // Step 2: Find the user's cart
     let cart = await this.cartModel.findOne({ user_id: user_id }).exec();
+
+    const modelInCart = cart?.items.find((item) => item.model === model);
+
+    console.log(modelRes)
+    console.log(modelInCart)
+    console.log(modelInCart?.quantity + quantity > modelRes?.stock)
+
+    if (modelInCart?.quantity + quantity > modelRes?.stock) {
+      throw new ConflictException('Quantity added exceeds stock');
+    }
 
     if (cart) {
       // Step 3: Check if the cart already contains the product
@@ -87,7 +97,7 @@ export class CartService {
       } else {
         // Add new item to the cart
         cart.items.push({
-          model: res?._id.toString(),
+          model: modelRes?._id.toString(),
           quantity,
         });
       }
@@ -205,6 +215,7 @@ export class CartService {
 
   async updateCartQuantity(user_id: string, body: UpdateCartDto) {
     const cart = await this.cartModel.findOne({ user_id: user_id }).exec();
+    const model = await this.modelService.findById(body.model);
 
     if (!cart) {
       throw new NotFoundException('Cart not found');
@@ -215,6 +226,10 @@ export class CartService {
     );
     if (itemIndex === -1) {
       throw new NotFoundException('Item not found in cart');
+    }
+    
+    if (cart.items[itemIndex]?.quantity + body.quantity > model?.stock) {
+      throw new ConflictException('Quantity added exceeds stock');
     }
 
     cart.items[itemIndex].quantity = body.quantity;
