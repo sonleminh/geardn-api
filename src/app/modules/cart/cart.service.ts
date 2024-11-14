@@ -18,6 +18,7 @@ interface CartItemPopulated {
     price: number;
     extinfo: {
       tier_index: number[];
+      is_pre_order: boolean;
     };
     product: {
       _id: string;

@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, Length } from 'class-validator';
 
 export enum ORDER_STATUS {
   PENDING = 'pending',
@@ -14,26 +14,71 @@ export enum RECEIVE_OPTION {
   STORE = 'store',
 }
 
-export class UpsertCartDto {
+export class OrderItemDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
-  model: string;
+  model_id: string;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
+  name: string;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  image: string;
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsNumber()
+  @IsPositive()
+  price: number;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  product_id: string;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  @Length(0, 100, { message: 'Độ dài từ 0-100 ký tự!' })
+  product_name: string;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNumber()
+  @IsPositive()
   quantity: number;
 }
 
-export class UpdateCartDto {
+export class CreateOrderDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
-  @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
-  model: string;
+  @Length(0, 50, { message: 'Độ dài từ 0-50 ký tự!' })
+  name: string;
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsNumber()
-  quantity: number;
+  items: OrderItemDto[];
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNumber()
+  @IsPositive()
+  total_amount: number;
+}
+
+export class UpdateOrderDto {
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsString()
+  @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
+  name: string;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNumber()
+  items: OrderItemDto[];
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNumber()
+  @IsPositive()
+  total_amount: number;
 }
 
 export class StatusUpdateDto {

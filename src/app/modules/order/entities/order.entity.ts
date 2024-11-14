@@ -51,7 +51,7 @@ export class Order {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   user_id: Types.ObjectId;
 
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
   @Prop()

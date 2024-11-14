@@ -9,7 +9,7 @@ import { Types } from 'mongoose';
 import { Model } from 'mongoose';
 import { Order } from './entities/order.entity';
 import { paginateCalculator } from 'src/app/utils/page-helpers';
-import { ORDER_STATUS } from './dto/order.dto';
+import { CreateOrderDto, ORDER_STATUS, UpdateOrderDto } from './dto/order.dto';
 import { Model as ModelEntity } from '../model/entities/model.entity';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class OrderService {
     @InjectModel(ModelEntity.name) private modelModel: Model<ModelEntity>,
   ) {}
 
-  async createOrder(user_id: string, role: string, body: any) {
+  async createOrder(user_id: string, role: string, body: CreateOrderDto) {
     try {
       const orderItems = body.items;
       for (const item of orderItems) {
@@ -127,7 +127,7 @@ export class OrderService {
     }
   }
 
-  async updateOrder(id: Types.ObjectId, body: any) {
+  async updateOrder(id: Types.ObjectId, body: UpdateOrderDto) {
     const entity = await this.orderModel
       .findById(id)
       .where({ is_deleted: { $ne: true } })
@@ -178,7 +178,11 @@ export class OrderService {
       0,
     );
 
-    entity.items = updatedItems;
+    entity.items = updatedItems.map((item) => ({
+      ...item,
+      model_id: new Types.ObjectId(item.model_id),
+      product_id: new Types.ObjectId(item.model_id),
+    }));
     entity.total_amount = totalAmount;
 
     return await this.orderModel
@@ -204,7 +208,7 @@ export class OrderService {
         throw new NotFoundException('Đối tượng không tồn tại!!');
       }
 
-      const orderItems = entity?.items
+      const orderItems = entity?.items;
 
       for (const item of orderItems) {
         await this.modelModel.findByIdAndUpdate(item.model_id, {
