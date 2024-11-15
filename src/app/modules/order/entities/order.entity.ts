@@ -40,7 +40,7 @@ export class Address {
   ward: string;
 
   @Prop()
-  address: string;
+  detail_address: string;
 }
 
 // Create the schema for the items array
