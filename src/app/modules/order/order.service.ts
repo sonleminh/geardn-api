@@ -11,16 +11,21 @@ import { Order } from './entities/order.entity';
 import { paginateCalculator } from 'src/app/utils/page-helpers';
 import { CreateOrderDto, ORDER_STATUS, UpdateOrderDto } from './dto/order.dto';
 import { Model as ModelEntity } from '../model/entities/model.entity';
+import { CartService } from '../cart/cart.service';
+import { Cart } from '../cart/entities/cart.entity';
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectModel(Order.name) private orderModel: Model<Order>,
     @InjectModel(ModelEntity.name) private modelModel: Model<ModelEntity>,
+    @InjectModel(Cart.name) private cartModel: Model<Cart>,
+    private readonly cartService: CartService,
   ) {}
 
   async createOrder(user_id: string, role: string, body: CreateOrderDto) {
     try {
+      const cart = await this.cartModel.findOne({ user_id: user_id }).exec();
       const orderItems = body.items;
       for (const item of orderItems) {
         const model = await this.modelModel.findById(item.model_id);
@@ -46,6 +51,13 @@ export class OrderService {
         await this.modelModel.findByIdAndUpdate(item.model_id, {
           $inc: { stock: -item.quantity },
         });
+        const existedItem = cart.items.find(
+          (cartItem) => cartItem.model === item.model_id,
+        );
+
+        if (existedItem) {
+          await this.cartService.deleteItem(user_id, item.model_id);
+        }
       }
 
       const totalAmount = orderItems.reduce(
@@ -120,7 +132,7 @@ export class OrderService {
       if (!res) {
         throw new NotFoundException('Không tìm thấy đơn hàng!');
       }
-
+      console.log(res)
       return res;
     } catch {
       throw new NotFoundException('Không tìm thấy đơn hàng!');

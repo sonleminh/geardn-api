@@ -36,26 +36,7 @@ export interface ICart {
   _id: string;
   user_id: string;
   items: CartItem[];
-  // createdAt: string;
-  // updatedAt: string;
-  // __v: number;
 }
-
-// interface CartItem {
-//   model: {
-//     _id: string;
-//     name: string;
-//     price: number;
-//     extinfo: {
-//       tier_index: number[];
-//     };
-//     product: {
-//       _id: string;
-//       name: string;
-//     };
-//   };
-//   quantity: number;
-// }
 @Injectable()
 export class CartService {
   constructor(
