@@ -29,6 +29,34 @@ export class OrderItem {
   price: number;
 }
 
+export class Customer {
+  @Prop({ required: true })
+  name: string;
+
+  @Prop()
+  phone: string;
+
+  @Prop()
+  mail: string;
+}
+
+export class Shipment {
+  @Prop({ required: true })
+  method: number;
+
+  @Prop()
+  address: string;
+
+  @Prop()
+  receiver_name: string;
+
+  @Prop()
+  receiver_phone: string;
+
+  @Prop()
+  delivery_date: string;
+}
+
 export class Address {
   @Prop()
   city: string;
@@ -48,32 +76,29 @@ export const OrderItemSchema = SchemaFactory.createForClass(OrderItem);
 
 @Schema({ collection: 'orders', timestamps: true })
 export class Order {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User' })
   user_id: Types.ObjectId;
-
-  @Prop({ required: true })
-  name: string;
-
-  @Prop()
-  phone: string;
-
-  @Prop()
-  email: string;
 
   @Prop({ type: [OrderItemSchema], required: true })
   items: OrderItem[];
 
   @Prop()
-  address: Address;
+  customer: Customer
 
-  @Prop({ required: true })
-  receive_option: string;
+  @Prop()
+  shipment: Shipment;
+
+  @Prop()
+  address: Address;
 
   @Prop({})
   note: string;
 
   @Prop({ required: true })
   total_amount: number;
+
+  @Prop({ required: true })
+  payment_method: number;
 
   @Prop({ default: 'pending' })
   status: string;

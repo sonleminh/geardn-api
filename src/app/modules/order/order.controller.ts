@@ -5,9 +5,12 @@ import { OrderService } from './order.service';
 import { Types } from 'mongoose';
 import { StatusUpdateDto } from './dto/order.dto';
 import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
+import { Roles } from 'src/app/decorators/role.decorator';
+import { RoleGuard } from '../auth/guards/role.guard';
+import { RBAC } from 'src/app/enums/rbac.enum';
 
 @Controller('order')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
@@ -29,6 +32,13 @@ export class OrderController {
   @Get(':id')
   async getOrderById(@Param('id') id: Types.ObjectId) {
     return this.orderService.getOrderById(id);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(RBAC.ADMIN)
+  @Get('admin/:id')
+  async getOrderByIdAdmin(@Param('id') id: Types.ObjectId) {
+    return this.orderService.getOrderByIdAdmin(id);
   }
 
   @Patch(':id')

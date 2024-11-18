@@ -128,11 +128,28 @@ export class OrderService {
 
   async getOrderById(id: Types.ObjectId) {
     try {
-      const res = await this.orderModel.findById(id);
+      const res = await this.orderModel.findById(id)?.lean().exec();
       if (!res) {
         throw new NotFoundException('Không tìm thấy đơn hàng!');
       }
-      console.log(res)
+      // const newRes = {
+      //   ...res,
+      //   address: `xxx, ${res.address.ward}, ${res.address.district}, ${res.address.city}`,
+      //   phone: res.phone.slice(0, -3) + 'xxx',
+      // };
+      // return newRes;
+    } catch {
+      throw new NotFoundException('Không tìm thấy đơn hàng!');
+    }
+  }
+
+  async getOrderByIdAdmin(id: Types.ObjectId) {
+    try {
+      const res = await this.orderModel.findById(id)?.lean().exec();
+      if (!res) {
+        throw new NotFoundException('Không tìm thấy đơn hàng!');
+      }
+
       return res;
     } catch {
       throw new NotFoundException('Không tìm thấy đơn hàng!');
