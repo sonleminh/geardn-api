@@ -17,6 +17,7 @@ import { ProductSkuModule } from './app/modules/product-sku/product-sku.module';
 import { CartModule } from './app/modules/cart/cart.module';
 import { ModelModule } from './app/modules/model/model.module';
 import { OrderModule } from './app/modules/order/order.module';
+import { TransactionModule } from './app/modules/transaction/transaction.module';
 // import { AuthModule } from './app/modules/auth/auth.module';
 
 @Module({
@@ -57,6 +58,7 @@ import { OrderModule } from './app/modules/order/order.module';
     CartModule,
     ModelModule,
     OrderModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
