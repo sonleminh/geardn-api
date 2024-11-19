@@ -61,10 +61,6 @@ export class CartService {
 
     const modelInCart = cart?.items.find((item) => item.model === model);
 
-    console.log(modelRes)
-    console.log(modelInCart)
-    console.log(modelInCart?.quantity + quantity > modelRes?.stock)
-
     if (modelInCart?.quantity + quantity > modelRes?.stock) {
       throw new ConflictException('Quantity added exceeds stock');
     }

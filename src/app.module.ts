@@ -18,6 +18,7 @@ import { CartModule } from './app/modules/cart/cart.module';
 import { ModelModule } from './app/modules/model/model.module';
 import { OrderModule } from './app/modules/order/order.module';
 import { TransactionModule } from './app/modules/transaction/transaction.module';
+import { PaymentMethodModule } from './app/modules/payment-method/payment-method.module';
 // import { AuthModule } from './app/modules/auth/auth.module';
 
 @Module({
@@ -59,6 +60,7 @@ import { TransactionModule } from './app/modules/transaction/transaction.module'
     ModelModule,
     OrderModule,
     TransactionModule,
+    PaymentMethodModule,
   ],
   controllers: [AppController],
   providers: [AppService],
