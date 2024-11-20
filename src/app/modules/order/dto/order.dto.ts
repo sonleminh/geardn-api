@@ -1,4 +1,8 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, Length } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, Length } from 'class-validator';
+import { CustomerDto } from './customer.dto';
+import { ShipmentDto } from './shipment';
+import { AddressDto } from './address.dto';
+import { PaymentDto } from './payment.dto';
 
 export enum ORDER_STATUS {
   PENDING = 'pending',
@@ -53,16 +57,27 @@ export class CreateOrderDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   @IsString()
   @Length(0, 50, { message: 'Độ dài từ 0-50 ký tự!' })
-  name: string;
+  user: string;
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
-  @IsNumber()
-  items: OrderItemDto[];
+  items: any[];
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
-  @IsNumber()
-  @IsPositive()
-  total_amount: number;
+  customer: CustomerDto;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  shipment: ShipmentDto;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  address: AddressDto;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  payment: PaymentDto;
+
+  @IsOptional()
+  @IsString()
+  @Length(0, 100, { message: 'Độ dài từ 0-100 ký tự!' })
+  note: string;
 }
 
 export class UpdateOrderDto {

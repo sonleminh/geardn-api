@@ -33,28 +33,28 @@ export class Customer {
   @Prop({ required: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true })
   phone: string;
 
-  @Prop()
+  @Prop({ required: true })
   mail: string;
 }
 
 export class Shipment {
   @Prop({ required: true })
-  method: number;
+  method: string;
 
-  @Prop()
-  address: string;
+  // @Prop()
+  // address: string;
 
-  @Prop()
-  receiver_name: string;
+  // @Prop()
+  // receiver_name: string;
 
-  @Prop()
-  receiver_phone: string;
+  // @Prop()
+  // receiver_phone: string;
 
-  @Prop()
-  delivery_date: string;
+  // @Prop()
+  // delivery_date: string;
 }
 
 export class Address {
@@ -71,25 +71,41 @@ export class Address {
   detail_address: string;
 }
 
+export class Payment {
+  @Prop({ type: Types.ObjectId, required: true, ref: 'Payment-methods' })
+  method: Types.ObjectId;
+}
+
+export class Flag {
+  @Prop({ default: false })
+  is_online_order: boolean;
+}
+
 // Create the schema for the items array
 export const OrderItemSchema = SchemaFactory.createForClass(OrderItem);
 
 @Schema({ collection: 'orders', timestamps: true })
 export class Order {
-  @Prop({ type: Types.ObjectId, ref: 'User' })
-  user_id: Types.ObjectId;
+  @Prop({ ref: 'User' })
+  user: string;
 
   @Prop({ type: [OrderItemSchema], required: true })
   items: OrderItem[];
 
-  @Prop()
-  customer: Customer
+  @Prop({ required: true })
+  customer: Customer;
 
-  @Prop()
+  @Prop({ required: true })
   shipment: Shipment;
 
-  @Prop()
+  @Prop({ required: true })
   address: Address;
+
+  @Prop({ required: true })
+  payment: Payment;
+
+  @Prop({ required: true })
+  flag: Flag;
 
   @Prop({})
   note: string;
@@ -97,17 +113,8 @@ export class Order {
   @Prop({ required: true })
   total_amount: number;
 
-  @Prop({ required: true })
-  payment_method: number;
-
   @Prop({ default: 'pending' })
   status: string;
-
-  // @Prop({ type: Types.ObjectId, ref: 'Payment', required: true })
-  // paymentId: Types.ObjectId;
-
-  // @Prop({ required: true })
-  // payment_status: string; 
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

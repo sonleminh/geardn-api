@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { AuthUser } from 'src/app/decorators/auth.decorators';
+import { AuthUser } from 'src/app/decorators/auth.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { OrderService } from './order.service';
 import { Types } from 'mongoose';
-import { StatusUpdateDto } from './dto/order.dto';
+import { CreateOrderDto, StatusUpdateDto } from './dto/order.dto';
 import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
 import { Roles } from 'src/app/decorators/role.decorator';
 import { RoleGuard } from '../auth/guards/role.guard';
@@ -16,7 +16,7 @@ export class OrderController {
 
   @Post('')
   // async createOrder(@AuthUser() { _id, role }, @Body() body: any) {
-    async createOrder(@Body() body: any) {
+    async createOrder(@Body() body: CreateOrderDto) {
     return this.orderService.createOrder(body);
   }
 

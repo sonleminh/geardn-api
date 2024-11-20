@@ -26,7 +26,7 @@ export class OrderService {
   async createOrder(body: CreateOrderDto) {
     // async createOrder(user_id: string, role: string, body: CreateOrderDto) {
     try {
-      const cart = await this.cartModel.findOne({ user_id: user_id }).exec();
+      const cart = await this.cartModel.findOne({ user_id: body.user }).exec();
       const orderItems = body.items;
       for (const item of orderItems) {
         const model = await this.modelModel.findById(item.model_id);
@@ -57,7 +57,7 @@ export class OrderService {
             (cartItem) => cartItem.model === item.model_id,
           );
           if (existedItem) {
-            await this.cartService.deleteItem(user_id, item.model_id);
+            await this.cartService.deleteItem(body.user, item.model_id);
           }
         }
       }
@@ -67,13 +67,13 @@ export class OrderService {
         0,
       );
 
-      body.total_amount = totalAmount;
+      const order = { ...body, total_amount: totalAmount };
 
-      const orderData =
-        user_id && role !== 'admin'
-          ? { ...body, user_id }
-          : { ...body, user_id: 'admin' };
-      return await this.orderModel.create(orderData);
+      // const orderData =
+      //   user_id && role !== 'admin'
+      //     ? { ...body, user_id }
+      //     : { ...body, user_id: 'admin' };
+      return await this.orderModel.create(order);
     } catch (error) {
       throw error;
     }
