@@ -21,7 +21,6 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { Roles } from 'src/app/decorators/role.decorator';
 import { RBAC } from 'src/app/enums/rbac.enum';
 @Controller('payment-method')
-@UseGuards(JwtAuthGuard)
 export class PaymentMethodController {
   constructor(private paymentMethodService: PaymentMethodService) {}
   @Post('/')

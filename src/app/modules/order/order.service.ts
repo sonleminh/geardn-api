@@ -23,7 +23,8 @@ export class OrderService {
     private readonly cartService: CartService,
   ) {}
 
-  async createOrder(user_id: string, role: string, body: CreateOrderDto) {
+  async createOrder(body: CreateOrderDto) {
+    // async createOrder(user_id: string, role: string, body: CreateOrderDto) {
     try {
       const cart = await this.cartModel.findOne({ user_id: user_id }).exec();
       const orderItems = body.items;
@@ -51,12 +52,13 @@ export class OrderService {
         await this.modelModel.findByIdAndUpdate(item.model_id, {
           $inc: { stock: -item.quantity },
         });
-        const existedItem = cart.items.find(
-          (cartItem) => cartItem.model === item.model_id,
-        );
-
-        if (existedItem) {
-          await this.cartService.deleteItem(user_id, item.model_id);
+        if (cart) {
+          const existedItem = cart.items.find(
+            (cartItem) => cartItem.model === item.model_id,
+          );
+          if (existedItem) {
+            await this.cartService.deleteItem(user_id, item.model_id);
+          }
         }
       }
 

@@ -15,8 +15,9 @@ export class OrderController {
   constructor(private orderService: OrderService) {}
 
   @Post('')
-  async createOrder(@AuthUser() { _id, role }, @Body() body: any) {
-    return this.orderService.createOrder(_id, role, body);
+  // async createOrder(@AuthUser() { _id, role }, @Body() body: any) {
+    async createOrder(@Body() body: any) {
+    return this.orderService.createOrder(body);
   }
 
   @Get()
