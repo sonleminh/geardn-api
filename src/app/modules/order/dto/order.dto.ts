@@ -3,6 +3,7 @@ import { CustomerDto } from './customer.dto';
 import { ShipmentDto } from './shipment';
 import { AddressDto } from './address.dto';
 import { PaymentDto } from './payment.dto';
+import { FlagDto } from './flag';
 
 export enum ORDER_STATUS {
   PENDING = 'pending',
@@ -54,7 +55,7 @@ export class OrderItemDto {
 }
 
 export class CreateOrderDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsOptional({ message: 'Nội dung này không được để trống!' })
   @IsString()
   @Length(0, 50, { message: 'Độ dài từ 0-50 ký tự!' })
   user: string;
@@ -68,11 +69,14 @@ export class CreateOrderDto {
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   shipment: ShipmentDto;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
-  address: AddressDto;
+  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  // address: AddressDto;
 
   @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
   payment: PaymentDto;
+
+  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  flag: FlagDto;
 
   @IsOptional()
   @IsString()

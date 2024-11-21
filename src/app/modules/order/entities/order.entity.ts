@@ -44,17 +44,17 @@ export class Shipment {
   @Prop({ required: true })
   method: string;
 
-  // @Prop()
-  // address: string;
+  @Prop({ required: true })
+  address: string;
 
-  // @Prop()
-  // receiver_name: string;
+  @Prop()
+  receiver_name: string;
 
-  // @Prop()
-  // receiver_phone: string;
+  @Prop()
+  receiver_phone: string;
 
-  // @Prop()
-  // delivery_date: string;
+  @Prop()
+  delivery_date: Date;
 }
 
 export class Address {
@@ -98,8 +98,8 @@ export class Order {
   @Prop({ required: true })
   shipment: Shipment;
 
-  @Prop({ required: true })
-  address: Address;
+  // @Prop({ required: true })
+  // address: Address;
 
   @Prop({ required: true })
   payment: Payment;

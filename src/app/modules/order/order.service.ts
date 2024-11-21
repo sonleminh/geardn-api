@@ -204,6 +204,8 @@ export class OrderService {
       });
     }
 
+    
+
     const totalAmount = updatedItems.reduce(
       (total, item) => total + item.price * item.quantity,
       0,
@@ -216,8 +218,13 @@ export class OrderService {
     }));
     entity.total_amount = totalAmount;
 
+    const newData = {
+      ...entity,
+      ...body,
+    };
+
     return await this.orderModel
-      .findByIdAndUpdate(id, entity, {
+      .findByIdAndUpdate(id, newData, {
         new: true,
       })
       .exec();
