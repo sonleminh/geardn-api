@@ -171,6 +171,24 @@ export class OrderService {
     const updatedItems = body.items;
     const originalItems = entity.items;
 
+    const removedItems = originalItems.filter(
+      (originalItem) =>
+        !updatedItems.some(
+          (updatedItem) =>
+            updatedItem.model_id.toString() ===
+            originalItem.model_id.toString(),
+        ),
+    );
+    
+    if (removedItems?.length) {
+      console.log('inc')
+      for (const removedItem of removedItems) {
+        await this.modelModel.findByIdAndUpdate(removedItem.model_id, {
+          $inc: { stock: +removedItem?.quantity },
+        });
+      }
+    }
+
     // Step 1: Calculate stock adjustments for each item
     for (const updatedItem of updatedItems) {
       const originalItem = originalItems.find(
@@ -203,8 +221,6 @@ export class OrderService {
         $inc: { stock: -quantityChange },
       });
     }
-
-    
 
     const totalAmount = updatedItems.reduce(
       (total, item) => total + item.price * item.quantity,
