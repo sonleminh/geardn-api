@@ -48,12 +48,6 @@ export class Shipment {
   address: string;
 
   @Prop()
-  receiver_name: string;
-
-  @Prop()
-  receiver_phone: string;
-
-  @Prop()
   delivery_date: Date;
 }
 

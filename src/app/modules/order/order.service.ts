@@ -13,6 +13,7 @@ import { CreateOrderDto, ORDER_STATUS, UpdateOrderDto } from './dto/order.dto';
 import { Model as ModelEntity } from '../model/entities/model.entity';
 import { CartService } from '../cart/cart.service';
 import { Cart } from '../cart/entities/cart.entity';
+import { obfuscateEmail } from 'src/app/utils/obfuscateEmail';
 
 @Injectable()
 export class OrderService {
@@ -134,12 +135,31 @@ export class OrderService {
       if (!res) {
         throw new NotFoundException('Không tìm thấy đơn hàng!');
       }
-      // const newRes = {
-      //   ...res,
-      //   address: `xxx, ${res.address.ward}, ${res.address.district}, ${res.address.city}`,
-      //   phone: res.phone.slice(0, -3) + 'xxx',
-      // };
-      // return newRes;
+
+      if (res.shipment?.address) {
+        const addressParts = res.shipment.address.split(', ');
+        // Replace the first part of the address with "xxx" if there are parts available
+        if (addressParts.length > 0) {
+          addressParts[0] = 'xxx';
+        }
+        // Join the parts back together
+        res.shipment.address = addressParts.join(', ');
+      }
+      // const hiddenAddress  = 
+      const newRes = {
+        ...res,
+        customer: {
+          ...res.customer,
+          phone: res.customer.phone.slice(0, -3) + 'xxx',
+          mail: obfuscateEmail(res.customer.mail),
+        },
+        shipment: {
+          ...res.shipment,
+          receive_name: res.customer.name,
+          receive_phone: res.customer.phone.slice(0, -3) + 'xxx',
+        },
+      };
+      return newRes;
     } catch {
       throw new NotFoundException('Không tìm thấy đơn hàng!');
     }
