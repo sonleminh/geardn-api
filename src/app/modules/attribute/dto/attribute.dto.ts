@@ -8,7 +8,7 @@ export enum TYPE_ATTRIBUTE {
 }
 
 export class CreateAttributeDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   @IsEnum(TYPE_ATTRIBUTE, {
@@ -18,12 +18,12 @@ export class CreateAttributeDto {
   })
   name: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   value: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   atb_sku: string;

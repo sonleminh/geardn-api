@@ -145,7 +145,6 @@ export class OrderService {
         // Join the parts back together
         res.shipment.address = addressParts.join(', ');
       }
-      // const hiddenAddress  = 
       const newRes = {
         ...res,
         customer: {
@@ -199,9 +198,7 @@ export class OrderService {
             originalItem.model_id.toString(),
         ),
     );
-    
     if (removedItems?.length) {
-      console.log('inc')
       for (const removedItem of removedItems) {
         await this.modelModel.findByIdAndUpdate(removedItem.model_id, {
           $inc: { stock: +removedItem?.quantity },

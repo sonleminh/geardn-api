@@ -10,27 +10,27 @@ export enum STATUS {
 
 
 export class CreateProductSkuDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   product_id: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   product_name: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   product_sku: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   sku_image: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsArray()
   attributes: Attribute[];
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   sku: string;
@@ -50,27 +50,27 @@ export class CreateProductSkuDto {
 }
 
 export class UpdateProductSkuDto {
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsString()
   product_id: string;
 
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsString()
   product_name: string;
 
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsString()
   product_sku: string;
 
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsString()
   sku_image: string;
 
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsArray()
   attributes: Attribute[];
 
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   sku: string;

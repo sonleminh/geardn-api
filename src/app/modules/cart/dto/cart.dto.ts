@@ -1,24 +1,24 @@
 import { IsNotEmpty, IsNumber, IsPositive, IsString, Length } from 'class-validator';
 
 export class UpsertCartDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   model: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsNumber()
   @IsPositive()
   quantity: number;
 }
 
 export class UpdateCartDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   model: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsNumber()
   @IsPositive()
   quantity: number;

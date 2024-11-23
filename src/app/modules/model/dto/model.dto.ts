@@ -4,19 +4,19 @@ import { Attribute } from '../../attribute/entities/attribute.entity';
 import { ExtInfoDto } from './extinfo.dto';
 
 export class CreateModelDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   product: string;
 
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsString()
   name: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   sku: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsNumber()
   price: number;
 

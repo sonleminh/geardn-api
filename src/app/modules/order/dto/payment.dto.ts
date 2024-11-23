@@ -1,26 +1,26 @@
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, Length } from 'class-validator';
 
 export class PaymentDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   method: string;
 
-  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  // @IsNotEmpty()
   // @IsString()
   // @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   // address: string;
 
-  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  // @IsNotEmpty()
   // @IsString()
   // receiver_name: string;
 
-  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  // @IsNotEmpty()
   // @IsNumber()
   // @IsPositive()
   // receiver_phone: number;
 
-  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  // @IsNotEmpty()
   // @IsDate()
   // @IsPositive()
   // delivery_date: Date;

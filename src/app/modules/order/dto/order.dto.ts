@@ -20,62 +20,62 @@ export enum RECEIVE_OPTION {
 }
 
 export class OrderItemDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   model_id: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   name: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   image: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsNumber()
   @IsPositive()
   price: number;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   product_id: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 100, { message: 'Độ dài từ 0-100 ký tự!' })
   product_name: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsNumber()
   @IsPositive()
   quantity: number;
 }
 
 export class CreateOrderDto {
-  @IsOptional({ message: 'Nội dung này không được để trống!' })
+  @IsOptional()
   @IsString()
   @Length(0, 50, { message: 'Độ dài từ 0-50 ký tự!' })
   user: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   items: any[];
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   customer: CustomerDto;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   shipment: ShipmentDto;
 
-  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  // @IsNotEmpty()
   // address: AddressDto;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   payment: PaymentDto;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   flag: FlagDto;
 
   @IsOptional()
@@ -85,16 +85,16 @@ export class CreateOrderDto {
 }
 
 export class UpdateOrderDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài từ 0-30 ký tự!' })
   name: string;
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsNumber()
   items: OrderItemDto[];
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsNumber()
   @IsPositive()
   total_amount: number;

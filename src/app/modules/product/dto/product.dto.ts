@@ -10,7 +10,7 @@ import { TagsDto } from './tag.dto';
 import { VariantDTO } from './variant.dto';
 
 export class CreateProductDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 100, { message: 'Độ dài tên từ 0-100 ký tự!' })
   name: string;
@@ -30,7 +30,7 @@ export class CreateProductDto {
   @IsOptional()
   tier_variations: VariantDTO[];
 
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 30, { message: 'Độ dài tên từ 0-30 ký tự!' })
   sku_name: string;
@@ -97,7 +97,7 @@ export class UpdateProductDto {
 }
 
 export class UploadProductDto {
-  @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  @IsNotEmpty()
   @IsString()
   @Length(0, 100, { message: 'Độ dài tên từ 0-100 ký tự!' })
   name: string;
@@ -124,7 +124,7 @@ export class UploadProductDto {
   // @IsArray()
   // attributes?: string;
 
-  // @IsNotEmpty({ message: 'Nội dung này không được để trống!' })
+  // @IsNotEmpty()
   // @IsString()
   // @Length(0, 30, { message: 'Độ dài tên từ 0-30 ký tự!' })
   // sku_name: string;
