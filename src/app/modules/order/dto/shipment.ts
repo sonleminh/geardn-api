@@ -19,7 +19,7 @@ export class ShipmentDto {
   @IsPositive()
   receiver_phone: number;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsDate()
   delivery_date: Date;
 }

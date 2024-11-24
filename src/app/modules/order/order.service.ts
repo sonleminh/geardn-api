@@ -98,16 +98,37 @@ export class OrderService {
         ];
       }
 
-      const [res, total] = await Promise.all([
+      const [res, total, statusCounts] = await Promise.all([
         this.orderModel
           .find(query)
           .skip(passedPage)
           .limit(resPerPage)
           .lean()
           .exec(),
-        this.orderModel.countDocuments(query),
+        this.orderModel.countDocuments(),
+        this.orderModel.aggregate([
+          {
+            $group: {
+              _id: '$status',
+              count: { $sum: 1 },
+            },
+          },
+          {
+            $sort: { count: -1 },
+          },
+        ]),
       ]);
-      return { orders: res, total, page: passedPage, limit: resPerPage };
+
+      return {
+        orders: res,
+        total,
+        status_counts: statusCounts.map((item) => ({
+          status: item._id,
+          count: item.count,
+        })),
+        page: passedPage,
+        limit: resPerPage,
+      };
     } catch (error) {
       throw new BadRequestException(error);
     }
