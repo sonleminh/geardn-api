@@ -33,14 +33,19 @@ export class AdminAuthService {
   }
 
   async validateUser(email: string, password: string) {
-    const user = await this.userService.findAndVerify({
+    const userData = await this.userService.findAndVerify({
       email,
       password,
     });
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+    return userData;
+  }
+
+  async signUp(registerDTO: RegisterDTO) {
+    try {
+      return this.userService.createUser(registerDTO);
+    } catch (error) {
+      throw error;
     }
-    return user;
   }
 
   async login(user: ILoginResponse, res: Response) {
@@ -52,8 +57,8 @@ export class AdminAuthService {
         role: user.role,
       });
 
-      this.storeToken(res, 'at', accessToken);
-      this.storeToken(res, 'rt', refreshToken);
+      this.storeToken(res, 'at', accessToken, 2);
+      this.storeToken(res, 'rt', refreshToken, 48);
 
       const { password, ...tempUser } = user['_doc'];
       return tempUser;
@@ -76,13 +81,13 @@ export class AdminAuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '1d',
+          expiresIn: '2h',
         }),
         this.jwtService.signAsync(data, {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '7d',
+          expiresIn: '2d',
         }),
       ]);
       return {
@@ -94,11 +99,15 @@ export class AdminAuthService {
     }
   }
 
-  storeToken(res: Response, tokenName: string, token: string) {
+  storeToken(res: Response, tokenName: string, token: string, expiresInHours: number) {
+    const expires = new Date();
+    expires.setHours(expires.getHours() + expiresInHours);
+
     res.cookie(tokenName, token, {
       // sameSite: 'none',
       // httpOnly: true,
       // secure: true,
+      expires: expires,
       path: '/',
     });
   }
@@ -113,8 +122,14 @@ export class AdminAuthService {
     }
     const refreshToken = tokens
       ?.split('; ')
-      .find((tokens) => tokens.startsWith('rt='))
+      ?.find((tokens) => tokens.startsWith('rt='))
       ?.split('=')[1];
+    // if (!refreshToken) {
+    //   throw new HttpException(
+    //     'Refresh token has expired or does not exist',
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
     try {
       const payload = await this.jwtService.verify(refreshToken, {
         secret:
@@ -129,11 +144,14 @@ export class AdminAuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '1d',
-        },
+          expiresIn: '2h',
+        },  
       );
+      this.storeToken(res, 'at', newAccessToken, 2);
+
       return {
         accessToken: newAccessToken,
+        expires: 2,
         statusCode: HttpStatus.OK,
       };
       // return 2;

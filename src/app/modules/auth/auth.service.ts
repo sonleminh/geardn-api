@@ -56,8 +56,10 @@ export class AuthService {
         role: user.role,
       });
 
-      this.storeToken(res, 'at', accessToken, 2);
-      this.storeToken(res, 'rt', refreshToken, 48);
+      this.storeToken(res, 'at', accessToken, 30);
+      this.storeToken(res, 'rt', refreshToken, 40);
+      // this.storeToken(res, 'at', accessToken, 2);
+      // this.storeToken(res, 'rt', refreshToken, 48);
 
       const { password, ...tempUser } = user['_doc'];
       return tempUser;
@@ -80,13 +82,15 @@ export class AuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '2h',
+          expiresIn: '30s',
+          // expiresIn: '2h',
         }),
         this.jwtService.signAsync(data, {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '2d',
+          expiresIn: '40s',
+          // expiresIn: '2d',
         }),
       ]);
       return {
@@ -100,7 +104,8 @@ export class AuthService {
 
   storeToken(res: Response, tokenName: string, token: string, expiresInHours: number) {
     const expires = new Date();
-    expires.setHours(expires.getHours() + expiresInHours);
+    expires.setSeconds(expires.getSeconds() + expiresInHours);
+    // expires.setHours(expires.getHours() + expiresInHours);
 
     res.cookie(tokenName, token, {
       // sameSite: 'none',
@@ -143,14 +148,17 @@ export class AuthService {
           secret: this.configService.get<IAuthConfig['JWT_SECRET_KEY']>(
             AuthConfigKey.JWT_SECRET_KEY,
           ),
-          expiresIn: '2h',
+          expiresIn: '30s',
+          // expiresIn: '2h',
         },  
       );
-      this.storeToken(res, 'at', newAccessToken, 2);
+      this.storeToken(res, 'at', newAccessToken, 30);
+      // this.storeToken(res, 'at', newAccessToken, 2);
 
       return {
         accessToken: newAccessToken,
-        expires: 2,
+        expires: 30,
+        // expires: 2,
         statusCode: HttpStatus.OK,
       };
       // return 2;
