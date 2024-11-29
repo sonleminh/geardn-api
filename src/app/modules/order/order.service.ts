@@ -157,7 +157,7 @@ export class OrderService {
         throw new NotFoundException('Không tìm thấy đơn hàng!');
       }
 
-      if (res.shipment?.address) {
+      if (res.shipment.method === 1 && res.shipment?.address) {
         const addressParts = res.shipment.address.split(', ');
         // Replace the first part of the address with "xxx" if there are parts available
         if (addressParts.length > 0) {

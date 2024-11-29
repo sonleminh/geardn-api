@@ -42,7 +42,7 @@ export class Customer {
 
 export class Shipment {
   @Prop({ required: true })
-  method: string;
+  method: number;
 
   @Prop({ required: true })
   address: string;
