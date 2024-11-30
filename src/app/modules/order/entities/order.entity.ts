@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { PaymentMethod } from '../../payment-method/entities/payment-method.entity';
 
 
 export type OrderDocument = HydratedDocument<Order>;
@@ -65,11 +66,6 @@ export class Address {
   detail_address: string;
 }
 
-export class Payment {
-  @Prop({ type: Types.ObjectId, required: true, ref: 'Payment-methods' })
-  method: Types.ObjectId;
-}
-
 export class Flag {
   @Prop({ default: false })
   is_online_order: boolean;
@@ -92,11 +88,8 @@ export class Order {
   @Prop({ required: true })
   shipment: Shipment;
 
-  // @Prop({ required: true })
-  // address: Address;
-
-  @Prop({ required: true })
-  payment: Payment;
+  @Prop({ type: Types.ObjectId, ref: PaymentMethod.name })
+  payment: Types.ObjectId;
 
   @Prop({ required: true })
   flag: Flag;

@@ -103,6 +103,7 @@ export class OrderService {
           .find(query)
           .skip(passedPage)
           .limit(resPerPage)
+          .sort({ createdAt: -1 })
           .lean()
           .exec(),
         this.orderModel.countDocuments(),
@@ -152,34 +153,39 @@ export class OrderService {
 
   async getOrderById(id: Types.ObjectId) {
     try {
-      const res = await this.orderModel.findById(id)?.lean().exec();
+      const res = await this.orderModel
+        .findById(id)
+        .populate('payment', 'key name image')
+        .lean()
+        .exec();
       if (!res) {
         throw new NotFoundException('Không tìm thấy đơn hàng!');
       }
 
-      if (res.shipment.method === 1 && res.shipment?.address) {
-        const addressParts = res.shipment.address.split(', ');
-        // Replace the first part of the address with "xxx" if there are parts available
-        if (addressParts.length > 0) {
-          addressParts[0] = 'xxx';
-        }
-        // Join the parts back together
-        res.shipment.address = addressParts.join(', ');
-      }
-      const newRes = {
-        ...res,
-        customer: {
-          ...res.customer,
-          phone: res.customer.phone.slice(0, -3) + 'xxx',
-          mail: obfuscateEmail(res.customer.mail),
-        },
-        shipment: {
-          ...res.shipment,
-          receive_name: res.customer.name,
-          receive_phone: res.customer.phone.slice(0, -3) + 'xxx',
-        },
-      };
-      return newRes;
+      // if (res.shipment.method === 1 && res.shipment?.address) {
+      //   const addressParts = res.shipment.address.split(', ');
+      //   // Replace the first part of the address with "xxx" if there are parts available
+      //   if (addressParts.length > 0) {
+      //     addressParts[0] = 'xxx';
+      //   }
+      //   // Join the parts back together
+      //   res.shipment.address = addressParts.join(', ');
+      // }
+      // const newRes = {
+      //   ...res,
+      //   customer: {
+      //     ...res.customer,
+      //     phone: res.customer.phone.slice(0, -3) + 'xxx',
+      //     mail: obfuscateEmail(res.customer.mail),
+      //   },
+      //   shipment: {
+      //     ...res.shipment,
+      //     receive_name: res.customer.name,
+      //     receive_phone: res.customer.phone.slice(0, -3) + 'xxx',
+      //   },
+      // };
+      // return newRes;
+      return res;
     } catch {
       throw new NotFoundException('Không tìm thấy đơn hàng!');
     }

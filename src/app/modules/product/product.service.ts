@@ -225,7 +225,7 @@ export class ProductService {
     try {
       const res = await this.productModel
         .findById(id)
-        .populate('category', 'name');
+        .populate('category', 'name');  
       if (!res) {
         throw new NotFoundException('Không tìm thấy sản phẩm!');
       }
