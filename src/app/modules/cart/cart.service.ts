@@ -9,7 +9,7 @@ import { Model } from 'mongoose';
 import { Cart } from './entities/cart.entity';
 import { Model as ModelEntity } from '../model/entities/model.entity';
 import { ModelService } from '../model/model.service';
-import { UpdateCartDto } from './dto/cart.dto';
+import { UpdateCartDto, UpsertCartDto } from './dto/cart.dto';
 import { Request, Response } from 'express';
 
 interface CartItemUnpopulated {
@@ -54,7 +54,7 @@ export class CartService {
   async addCart(
     req: Request,
     res: Response,
-    user_id: string | null,
+    user_id: string,
     model: string,
     quantity: number,
   ) {
@@ -75,8 +75,6 @@ export class CartService {
     if (quantity && modelRes?.stock === 0) {
       throw new ConflictException('This item is out of stock');
     }
-
-    // oke
 
     if (!user_id && !cartToken) {
       const cart = await this.cartModel.create({
@@ -99,6 +97,9 @@ export class CartService {
 
     if (!user_id && cartToken) {
       const cart = await this.cartModel.findById(cartToken);
+      if (!cart) {
+        throw new NotFoundException('Cart not found');
+      }
       const modelInCart = cart?.items.find((item) => item.model === model);
       if (modelInCart?.quantity + quantity > modelRes?.stock) {
         throw new ConflictException('Quantity added exceeds stock');
@@ -120,43 +121,43 @@ export class CartService {
     }
 
     // Step 2: Find the user's cart
-    // let cart = await this.cartModel.findOne({ user_id: user_id }).exec();
+    let cart = await this.cartModel.findOne({ user_id: user_id }).exec();
 
-    // const modelInCart = cart?.items.find((item) => item.model === model);
+    const modelInCart = cart?.items.find((item) => item.model === model);
 
-    // if (modelInCart?.quantity + quantity > modelRes?.stock) {
-    //   throw new ConflictException('Quantity added exceeds stock');
-    // }
+    if (modelInCart?.quantity + quantity > modelRes?.stock) {
+      throw new ConflictException('Quantity added exceeds stock');
+    }
 
-    // if (cart) {
-    //   // Step 3: Check if the cart already contains the product
-    //   const itemIndex = cart.items.findIndex((item) => item.model === model);
+    if (cart) {
+      // Step 3: Check if the cart already contains the product
+      const itemIndex = cart.items.findIndex((item) => item.model === model);
 
-    //   if (itemIndex > -1) {
-    //     // If the product exists in the cart, update its quantity
-    //     cart.items[itemIndex].quantity += quantity;
-    //   } else {
-    //     // Add new item to the cart
-    //     cart.items.push({
-    //       model: modelRes?._id.toString(),
-    //       quantity,
-    //     });
-    //   }
-    // } else {
-    //   // If no cart exists for the user, create a new cart
-    //   cart = new this.cartModel({
-    //     user_id: user_id,
-    //     items: [
-    //       {
-    //         model,
-    //         quantity,
-    //       },
-    //     ],
-    //   });
-    // }
+      if (itemIndex > -1) {
+        // If the product exists in the cart, update its quantity
+        cart.items[itemIndex].quantity += quantity;
+      } else {
+        // Add new item to the cart
+        cart.items.push({
+          model: modelRes?._id.toString(),
+          quantity,
+        });
+      }
+    } else {
+      // If no cart exists for the user, create a new cart
+      cart = new this.cartModel({
+        user_id: user_id,
+        items: [
+          {
+            model,
+            quantity,
+          },
+        ],
+      });
+    }
 
-    // // Save the updated or new cart
-    // return cart.save();
+    // Save the updated or new cart
+    return cart.save();
   }
 
   async subtractQuantity(user_id: string, model_id: string, quantity: number) {

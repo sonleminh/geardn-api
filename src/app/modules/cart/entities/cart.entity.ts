@@ -21,7 +21,7 @@ export const CartItemSchema = SchemaFactory.createForClass(CartItem);
 
 @Schema({ collection: 'carts', timestamps: true })
 export class Cart {
-  @Prop({})
+  @Prop({ default: null })
   user_id: string;
 
   // Define an array of CartItem sub-schema

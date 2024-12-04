@@ -8,16 +8,18 @@ import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
 import { Roles } from 'src/app/decorators/role.decorator';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { RBAC } from 'src/app/enums/rbac.enum';
+import { GetUser } from 'src/app/decorators/get-user.decorator';
 
 @Controller('order')
-// @UseGuards(JwtAuthGuard)
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
   @Post('')
-  // async createOrder(@AuthUser() { _id, role }, @Body() body: any) {
-    async createOrder(@Body() body: CreateOrderDto) {
-    return this.orderService.createOrder(body);
+  async createOrder(@GetUser() { _id }, @Body() body: any) {
+    // async createOrder(@Body() body: any) {
+    console.log('_id:', _id)
+    // async createOrder(@Body() body: CreateOrderDto) {
+    // return this.orderService.createOrder(body);
   }
 
   @Get()
@@ -27,7 +29,7 @@ export class OrderController {
 
   @Get()
   async getOrdersByUser(@AuthUser() { _id }) {
-    console.log('user_id:', _id)
+    console.log('user_id:', _id);
     return this.orderService.getOrdersByUser(_id);
   }
 

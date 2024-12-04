@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { AuthUser } from 'src/app/decorators/auth.decorator';
 import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CartService } from './cart.service';
 import { UpsertCartDto } from './dto/cart.dto';
 import { GetUser } from 'src/app/decorators/get-user.decorator';
@@ -27,17 +26,15 @@ export class CartController {
   async addToCart(
     @Req() req: Request,
     @Res({ passthrough: true }) res,
-    @GetUser() user: { _id: string } | null,
     @Body() body: UpsertCartDto,
   ) {
-    console.log('user?._id:', user?._id)
-    // return this.cartService.addCart(
-    //   req,
-    //   res,
-    //   user?._id,
-    //   body.model,
-    //   body.quantity,
-    // );
+    return this.cartService.addCart(
+      req,
+      res,
+      body?.user_id,
+      body.model,
+      body.quantity,
+    );
   }
 
   @Post('subtract')
