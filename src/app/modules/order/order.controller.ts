@@ -27,6 +27,7 @@ export class OrderController {
 
   @Get()
   async getOrdersByUser(@AuthUser() { _id }) {
+    console.log('user_id:', _id)
     return this.orderService.getOrdersByUser(_id);
   }
 

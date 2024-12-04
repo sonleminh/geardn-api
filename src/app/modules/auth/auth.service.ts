@@ -98,7 +98,12 @@ export class AuthService {
     }
   }
 
-  storeToken(res: Response, tokenName: string, token: string, expiresInHours: number) {
+  storeToken(
+    res: Response,
+    tokenName: string,
+    token: string,
+    expiresInHours: number,
+  ) {
     const expires = new Date();
     expires.setHours(expires.getHours() + expiresInHours);
 
@@ -144,7 +149,7 @@ export class AuthService {
             AuthConfigKey.JWT_SECRET_KEY,
           ),
           expiresIn: '2h',
-        },  
+        },
       );
       this.storeToken(res, 'at', newAccessToken, 2);
 
