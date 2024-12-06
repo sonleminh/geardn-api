@@ -45,7 +45,12 @@ export class CartController {
     @GetUser() user: { _id: string } | null,
     @Body() body: UpsertCartDto,
   ) {
-    // return this.cartService.subtractQuantity(_id, body.model, body.quantity);
+    return this.cartService.subtractQuantity(
+      req,
+      body.user_id,
+      body.model,
+      body.quantity,
+    );
   }
 
   @Get()

@@ -50,6 +50,30 @@ export class CartService {
     private readonly modelService: ModelService,
   ) {}
 
+  private async findCart(req: Request, user_id: string): Promise<any> {
+    const cookies = req.headers?.cookie;
+    const cartToken = cookies
+      ?.split('; ')
+      ?.find((cookie) => cookie.startsWith('cart_token='))
+      ?.split('=')[1];
+
+    if (user_id) {
+      const cart = await this.cartModel.findOne({ user_id }).exec();
+      if (!cart) {
+        throw new NotFoundException('Cart not found');
+      }
+      return cart;
+    } else if (cartToken) {
+      const cart = await this.cartModel.findById(cartToken);
+      if (!cart) {
+        throw new NotFoundException('Cart not found');
+      }
+      return cart;
+    }
+
+    throw new NotFoundException('Cart not found');
+  }
+
   // async addCart(model: string, quantity: number) {
   async addCart(
     req: Request,
@@ -58,25 +82,42 @@ export class CartService {
     model: string,
     quantity: number,
   ) {
-    const cookies = req.headers?.cookie;
-    const cartToken = cookies
-      ?.split('; ')
-      ?.find((cookie) => cookie.startsWith('cart_token='))
-      ?.split('=')[1];
-    // const cartToken = req.headers?.cookie?.split('=')[1];
-    console.log('user_id:', user_id);
-    console.log('ct:', cartToken);
-    // Step 1: Verify that the product with the given SKU exists
+    // Check if the model exists
     const modelRes = await this.modelService.findById(model);
     if (!modelRes) {
       throw new NotFoundException('Model not found');
     }
 
+    // Get the cart token
+    const cookies = req.headers?.cookie;
+    const cartToken = cookies
+      ?.split('; ')
+      ?.find((cookie) => cookie.startsWith('cart_token='))
+      ?.split('=')[1];
+
+    // Step 1: Verify that the product with the given SKU exists
     if (quantity && modelRes?.stock === 0) {
       throw new ConflictException('This item is out of stock');
     }
+    if (quantity > modelRes?.stock) {
+      throw new NotFoundException('Quantity added exceeds stock');
+    }
 
-    if (!user_id && !cartToken) {
+    let cart;
+    if (user_id) {
+      // Find or create cart for user
+      cart = await this.cartModel.findOne({ user_id }).exec();
+      if (!cart) {
+        cart = new this.cartModel({ user_id, items: [] });
+        await cart.save();
+      }
+    } else if (cartToken) {
+      // Find cart by cartToken if no user_id
+      cart = await this.cartModel.findById(cartToken);
+      if (!cart) {
+        throw new NotFoundException('Cart not found');
+      }
+    } else {
       const cart = await this.cartModel.create({
         items: [
           {
@@ -85,7 +126,6 @@ export class CartService {
           },
         ],
       });
-
       const expires = new Date();
       expires.setDate(expires.getDate() + 7);
       res.cookie('cart_token', cart._id.toString(), {
@@ -95,91 +135,127 @@ export class CartService {
       return cart;
     }
 
-    if (!user_id && cartToken) {
-      const cart = await this.cartModel.findById(cartToken);
-      if (!cart) {
-        throw new NotFoundException('Cart not found');
-      }
-      const modelInCart = cart?.items.find((item) => item.model === model);
-      if (modelInCart?.quantity + quantity > modelRes?.stock) {
-        throw new ConflictException('Quantity added exceeds stock');
-      }
-      const itemIndex = cart.items.findIndex((item) => item.model === model);
-
-      if (itemIndex > -1) {
-        // If the product exists in the cart, update its quantity
-        cart.items[itemIndex].quantity += quantity;
-      } else {
-        // Add new item to the cart
-        cart.items.push({
-          model: modelRes?._id.toString(),
-          quantity,
-        });
-      }
-
-      return cart.save();
-    }
-
-    // Step 2: Find the user's cart
-    let cart = await this.cartModel.findOne({ user_id: user_id }).exec();
-
-    const modelInCart = cart?.items.find((item) => item.model === model);
-
-    if (modelInCart?.quantity + quantity > modelRes?.stock) {
-      throw new ConflictException('Quantity added exceeds stock');
-    }
-
-    if (cart) {
-      // Step 3: Check if the cart already contains the product
-      const itemIndex = cart.items.findIndex((item) => item.model === model);
-
-      if (itemIndex > -1) {
-        // If the product exists in the cart, update its quantity
-        cart.items[itemIndex].quantity += quantity;
-      } else {
-        // Add new item to the cart
-        cart.items.push({
-          model: modelRes?._id.toString(),
-          quantity,
-        });
-      }
+    const itemIndex = cart.items.findIndex((item) => item.model === model);
+    if (itemIndex > -1) {
+      // If the product exists in the cart, update its quantity
+      cart.items[itemIndex].quantity += quantity;
     } else {
-      // If no cart exists for the user, create a new cart
-      cart = new this.cartModel({
-        user_id: user_id,
-        items: [
-          {
-            model,
-            quantity,
-          },
-        ],
+      // Add new item to the cart
+      cart.items.push({
+        model: modelRes?._id.toString(),
+        quantity,
       });
     }
-
-    // Save the updated or new cart
     return cart.save();
+
+    // if (!user_id && !cartToken) {
+    //   const cart = await this.cartModel.create({
+    //     items: [
+    //       {
+    //         model,
+    //         quantity,
+    //       },
+    //     ],
+    //   });
+
+    //   const expires = new Date();
+    //   expires.setDate(expires.getDate() + 7);
+    //   res.cookie('cart_token', cart._id.toString(), {
+    //     expires: expires,
+    //     path: '/',
+    //   });
+    //   return cart;
+    // }
+
+    // if (!user_id && cartToken) {
+    //   const cart = await this.cartModel.findById(cartToken);
+    //   if (!cart) {
+    //     throw new NotFoundException('Cart not found');
+    //   }
+    //   const modelInCart = cart?.items.find((item) => item.model === model);
+    //   if (modelInCart?.quantity + quantity > modelRes?.stock) {
+    //     throw new ConflictException('Quantity added exceeds stock');
+    //   }
+    //   const itemIndex = cart.items.findIndex((item) => item.model === model);
+
+    //   if (itemIndex > -1) {
+    //     // If the product exists in the cart, update its quantity
+    //     cart.items[itemIndex].quantity += quantity;
+    //   } else {
+    //     // Add new item to the cart
+    //     cart.items.push({
+    //       model: modelRes?._id.toString(),
+    //       quantity,
+    //     });
+    //   }
+
+    //   return cart.save();
+    // }
+
+    // // Step 2: Find the user's cart
+    // let cart = await this.cartModel.findOne({ user_id: user_id }).exec();
+
+    // const modelInCart = cart?.items.find((item) => item.model === model);
+
+    // if (modelInCart?.quantity + quantity > modelRes?.stock) {
+    //   throw new ConflictException('Quantity added exceeds stock');
+    // }
+
+    // if (cart) {
+    //   // Step 3: Check if the cart already contains the product
+    //   const itemIndex = cart.items.findIndex((item) => item.model === model);
+
+    //   if (itemIndex > -1) {
+    //     // If the product exists in the cart, update its quantity
+    //     cart.items[itemIndex].quantity += quantity;
+    //   } else {
+    //     // Add new item to the cart
+    //     cart.items.push({
+    //       model: modelRes?._id.toString(),
+    //       quantity,
+    //     });
+    //   }
+    // } else {
+    //   // If no cart exists for the user, create a new cart
+    //   cart = new this.cartModel({
+    //     user_id: user_id,
+    //     items: [
+    //       {
+    //         model,
+    //         quantity,
+    //       },
+    //     ],
+    //   });
+    // }
+
+    // // Save the updated or new cart
+    // return cart.save();
   }
 
-  async subtractQuantity(user_id: string, model_id: string, quantity: number) {
-    const cart = await this.cartModel.findOne({ user_id: user_id }).exec();
-
-    if (!cart) {
-      throw new NotFoundException('Cart not found');
+  async subtractQuantity(
+    req: Request,
+    user_id: string,
+    model: string,
+    quantity: number,
+  ) {
+    const modelRes = await this.modelService.findById(model);
+    if (!modelRes) {
+      throw new NotFoundException('Model not found');
     }
 
-    const itemIndex = cart.items.findIndex((item) => item.model === model_id);
+    const cart = await this.findCart(req, user_id);
+    const itemIndex = await cart.items.findIndex(
+      (item) => item.model === model
+    );
+
     if (itemIndex === -1) {
       throw new NotFoundException('Item not found in cart');
     }
 
     cart.items[itemIndex].quantity -= quantity;
-
-    // Step 4: Remove the item if its quantity reaches zero
     if (cart.items[itemIndex].quantity <= 0) {
-      cart.items.splice(itemIndex, 1);
+      cart.items.splice(itemIndex, 1); 
     }
-
-    // Step 5: Save the updated cart
     return cart.save();
   }
 
