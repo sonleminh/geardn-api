@@ -13,7 +13,8 @@ import { CreateOrderDto, ORDER_STATUS, UpdateOrderDto } from './dto/order.dto';
 import { Model as ModelEntity } from '../model/entities/model.entity';
 import { CartService } from '../cart/cart.service';
 import { Cart } from '../cart/entities/cart.entity';
-import { obfuscateEmail } from 'src/app/utils/obfuscateEmail';
+import { Request } from 'express';
+import { getCartTokenFromCookies } from 'src/app/utils/getCartToken';
 
 @Injectable()
 export class OrderService {
@@ -24,10 +25,22 @@ export class OrderService {
     private readonly cartService: CartService,
   ) {}
 
-  async createOrder(body: CreateOrderDto) {
-    // async createOrder(user_id: string, role: string, body: CreateOrderDto) {
+  async createOrder(req: Request, body: CreateOrderDto) {
     try {
-      const cart = await this.cartModel.findOne({ user_id: body.user }).exec();
+      const cartToken = getCartTokenFromCookies(req);
+
+      let cart;
+      if (body.user_id) {
+        cart = await this.cartModel.findOne({ user_id: body.user_id }).exec();
+        if (!cart) {
+          throw new NotFoundException('Cart not found');
+        }
+      } else if (cartToken) {
+        cart = await this.cartModel.findById(cartToken);
+        if (!cart) {
+          throw new NotFoundException('Cart not found');
+        }
+      }
       const orderItems = body.items;
       for (const item of orderItems) {
         const model = await this.modelModel.findById(item.model_id);
@@ -57,8 +70,24 @@ export class OrderService {
           const existedItem = cart.items.find(
             (cartItem) => cartItem.model === item.model_id,
           );
-          if (existedItem) {
-            await this.cartService.deleteItem(body.user, item.model_id);
+          if (existedItem && body.user_id) {
+            await this.cartService.deleteItem(body.user_id, item.model_id);
+          } else if (existedItem) {
+            const cart = await this.cartModel.findById(cartToken).exec();
+            if (!cart) {
+              throw new NotFoundException('Cart not found');
+            }
+            const itemIndex = cart.items.findIndex(
+              (cartItem) => cartItem.model === item.model_id,
+            );
+
+            if (itemIndex === -1) {
+              throw new NotFoundException('Item not found in cart');
+            }
+
+            cart.items.splice(itemIndex, 1);
+
+            cart.save();
           }
         }
       }
@@ -67,13 +96,7 @@ export class OrderService {
         (total, item) => total + item.price * item.quantity,
         0,
       );
-
       const order = { ...body, total_amount: totalAmount };
-
-      // const orderData =
-      //   user_id && role !== 'admin'
-      //     ? { ...body, user_id }
-      //     : { ...body, user_id: 'admin' };
       return await this.orderModel.create(order);
     } catch (error) {
       throw error;

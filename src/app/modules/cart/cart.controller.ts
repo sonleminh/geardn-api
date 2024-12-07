@@ -54,11 +54,8 @@ export class CartController {
   }
 
   @Get()
-  async getCartById(
-    @Req() req: Request,
-    @GetUser() user: { _id: string } | null,
-  ) {
-    return this.cartService.getCartById(req, user?._id);
+  async getCartById(@Req() req: Request) {
+    return this.cartService.getCartById(req);
   }
 
   @Patch()

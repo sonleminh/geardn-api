@@ -76,8 +76,8 @@ export const OrderItemSchema = SchemaFactory.createForClass(OrderItem);
 
 @Schema({ collection: 'orders', timestamps: true })
 export class Order {
-  @Prop({ ref: 'User' })
-  user: string;
+  @Prop({ ref: 'User', default: null })
+  user_id: string;
 
   @Prop({ type: [OrderItemSchema], required: true })
   items: OrderItem[];

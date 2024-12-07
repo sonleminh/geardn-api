@@ -56,9 +56,7 @@ export class OrderItemDto {
 
 export class CreateOrderDto {
   @IsOptional()
-  @IsString()
-  @Length(0, 50, { message: 'Độ dài từ 0-50 ký tự!' })
-  user: string;
+  user_id: string | null;
 
   @IsNotEmpty()
   items: any[];

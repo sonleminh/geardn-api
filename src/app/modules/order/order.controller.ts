@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthUser } from 'src/app/decorators/auth.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { OrderService } from './order.service';
@@ -9,17 +9,15 @@ import { Roles } from 'src/app/decorators/role.decorator';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { RBAC } from 'src/app/enums/rbac.enum';
 import { GetUser } from 'src/app/decorators/get-user.decorator';
+import { Request } from 'express';
 
 @Controller('order')
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
   @Post('')
-  async createOrder(@GetUser() { _id }, @Body() body: any) {
-    // async createOrder(@Body() body: any) {
-    console.log('_id:', _id)
-    // async createOrder(@Body() body: CreateOrderDto) {
-    // return this.orderService.createOrder(body);
+  async createOrder(@Req() req: Request, @Body() body: CreateOrderDto) {
+    return this.orderService.createOrder(req, body);
   }
 
   @Get()
