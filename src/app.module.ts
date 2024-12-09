@@ -26,7 +26,7 @@ import { PaymentMethodModule } from './app/modules/payment-method/payment-method
     ConfigModule.forRoot({
       isGlobal: true,
       load: [...configurations],
-      envFilePath: ['.env'],
+      envFilePath: ['.env.production', '.env.local'],
     }),
     ThrottlerModule.forRoot({
       throttlers: [{ ttl: 10, limit: 200 }],

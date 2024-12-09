@@ -15,9 +15,21 @@ async function bootstrap() {
     AppConfigKey.APP_PREFIX,
   );
 
+  const whiteList = configService
+    .get<IAppConfig['WHITE_LIST']>(AppConfigKey.WHITE_LIST)
+    ?.toString()
+    .split(',')
+    .map((val) => val.trim());
+
   app.use(helmet());
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    origin: (origin, callback) => {
+      if (!origin || whiteList.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: 'GET, HEAD, PUT, POST, DELETE, OPTIONS, PATCH',
     credentials: true,
     allowedHeaders: 'Content-Type, Authorization',
