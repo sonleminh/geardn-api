@@ -4,14 +4,18 @@ FROM node:16
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json and package-lock.json for dependency installation
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of the application code, including .env and service-account.json
 COPY . .
+
+# Ensure .env and service-account.json are included in the build context
+COPY .env /app/.env
+COPY service-account.json /app/service-account.json
 
 # Build the application
 RUN npm run build

@@ -5,7 +5,6 @@ import { AppConfigKey, IAppConfig } from './app/config/app.config';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
 import { ValidationConfig } from './app/config/validation.config';
-import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
