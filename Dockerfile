@@ -13,10 +13,6 @@ RUN npm install
 # Copy the rest of the application code, including .env and service-account.json
 COPY . .
 
-# Ensure .env and service-account.json are included in the build context
-COPY .env /app/.env
-COPY service-account.json /app/service-account.json
-
 # Build the application
 RUN npm run build
 
