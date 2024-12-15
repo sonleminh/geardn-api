@@ -8,7 +8,6 @@ import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
 import { Roles } from 'src/app/decorators/role.decorator';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { RBAC } from 'src/app/enums/rbac.enum';
-import { GetUser } from 'src/app/decorators/get-user.decorator';
 import { Request } from 'express';
 
 @Controller('order')
