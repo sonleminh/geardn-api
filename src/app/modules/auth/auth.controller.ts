@@ -7,7 +7,6 @@ import {
   Res,
   UseGuards
 } from '@nestjs/common';
-import { Request as MGRQ } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterDTO } from './dto/register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
