@@ -22,7 +22,6 @@ export class CartController {
   constructor(private cartService: CartService) {}
 
   @Post('add')
-  // async addToCart(@Body() body: UpsertCartDto) {
   async addToCart(
     @Req() req: Request,
     @Res({ passthrough: true }) res,
