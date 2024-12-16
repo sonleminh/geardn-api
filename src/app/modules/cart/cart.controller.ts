@@ -8,7 +8,6 @@ import {
   Post,
   Req,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthUser } from 'src/app/decorators/auth.decorator';
 import { ObjectIdParamDto } from 'src/app/dtos/object-id.dto';
