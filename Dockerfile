@@ -12,7 +12,9 @@ RUN npm install
 
 COPY . .
 
+COPY .env /app/.env
 COPY service-account.json /app/service-account.json
+
 # Build the application
 RUN npm run build
 
