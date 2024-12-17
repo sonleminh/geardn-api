@@ -10,9 +10,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-COPY service-account.json /app/service-account.json
 COPY . .
 
+COPY service-account.json /app/service-account.json
 # Build the application
 RUN npm run build
 
