@@ -10,7 +10,7 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code, including .env and service-account.json
+COPY service-account.json /app/service-account.json
 COPY . .
 
 # Build the application
