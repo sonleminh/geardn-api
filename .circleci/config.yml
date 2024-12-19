@@ -6,4 +6,4 @@ orbs:
 workflows:
   build-and-test:
     jobs:
-      - test-node
+      - node/test
