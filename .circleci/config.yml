@@ -1,9 +1,14 @@
-# This config was automatically generated from your source code
-# Stacks detected: cicd:github-actions:.github/workflows,deps:node:.,test:jest:
 version: 2.1
-orbs:
-  node: circleci/node@5
+
+jobs:
+  hello-job:
+    docker:
+      - image: cimg/node:17.2.0 # the primary container, where your job's commands are run
+    steps:
+      - checkout # check out the code in the project directory
+      - run: echo "hello world" # run the `echo` command
+
 workflows:
-  build-and-test:
+  my-workflow:
     jobs:
-      - node/test
+      - hello-job
