@@ -1,14 +1,34 @@
-version: 2.1
-
+version: '2.1'
+orbs:
+  node: circleci/node@3.0.0
+  docker: circleci/docker@x.y.z
 jobs:
-  hello-job:
-    docker:
-      - image: cimg/node:17.2.0 # the primary container, where your job's commands are run
+  build-and-push:
+    environment:
+      DOCKER_IMAGE: sonlele/geardn-api
+      DOCKER_TAG: latest
+    executor: docker/docker
     steps:
-      - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
-
+      - setup_remote_docker
+      - checkout
+       - docker/check:
+          docker-username: DOCKER_USER
+          docker-password: DOCKER_PASSWORD
+      - docker/build:
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: sonlele/geardn-api
+          tag: $DOCKER_TAG
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
 workflows:
-  my-workflow:
+  commit:
     jobs:
-      - hello-job
+      - build-and-push:
+          filters:
+            branches:
+              only:
+                - main
