@@ -25,6 +25,7 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
+            
   deploy:
     executor: docker/docker
     steps:
@@ -32,6 +33,7 @@ jobs:
            fingerprints:
              - "SHA256:FSRJHzpHtfeA044IC8zRXo33qoDehPmaCNpgzd7kzsg"
       - run: ssh -oStrictHostKeyChecking=no circleci@http://54.164.120.11 './deploy.sh'
+      
 workflows:
   commit:
     jobs:
