@@ -1,4 +1,12 @@
-ment:
+
+version: 2.1
+orbs:
+  node: circleci/node@3.0.0
+  docker: circleci/docker@1.4.0
+
+jobs:
+  build-and-push:
+    environment:
       DOCKER_IMAGE: sonlele/geardn-api
       DOCKER_TAG: latest
     executor: docker/docker
