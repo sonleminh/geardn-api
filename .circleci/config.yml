@@ -32,7 +32,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "SHA256:FSRJHzpHtfeA044IC8zRXo33qoDehPmaCNpgzd7kzsg"
-      - run: ssh -oStrictHostKeyChecking=no ec2-user@54.164.120.11 './deploy.sh'
+      - run: ssh -oStrictHostKeyChecking=no ubuntu@ec2-54-164-120-11.compute-1.amazonaws.com './deploy.sh'
 
 workflows:
   my-pipeline:
