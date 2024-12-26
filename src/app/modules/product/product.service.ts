@@ -249,7 +249,7 @@ export class ProductService {
         result.original_price = lowestPriceSku.price;
       }
 
-      return { ...result, models };
+      return { ...result, models, test: 'CI/CD' };
     } catch {
       throw new NotFoundException('Không tìm thấy sản phẩm!');
     }
