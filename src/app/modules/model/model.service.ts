@@ -70,7 +70,7 @@ export class ModelService {
 
   async initialForCreate() {
     const res = await this.productService.getCategoriesWithProducts();
-    return { categoryList: res };
+    return { categories: res };
   }
 
   async update(id: string, body: UpdateModelDto) {

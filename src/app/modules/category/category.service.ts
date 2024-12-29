@@ -30,7 +30,7 @@ export class CategoryService {
         this.categoryModel.find().lean().exec(),
         this.categoryModel.countDocuments(),
       ]);
-      return { categoryList: res, total };
+      return { categories: res, total };
     } catch (error) {
       throw new BadRequestException(error);
     }

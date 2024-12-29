@@ -5,6 +5,10 @@ export class CreateCategoryDto {
   @IsString()
   @Length(0, 30, { message: 'Độ dài tiêu đề từ 0-30 ký tự!' })
   name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  icon: string;
 }
 
 export class UpdateCategoryDto {
@@ -12,4 +16,8 @@ export class UpdateCategoryDto {
   @IsString()
   @Length(1, 1000, { message: 'Độ dàitừ 1-50 ký tự!' })
   name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  icon: string;
 }

@@ -19,7 +19,6 @@ import { Roles } from 'src/app/decorators/role.decorator';
 import { RBAC } from 'src/app/enums/rbac.enum';
 
 @Controller('category')
-@UseGuards(JwtAuthGuard)
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 

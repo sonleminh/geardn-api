@@ -11,6 +11,9 @@ export class Category {
 
   @Prop({ require: true, unique: true, type: String })
   name: string;
+
+  @Prop({ require: true, type: String })
+  icon: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
