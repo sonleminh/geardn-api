@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -38,7 +39,8 @@ export class ModelService {
           : body.sku,
       };
 
-      return await this.modelModel.create(newBody);
+      const res = await this.modelModel.create(newBody);
+      return { status: HttpStatus.CREATED, message: 'success', data: res };
     } catch (error) {
       throw error;
     }

@@ -39,7 +39,8 @@ export class ProductService {
       const slug = convertToSlug(body.name);
       payload.slug = slug;
 
-      return await this.productModel.create(body);
+      const res = await this.productModel.create(body);
+      return { status: HttpStatus.CREATED, message: 'success', data: res };
     } catch (error) {
       throw error;
     }
@@ -176,6 +177,8 @@ export class ProductService {
         products: products,
         categories: categories,
         total,
+        status: HttpStatus.OK,
+        message: 'success',
       };
     } catch (error) {
       throw new BadRequestException(error);
@@ -222,7 +225,12 @@ export class ProductService {
         }),
       );
 
-      return { products: products, total: total };
+      return {
+        products: products,
+        total: total,
+        status: HttpStatus.OK,
+        message: 'success',
+      };
     } catch (error) {
       throw new BadRequestException(error);
     }
@@ -256,7 +264,7 @@ export class ProductService {
         result.original_price = lowestPriceSku.price;
       }
 
-      return { ...result, models};
+      return { ...result, models, status: HttpStatus.OK, message: 'success' };
     } catch {
       throw new NotFoundException('Không tìm thấy sản phẩm!');
     }
@@ -377,7 +385,7 @@ export class ProductService {
           },
         ])
         .exec();
-      return res;
+      return { status: HttpStatus.OK, message: 'success', data: res };
     } catch (error) {
       throw new BadRequestException(error);
     }

@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -61,13 +62,13 @@ export class CartService {
       if (!cart) {
         throw new NotFoundException('Cart not found');
       }
-      return cart;
+      return { status: HttpStatus.OK, message: 'success', data: cart };
     } else if (cartToken) {
       const cart = await this.cartModel.findById(cartToken);
       if (!cart) {
         throw new NotFoundException('Cart not found');
       }
-      return cart;
+      return { status: HttpStatus.OK, message: 'success', data: cart };
     }
 
     throw new NotFoundException('Cart not found');
@@ -126,7 +127,8 @@ export class CartService {
         expires: expires,
         path: '/',
       });
-      return cart;
+      return { status: HttpStatus.CREATED, message: 'success', data: cart };
+
     }
 
     const itemIndex = cart.items.findIndex((item) => item.model === model);
@@ -198,7 +200,7 @@ export class CartService {
         throw new NotFoundException('Không tìm thấy giỏ hàng!');
       }
 
-      return cart;
+      return { status: HttpStatus.OK, message: 'success', data: cart };
     } catch {
       throw new NotFoundException('Không tìm thấy giỏ hàng!');
     }

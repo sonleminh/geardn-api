@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -97,7 +98,8 @@ export class OrderService {
         0,
       );
       const order = { ...body, total_amount: totalAmount };
-      return await this.orderModel.create(order);
+      const res = await this.orderModel.create(order);
+      return { status: HttpStatus.CREATED, message: 'success', data: res };
     } catch (error) {
       throw error;
     }

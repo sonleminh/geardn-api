@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -21,7 +22,8 @@ export class CategoryService {
       const payload = { ...createCategoryDTO };
       const slug = convertToSlug(createCategoryDTO.name);
       payload.slug = slug;
-      return await this.categoryModel.create(payload);
+      const res = await this.categoryModel.create(payload);
+      return { status: HttpStatus.CREATED, message: 'success', data: res };
     } catch (error) {
       throw error;
     }
@@ -33,7 +35,12 @@ export class CategoryService {
         this.categoryModel.find().lean().exec(),
         this.categoryModel.countDocuments(),
       ]);
-      return { categories: res, total };
+      return {
+        categories: res,
+        total,
+        status: HttpStatus.OK,
+        message: 'success',
+      };
     } catch (error) {
       throw new BadRequestException(error);
     }
@@ -45,7 +52,7 @@ export class CategoryService {
       if (!res) {
         throw new NotFoundException('Không tìm thấy danh mục!');
       }
-      return res;
+      return { status: HttpStatus.OK, message: 'success', data: res };
     } catch {
       throw new NotFoundException('Không tìm thấy danh mục!');
     }

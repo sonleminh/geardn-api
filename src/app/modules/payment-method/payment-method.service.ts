@@ -19,7 +19,8 @@ export class PaymentMethodService {
   ) {}
   async create(body: CreatePaymentMethodDto) {
     try {
-      return await this.paymentMethodModel.create(body);
+      const res = await this.paymentMethodModel.create(body);
+      return { status: HttpStatus.CREATED, message: 'success', data: res };
     } catch (error) {
       throw error;
     }
@@ -38,15 +39,12 @@ export class PaymentMethodService {
       if (!res) {
         throw new NotFoundException('Không tìm thấy danh mục!');
       }
-      return res;
+      return { status: HttpStatus.OK, message: 'success', data: res };
     } catch {
       throw new NotFoundException('Không tìm thấy danh mục!');
     }
   }
-  async update(
-    id: string,
-    body: UpdatePaymentMethodDto,
-  ): Promise<PaymentMethod> {
+  async update(id: string, body: UpdatePaymentMethodDto) {
     const entity = await this.paymentMethodModel
       .findById({ _id: id })
       .where({ is_deleted: { $ne: true } })
@@ -54,9 +52,10 @@ export class PaymentMethodService {
     if (!entity) {
       throw new NotFoundException(`Đối tượng này không tồn tại!!`);
     }
-    return await this.paymentMethodModel
+    const res = await this.paymentMethodModel
       .findByIdAndUpdate(id, { ...entity, ...body }, { new: true })
       .exec();
+    return { status: HttpStatus.OK, message: 'success', data: res };
   }
   async delete(id: string): Promise<{ deletedCount: number }> {
     const entity = await this.paymentMethodModel.findById(id).lean();
