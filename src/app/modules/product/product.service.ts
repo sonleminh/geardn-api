@@ -8,10 +8,10 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { escapeRegExp } from 'src/app/utils/escapeRegExp';
 import { paginateCalculator } from 'src/app/utils/page-helpers';
 import { CategoryService } from '../category/category.service';
 import { FirebaseService } from '../firebase/firebase.service';
+import { Model as ModelEntity } from '../model/entities/model.entity';
 import {
   CreateProductDto,
   UpdateProductDto,
@@ -19,8 +19,8 @@ import {
 } from './dto/product.dto';
 import { TAGS } from './dto/tag.dto';
 import { Product } from './entities/product.entity';
-import { ProductSku } from '../product-sku/entities/product-sku.entity';
-import { Model as ModelEntity } from '../model/entities/model.entity';
+import { QueryParamDto } from 'src/app/dtos/query-params.dto';
+import { convertToSlug } from 'src/app/utils/convertToSlug';
 
 @Injectable()
 export class ProductService {
@@ -35,6 +35,10 @@ export class ProductService {
 
   async createProduct(body: CreateProductDto) {
     try {
+      const payload = { ...body };
+      const slug = convertToSlug(body.name);
+      payload.slug = slug;
+
       return await this.productModel.create(body);
     } catch (error) {
       throw error;
@@ -107,7 +111,7 @@ export class ProductService {
     }
   }
 
-  async findAll({ s, page, limit, find_option }) {
+  async findAll(queryParam: QueryParamDto) {
     try {
       const filterObject = {
         is_deleted: { $ne: true },
@@ -127,7 +131,10 @@ export class ProductService {
         // }),
       };
 
-      const { resPerPage, passedPage } = paginateCalculator(page, limit);
+      const { resPerPage, passedPage } = paginateCalculator(
+        queryParam.page,
+        queryParam.limit,
+      );
 
       const pipeline = [];
 
@@ -249,13 +256,13 @@ export class ProductService {
         result.original_price = lowestPriceSku.price;
       }
 
-      return { ...result, models, test: 'CI/CD 3' };
+      return { ...result, models};
     } catch {
       throw new NotFoundException('Không tìm thấy sản phẩm!');
     }
   }
 
-  async getProductByCategory(id: string, queryParam) {
+  async getProductByCategory(id: Types.ObjectId, queryParam?: QueryParamDto) {
     try {
       const filterObject = {
         is_deleted: { $ne: true },
@@ -307,9 +314,13 @@ export class ProductService {
       throw new NotFoundException('Đối tượng không tồn tại!!');
     }
 
+    const slug = convertToSlug(body.name);
+
+
     const newData = {
       ...entity,
       ...body,
+      slug: slug
     };
 
     // if (images) {

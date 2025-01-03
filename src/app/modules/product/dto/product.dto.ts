@@ -44,6 +44,10 @@ export class CreateProductDto {
   @Length(1, 10000, { message: 'Độ dài đoạn mô tả từ 1-10000 ký tự!' })
   description: string;
 
+  @IsOptional()
+  @IsString()
+  slug: string;
+
   // @IsOptional()
   // @IsArray()
   // @IsEnum(TYPE_ATTRIBUTE, {

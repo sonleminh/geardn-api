@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
 import { Category } from './entities/category.entity';
+import { convertToSlug } from 'src/app/utils/convertToSlug';
 
 @Injectable()
 export class CategoryService {
@@ -17,7 +18,9 @@ export class CategoryService {
 
   async create(createCategoryDTO: CreateCategoryDto) {
     try {
-      const payload = createCategoryDTO;
+      const payload = { ...createCategoryDTO };
+      const slug = convertToSlug(createCategoryDTO.name);
+      payload.slug = slug;
       return await this.categoryModel.create(payload);
     } catch (error) {
       throw error;
@@ -57,8 +60,10 @@ export class CategoryService {
       throw new NotFoundException(`Đối tượng này không tồn tại!!`);
     }
 
+    const slug = convertToSlug(body.name);
+
     return await this.categoryModel
-      .findByIdAndUpdate(id, { ...entity, ...body }, { new: true })
+      .findByIdAndUpdate(id, { ...entity, ...body, slug: slug }, { new: true })
       .exec();
   }
 

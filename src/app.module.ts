@@ -12,14 +12,13 @@ import { CategoryModule } from './app/modules/category/category.module';
 import { ProductModule } from './app/modules/product/product.module';
 import { AdminAuthModule } from './app/modules/admin-auth/admin-auth.module';
 import { UploadModule } from './app/modules/upload/upload.module';
-import { AttributeModule } from './app/modules/attribute/attribute.module';
-import { ProductSkuModule } from './app/modules/product-sku/product-sku.module';
 import { CartModule } from './app/modules/cart/cart.module';
 import { ModelModule } from './app/modules/model/model.module';
 import { OrderModule } from './app/modules/order/order.module';
 import { TransactionModule } from './app/modules/transaction/transaction.module';
 import { PaymentMethodModule } from './app/modules/payment-method/payment-method.module';
-
+import { Product, ProductSchema } from './app/modules/product/entities/product.entity';
+import { Category, CategorySchema } from './app/modules/category/entities/category.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -47,13 +46,15 @@ import { PaymentMethodModule } from './app/modules/payment-method/payment-method
         };
       },
     }),
+    MongooseModule.forFeature([
+      { name: Product.name, schema: ProductSchema },
+      { name: Category.name, schema: CategorySchema },
+    ]),
     AuthModule,
     AdminAuthModule,
     UserModule,
     CategoryModule,
     ProductModule,
-    AttributeModule,
-    ProductSkuModule,
     UploadModule,
     CartModule,
     ModelModule,

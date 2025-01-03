@@ -1,6 +1,5 @@
 import { Transform } from 'class-transformer';
 import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator';
-import { Attribute } from '../../attribute/entities/attribute.entity';
 import { ExtInfoDto } from './extinfo.dto';
 
 export class CreateModelDto {

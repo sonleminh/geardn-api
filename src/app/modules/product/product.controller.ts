@@ -27,6 +27,7 @@ import {
   UploadProductDto,
 } from './dto/product.dto';
 import { ProductService } from './product.service';
+import { QueryParamDto } from 'src/app/dtos/query-params.dto';
 
 @Controller('product')
 export class ProductController {
@@ -57,7 +58,7 @@ export class ProductController {
   }
 
   @Get('/admin')
-  async getProductList(@Query() queryParam) {
+  async getProductList(@Query() queryParam: QueryParamDto) {
     return this.productService.findAll(queryParam);
   }
 
@@ -67,7 +68,10 @@ export class ProductController {
   }
 
   @Get('/category/:id')
-  async getProductByCategory(@Param('id') id: string, @Query() queryParam) {
+  async getProductByCategory(
+    @Param('id') id: Types.ObjectId,
+    @Query() queryParam: QueryParamDto,
+  ) {
     return await this.productService.getProductByCategory(id, queryParam);
   }
 

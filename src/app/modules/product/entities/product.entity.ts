@@ -4,7 +4,6 @@ import { Types } from 'mongoose';
 import { Category } from '../../category/entities/category.entity';
 import { TagsDto } from '../dto/tag.dto';
 import { Document } from 'mongoose';
-import { TYPE_ATTRIBUTE } from '../../attribute/dto/attribute.dto';
 @Schema({ _id: false })
 export class Discount extends Document {
   @Prop({ required: true })
@@ -77,6 +76,9 @@ export class Product {
 
   @Prop({})
   description: string;
+
+  @Prop({ require: true, unique: true })
+  slug: string;
 
   @Prop({ default: false })
   is_deleted: boolean;

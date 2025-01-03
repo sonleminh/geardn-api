@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ProductSku } from '../../product-sku/entities/product-sku.entity';
 import { HydratedDocument, Types } from 'mongoose';
 import { Model } from '../../model/entities/model.entity';
 

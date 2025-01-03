@@ -9,6 +9,10 @@ export class CreateCategoryDto {
   @IsNotEmpty()
   @IsString()
   icon: string;
+
+  @IsOptional()
+  @IsString()
+  slug: string;
 }
 
 export class UpdateCategoryDto {
@@ -17,7 +21,7 @@ export class UpdateCategoryDto {
   @Length(1, 1000, { message: 'Độ dàitừ 1-50 ký tự!' })
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   icon: string;
 }
