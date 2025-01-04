@@ -11,7 +11,6 @@ import { Model, Types } from 'mongoose';
 import { paginateCalculator } from 'src/app/utils/page-helpers';
 import { CategoryService } from '../category/category.service';
 import { FirebaseService } from '../firebase/firebase.service';
-import { Model as ModelEntity } from '../model/entities/model.entity';
 import {
   CreateProductDto,
   UpdateProductDto,
@@ -19,8 +18,8 @@ import {
 } from './dto/product.dto';
 import { TAGS } from './dto/tag.dto';
 import { Product } from './entities/product.entity';
+import { Model as ModelEntity } from '../model/entities/model.entity';
 import { QueryParamDto } from 'src/app/dtos/query-params.dto';
-import { convertToSlug } from 'src/app/utils/convertToSlug';
 
 @Injectable()
 export class ProductService {
@@ -35,12 +34,7 @@ export class ProductService {
 
   async createProduct(body: CreateProductDto) {
     try {
-      const payload = { ...body };
-      const slug = convertToSlug(body.name);
-      payload.slug = slug;
-
-      const res = await this.productModel.create(body);
-      return { status: HttpStatus.CREATED, message: 'success', data: res };
+      return await this.productModel.create(body);
     } catch (error) {
       throw error;
     }
@@ -136,7 +130,6 @@ export class ProductService {
         queryParam.page,
         queryParam.limit,
       );
-
       const pipeline = [];
 
       const [res, total] = await Promise.all([
@@ -177,8 +170,6 @@ export class ProductService {
         products: products,
         categories: categories,
         total,
-        status: HttpStatus.OK,
-        message: 'success',
       };
     } catch (error) {
       throw new BadRequestException(error);
@@ -225,12 +216,7 @@ export class ProductService {
         }),
       );
 
-      return {
-        products: products,
-        total: total,
-        status: HttpStatus.OK,
-        message: 'success',
-      };
+      return { products: products, total: total };
     } catch (error) {
       throw new BadRequestException(error);
     }
@@ -240,7 +226,7 @@ export class ProductService {
     try {
       const res = await this.productModel
         .findById(id)
-        .populate('category', 'name');  
+        .populate('category', 'name');
       if (!res) {
         throw new NotFoundException('Không tìm thấy sản phẩm!');
       }
@@ -264,13 +250,13 @@ export class ProductService {
         result.original_price = lowestPriceSku.price;
       }
 
-      return { ...result, models, status: HttpStatus.OK, message: 'success' };
+      return { ...result, models, test: 'CI/CD 3' };
     } catch {
       throw new NotFoundException('Không tìm thấy sản phẩm!');
     }
   }
 
-  async getProductByCategory(id: Types.ObjectId, queryParam?: QueryParamDto) {
+  async getProductByCateId(id: Types.ObjectId, queryParam) {
     try {
       const filterObject = {
         is_deleted: { $ne: true },
@@ -312,6 +298,49 @@ export class ProductService {
     }
   }
 
+  async getProductByCateSlug(slug: string, queryParam) {
+    try {
+      const category = await this.categoryService.findBySlug(slug);
+
+      const filterObject = {
+        is_deleted: { $ne: true },
+      };
+
+      const { resPerPage, passedPage } = paginateCalculator(
+        queryParam.page,
+        queryParam.limit,
+      );
+
+      const res = await this.productModel
+        .find({ category: category._id.toString() })
+        .select('name category tags images')
+        .sort({ createdAt: -1 })
+        .limit(resPerPage)
+        .skip(passedPage)
+        .populate('category', 'name')
+        .lean()
+        .exec();
+      return await Promise.all(
+        res.map(async (product) => {
+          // Find the lowest price for each product's SKU
+          const lowestPriceSku = await this.modelModel
+            .findOne({ product: product._id }) // Match product ID
+            .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
+            .select('price') // Only fetch the price field
+            .lean()
+            .exec();
+
+          return {
+            ...product,
+            original_price: lowestPriceSku ? lowestPriceSku.price : null,
+          };
+        }),
+      );
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
   async update(id: Types.ObjectId, body: UpdateProductDto) {
     const entity = await this.productModel
       .findById(id)
@@ -322,13 +351,9 @@ export class ProductService {
       throw new NotFoundException('Đối tượng không tồn tại!!');
     }
 
-    const slug = convertToSlug(body.name);
-
-
     const newData = {
       ...entity,
       ...body,
-      slug: slug
     };
 
     // if (images) {
@@ -385,7 +410,7 @@ export class ProductService {
           },
         ])
         .exec();
-      return { status: HttpStatus.OK, message: 'success', data: res };
+      return res;
     } catch (error) {
       throw new BadRequestException(error);
     }

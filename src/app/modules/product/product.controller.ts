@@ -53,8 +53,8 @@ export class ProductController {
   }
 
   @Get()
-  async getProducts() {
-    return this.productService.getProducts();
+  async getProducts(@Query() queryParam: QueryParamDto) {
+    return this.productService.findAll(queryParam);
   }
 
   @Get('/admin')
@@ -67,12 +67,20 @@ export class ProductController {
     return await this.productService.getInitialProductForCreate();
   }
 
-  @Get('/category/:id')
-  async getProductByCategory(
+  @Get('/admin/category/:id')
+  async getProductByCateId(
     @Param('id') id: Types.ObjectId,
     @Query() queryParam: QueryParamDto,
   ) {
-    return await this.productService.getProductByCategory(id, queryParam);
+    return await this.productService.getProductByCateId(id, queryParam);
+  }
+
+  @Get('/category/:slug')
+  async getProductByCateSlug(
+    @Param('slug') slug: string,
+    @Query() queryParam: QueryParamDto,
+  ) {
+    return await this.productService.getProductByCateSlug(slug, queryParam);
   }
 
   @Get(':id')

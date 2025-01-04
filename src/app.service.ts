@@ -31,10 +31,7 @@ export class AppService {
       const res = await this.productService.getProductById(id);
       return { status: HttpStatus.OK, message: 'success', data: res };
     } else if (type === 'cat') {
-      const res = await this.productService.getProductByCategory(
-        id,
-        queryParam,
-      );
+      const res = await this.productService.getProductByCateId(id, queryParam);
       return { status: HttpStatus.OK, message: 'success', data: res };
     } else {
       return { error: 'Invalid type' };

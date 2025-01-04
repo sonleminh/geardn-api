@@ -46,6 +46,21 @@ export class CategoryService {
     }
   }
 
+  async findBySlug(slug: string) {
+    try {
+      const res = await this.categoryModel
+        .findOne({ slug: slug })
+        .lean()
+        .exec();
+      if (!res) {
+        throw new NotFoundException('Không tìm thấy danh mục!');
+      }
+      return res;
+    } catch {
+      throw new NotFoundException('Không tìm thấy danh mục!');
+    }
+  }
+
   async findById(id: string) {
     try {
       const res = await this.categoryModel.findById(id);

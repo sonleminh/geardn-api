@@ -34,7 +34,7 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
-  @Get('/:id')
+  @Get('/admin/:id')
   @HttpCode(HttpStatus.OK)
   async findById(@Param() { id }: ObjectIdParamDto) {
     return await this.categoryService.findById(id);
