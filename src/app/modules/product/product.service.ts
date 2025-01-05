@@ -148,7 +148,6 @@ export class ProductService {
       ]);
       const categories = await this.categoryService.getCategoryInitial();
 
-
       const products = await Promise.all(
         res.map(async (product) => {
           // Find the lowest price for each product's SKU
@@ -256,7 +255,7 @@ export class ProductService {
     }
   }
 
-  async getProductByCateId(id: Types.ObjectId, queryParam) {
+  async getProductByCateId(id: Types.ObjectId, queryParam: QueryParamDto) {
     try {
       const filterObject = {
         is_deleted: { $ne: true },
@@ -267,17 +266,22 @@ export class ProductService {
         queryParam.limit,
       );
 
-      const res = await this.productModel
-        .find({ category: id })
-        .select('name category tags images')
-        .sort({ createdAt: -1 })
-        .limit(resPerPage)
-        .skip(passedPage)
-        .populate('category', 'name')
-        .lean()
-        .exec();
+      const [res, total] = await Promise.all([
+        this.productModel
+          .find({ category: id })
+          .select('name category tags images')
+          .sort({ createdAt: -1 })
+          .limit(resPerPage)
+          .skip(passedPage)
+          .populate('category', 'name')
+          .lean()
+          .exec(),
+        this.productModel
+          .countDocuments({ category: id }) // Get total count of documents
+          .exec(),
+      ]);
 
-      return await Promise.all(
+      const data = await Promise.all(
         res.map(async (product) => {
           // Find the lowest price for each product's SKU
           const lowestPriceSku = await this.modelModel
@@ -293,6 +297,8 @@ export class ProductService {
           };
         }),
       );
+
+      return { data, total };
     } catch (error) {
       throw new BadRequestException(error);
     }
