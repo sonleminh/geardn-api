@@ -54,7 +54,7 @@ export class ProductController {
 
   @Get()
   async getProducts(@Query() queryParam: QueryParamDto) {
-    return this.productService.findAll(queryParam);
+    return this.productService.findAllClient(queryParam);
   }
 
   @Get('/admin')

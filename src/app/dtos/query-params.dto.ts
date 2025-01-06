@@ -12,4 +12,8 @@ export class QueryParamDto {
   @IsOptional()
   @IsNumberString()
   limit?: string;
+
+  @IsOptional()
+  @IsString()
+  sortPriceOrder?: 'asc' | 'desc';
 }

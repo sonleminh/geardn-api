@@ -106,7 +106,7 @@ export class ProductService {
     }
   }
 
-  async findAll(queryParam: QueryParamDto) {
+  async findAllClient(queryParam: QueryParamDto) {
     try {
       const filterObject = {
         is_deleted: { $ne: true },
@@ -130,6 +130,7 @@ export class ProductService {
         queryParam.page,
         queryParam.limit,
       );
+
       const pipeline = [];
 
       const [res, total] = await Promise.all([
@@ -157,6 +158,85 @@ export class ProductService {
             .select('price') // Only fetch the price field
             .lean()
             .exec();
+          console.log(lowestPriceSku);
+          // if (lowestPriceSku) {
+          //   return {
+          //     ...product,
+          //     original_price: lowestPriceSku.price,
+          //   };
+          // }
+          // // Return null or undefined to filter out later
+          // return null;
+          return {
+            ...product,
+            original_price: lowestPriceSku ? lowestPriceSku.price : null,
+          };
+        }),
+      );
+
+      return {
+        products: products,
+        categories: categories,
+        total,
+      };
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
+  async findAll(queryParam: QueryParamDto) {
+    try {
+      const filterObject = {
+        is_deleted: { $ne: true },
+        // ...(s?.length && {
+        //   $or: [
+        //     {
+        //       title: {
+        //         $regex: new RegExp(escapeRegExp(s), 'i'),
+        //       },
+        //     },
+        //     {
+        //       content: {
+        //         $regex: new RegExp(escapeRegExp(s), 'i'),
+        //       },
+        //     },
+        //   ],
+        // }),
+      };
+
+      const { resPerPage, passedPage } = paginateCalculator(
+        queryParam.page,
+        queryParam.limit,
+      );
+
+      const pipeline = [];
+
+      const [res, total] = await Promise.all([
+        pipeline.length
+          ? this.productModel.aggregate(pipeline).exec()
+          : this.productModel
+              .find(filterObject)
+              .sort({ createdAt: -1 })
+              .limit(resPerPage)
+              .skip(passedPage)
+              .populate('category', 'name')
+              .lean()
+              .exec(),
+
+        this.productModel.countDocuments(filterObject),
+      ]);
+      const categories = await this.categoryService.getCategoryInitial();
+
+      const products = await Promise.all(
+        res.map(async (product) => {
+          // Find the lowest price for each product's SKU
+          const lowestPriceSku = await this.modelModel
+            .findOne({ product: product._id }) // Match product ID
+            .sort({ price: 1 }) // Sort by price in ascending order to get the lowest
+            .select('price') // Only fetch the price field
+            .lean()
+            .exec();
+          console.log(lowestPriceSku);
 
           return {
             ...product,
@@ -265,6 +345,8 @@ export class ProductService {
         queryParam.page,
         queryParam.limit,
       );
+
+      const sortOrder = queryParam.sortPriceOrder === 'desc' ? -1 : 1;
 
       const [res, total] = await Promise.all([
         this.productModel
