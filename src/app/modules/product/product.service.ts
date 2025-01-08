@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, Types, ObjectId } from 'mongoose';
 import { paginateCalculator } from 'src/app/utils/page-helpers';
 import { CategoryService } from '../category/category.service';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -20,6 +20,7 @@ import { TAGS } from './dto/tag.dto';
 import { Product } from './entities/product.entity';
 import { Model as ModelEntity } from '../model/entities/model.entity';
 import { QueryParamDto } from 'src/app/dtos/query-params.dto';
+import { ProductWithPrice } from 'src/app/interfaces/IProduct';
 
 @Injectable()
 export class ProductService {
@@ -149,8 +150,8 @@ export class ProductService {
       ]);
       const categories = await this.categoryService.getCategoryInitial();
 
-      const products = await Promise.all(
-        res.map(async (product) => {
+      const products: ProductWithPrice[] = await Promise.all(
+        res.map(async (product): Promise<ProductWithPrice> => {
           // Find the lowest price for each product's SKU
           const lowestPriceSku = await this.modelModel
             .findOne({ product: product._id }) // Match product ID
@@ -158,21 +159,18 @@ export class ProductService {
             .select('price') // Only fetch the price field
             .lean()
             .exec();
-          console.log(lowestPriceSku);
-          // if (lowestPriceSku) {
-          //   return {
-          //     ...product,
-          //     original_price: lowestPriceSku.price,
-          //   };
-          // }
-          // // Return null or undefined to filter out later
-          // return null;
           return {
             ...product,
             original_price: lowestPriceSku ? lowestPriceSku.price : null,
           };
         }),
       );
+
+      products.sort((a, b) => {
+        if (a.original_price === null) return 1;
+        if (b.original_price === null) return -1;
+        return a.original_price - b.original_price;
+      });
 
       return {
         products: products,
@@ -182,6 +180,39 @@ export class ProductService {
     } catch (error) {
       throw new BadRequestException(error);
     }
+  }
+
+  async findAllWithOriginalPrice(queryParam: QueryParamDto): Promise<any> {
+    const skip = (+queryParam.page - 1) * +queryParam.limit;
+    const sortOrder = queryParam.sort === 'desc' ? -1 : 1;
+
+    const { resPerPage, passedPage } = paginateCalculator(
+      queryParam.page,
+      queryParam.limit,
+    );
+
+    // Aggregation pipeline
+    const productsWithOriginalPrice = await this.productModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'models', // The name of the collection of your model
+            localField: "_id",
+            foreignField: "product",
+            as: "cccc" 
+          },
+        },
+      ])
+      .exec();
+
+    console.log(productsWithOriginalPrice); // Kiểm tra kết quả
+
+    const total = await this.productModel.countDocuments().exec();
+
+    return {
+      total,
+      data: productsWithOriginalPrice,
+    };
   }
 
   async findAll(queryParam: QueryParamDto) {
@@ -346,7 +377,7 @@ export class ProductService {
         queryParam.limit,
       );
 
-      const sortOrder = queryParam.sortPriceOrder === 'desc' ? -1 : 1;
+      const sortOrder = queryParam.sort === 'desc' ? -1 : 1;
 
       const [res, total] = await Promise.all([
         this.productModel

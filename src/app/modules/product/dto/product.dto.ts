@@ -9,6 +9,8 @@ import { DetailsDto } from './details.dto';
 import { TagsDto } from './tag.dto';
 import { VariantDTO } from './variant.dto';
 
+
+
 export class CreateProductDto {
   @IsNotEmpty()
   @IsString()

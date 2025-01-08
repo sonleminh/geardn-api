@@ -15,5 +15,5 @@ export class QueryParamDto {
 
   @IsOptional()
   @IsString()
-  sortPriceOrder?: 'asc' | 'desc';
+  sort?: 'asc' | 'desc';
 }
